@@ -54,6 +54,8 @@ function dump($var, $echo = true, $label = null, $strict = true)
 	{
 		return $output;
 	}
+
+	return true;
 }
 
 /**
@@ -83,6 +85,8 @@ function C($class)
 	{
 		RcController::halt('The controller file does not exist');
 	}
+
+	return false;
 }
 
 /**
@@ -107,6 +111,8 @@ function M($class = '')
 	{
 		RcController::halt("The " . $model . " file does not exist");
 	}
+
+	return false;
 }
 
 /**
@@ -164,7 +170,7 @@ function F($func)
  *
  * @param string $class
  * @param string $lib
- * @return object
+ * @return object|bool
  */
 function load_class($class, $lib = '')
 {
@@ -192,6 +198,8 @@ function load_class($class, $lib = '')
 	{
 		RcController::halt('The ' . $fileName . ' file does not exist');
 	}
+
+	return false;
 }
 
 /**
@@ -952,7 +960,7 @@ function rand_string($len = 6, $type = '', $addChars = '')
 /**
  * Rand color code.
  *
- * @return void
+ * @return string
  */
 function rand_color()
 {
