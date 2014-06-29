@@ -922,8 +922,6 @@ abstract class RcModel extends RcBase
 		switch($driver)
 		{
 			case 'mysql':
-				$linkId = new RcDbMysql($config);
-				break;
 			case 'mysqli':
 				$linkId = new RcDbMysqli($config);
 				break;

@@ -8,6 +8,7 @@
  * @package        core
  * @since          1.0
  * @filesource
+ * @deprecated
  */
 defined('IN_RCPHP') or exit('Access denied');
 
