@@ -68,7 +68,7 @@ function C($class)
 	{
 		RcController::halt('The controller name is empty');
 	}
-	
+
 	$controller = APP_PATH . "controllers/" . $class . "Controller.class.php";
 
 	if(file_exists($controller))
@@ -92,7 +92,7 @@ function C($class)
  * @return object
  */
 function M($class = '')
-{	
+{
 	$model = APP_PATH . "models/" . (empty($class) ? RcPHP::getController() : $class) . "Model.class.php";
 
 	if(file_exists($model))
@@ -139,6 +139,24 @@ function P($key)
 	}
 
 	return RcRequest::post($key, true);
+}
+
+/**
+ * Load function file.
+ *
+ * @param string $func
+ * @return bool
+ */
+function F($func)
+{
+	if(empty($func))
+	{
+		return false;
+	}
+
+	RcPHP::loadFile(RCPHP_PATH . 'functions' . DS . $func . '.php');
+
+	return true;
 }
 
 /**
