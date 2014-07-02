@@ -43,6 +43,13 @@ abstract class RcModel extends RcBase
 	protected $_slave = null;
 
 	/**
+	 * 数据库链接池
+	 *
+	 * @var array
+	 */
+	protected $_links = array();
+
+	/**
 	 * 数据库实例化是否为单例模式
 	 *
 	 * @var bool
@@ -216,7 +223,7 @@ abstract class RcModel extends RcBase
 	 * 解析where条件
 	 *
 	 * @param string $where
-	 * @param boolen $isWhere
+	 * @param bool   $isWhere
 	 * @return object
 	 */
 	protected function _parseWhere($where, $isWhere = true)
@@ -407,7 +414,7 @@ abstract class RcModel extends RcBase
 	 * 解析where条件
 	 *
 	 * @param string $where
-	 * @param boolen $isWhere
+	 * @param bool   $isWhere
 	 * @return object
 	 */
 	protected function _parseHaving($where, $isWhere = true)
@@ -534,7 +541,7 @@ abstract class RcModel extends RcBase
 	 * $this->insert('user',$data);
 	 * @param string $tableName
 	 * @param array  $data
-	 * @param boolen $insertId
+	 * @param bool   $insertId
 	 * @return mixed
 	 */
 	public function insert($tableName, $data, $insertId = true)
@@ -853,19 +860,9 @@ abstract class RcModel extends RcBase
 	 */
 	protected function master()
 	{
-		if($this->_master)
-		{
-			return $this->_master;
-		}
+		RcDebug::addMessage("Master connection");
 
-		$this->_master = $this->factory($this->_config['master']);
-
-		if($this->_singleton)
-		{
-			$this->_slave = $this->_master;
-		}
-
-		return $this->_master;
+		return $this->_master = $this->factory($this->_config['master'], 0);
 	}
 
 	/**
@@ -875,26 +872,24 @@ abstract class RcModel extends RcBase
 	 */
 	public function slave()
 	{
-		if($this->_slave)
+		if($this->_singleton === true)
 		{
-			return $this->_slave;
+			return $this->_master = $this->factory($this->_config['master'], 0);
 		}
 
 		//获得从数据库配置的索引
 		$config_slave = $this->_config['slave'];
+
 		if(defined('MASTER_READ') && MASTER_READ)
 		{
 			$config_slave[] = $this->_config['master'];
 		}
-		$length = count($config_slave);
-		$index = $length == 1 ? 0 : array_rand($config_slave);
-		$this->_slave = $this->factory($config_slave[$index]);
-		if($this->_singleton)
-		{
-			$this->_master = $this->_slave;
-		}
 
-		return $this->_slave;
+		$length = count($config_slave);
+
+		$index = $length == 1 ? 0 : array_rand($config_slave);
+
+		return $this->_slave = $this->factory($config_slave[$index], $index + 1);
 	}
 
 	/**
@@ -913,39 +908,40 @@ abstract class RcModel extends RcBase
 	 * @param array $config
 	 * @return object
 	 */
-	public function factory($config)
+	public function factory($config, $linkNum = 0)
 	{
-		$driver = $config['driver'];
-
-		$linkId = null;
-
-		switch($driver)
+		if(!isset($this->_links[$linkNum]))
 		{
-			case 'mysql':
-			case 'mysqli':
-				$linkId = new RcDbMysqli($config);
-				break;
-			case 'pdo_mysql':
-				//组合dsn信息
-				if(!isset($config['dsn']))
-				{
-					$dsnArray = array();
-					$dsnArray['host'] = $config['host'];
-					$dsnArray['dbname'] = $config['database'];
+			$driver = $config['driver'];
 
-					if(!empty($config['port']))
+			switch($driver)
+			{
+				case 'mysql':
+				case 'mysqli':
+					$this->_links[$linkNum] = new RcDbMysqli($config);
+					break;
+				case 'pdo_mysql':
+					//组合dsn信息
+					if(!isset($config['dsn']))
 					{
-						$dsnArray['port'] = $config['port'];
+						$dsnArray = array();
+						$dsnArray['host'] = $config['host'];
+						$dsnArray['dbname'] = $config['database'];
+
+						if(!empty($config['port']))
+						{
+							$dsnArray['port'] = $config['port'];
+						}
+						$config['dsn'] = sprintf('%s:%s', 'mysql', http_build_query($dsnArray, '', ';'));
 					}
-					$config['dsn'] = sprintf('%s:%s', 'mysql', http_build_query($dsnArray, '', ';'));
-				}
-				$linkId = new RcDbPdoMysql($config);
-				break;
-			default:
-				$linkId = new RcDbMysqli($config);
+					$this->_links[$linkNum] = new RcDbPdoMysql($config);
+					break;
+				default:
+					$this->_links[$linkNum] = new RcDbMysqli($config);
+			}
 		}
 
-		return $linkId;
+		return $this->_links[$linkNum];
 	}
 
 	/**
