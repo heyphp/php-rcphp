@@ -1,64 +1,114 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
-	<title>Exception</title>
+	<title>RcPHP Error</title>
+	<meta http
+	- equiv = "Content-Type" content = "text/html; charset=gb2312" />
+	<meta name="ROBOTS" content="NOINDEX,NOFOLLOW,NOARCHIVE"/>
 	<style type="text/css">
-		/*<![CDATA[*/
+		<!--
 		body {
-			font-family: "Verdana";
-			font-weight: normal;
+			background-color : white;
 			color: black;
-			background-color: white;
+			font: 9pt/11pt verdana, arial, sans-serif;
+		}
+
+		#container {
+			width: 1024px;
+		}
+
+		#message {
+			width: 1024px;
+			color: black;
+		}
+
+		.red {
+			color: red;
+		}
+
+		a:link {
+			font: 9pt / 11pt verdana, arial, sans -serif;
+			color: red;
+		}
+
+		a:visited {
+			font: 9pt / 11pt verdana, arial, sans -serif;
+			color: #4e4e4e;
 		}
 
 		h1 {
-			font-family: "Verdana";
-			font-weight: normal;
-			font-size: 18pt;
-			color: red
+			color: #FF0000;
+			font: 18pt "Verdana";
+			margin-bottom: 0.5em;
 		}
 
-		h3 {
-			font-family: "Verdana";
-			font-weight: bold;
-			font-size: 11pt
+		.bg1 {
+			background-color: #FFFFCC;
 		}
 
-		p {
-			font-family: "Verdana";
-			font-size: 9pt;
+		.bg2 {
+			background-color: #EEEEEE;
 		}
 
-		.message {
-			color: maroon;
+		.table {
+			background: #AAAAAA;
+			font: 11pt Menlo, Consolas, "Lucida Console"
 		}
 
-		/*]]>*/
+		.info {
+			background: none repeat scroll 0 0 #F3F3F3;
+			border: 0px solid #aaaaaa;
+			border-radius : 10px 10px 10px 10px;
+			color: #000000;
+			font -size : 11 pt;
+			line -height : 160 %;
+			margin-bottom : 1em;
+			padding: 1em;
+		}
+
+		.help {
+			background: #F3F3F3;
+			border-radius : 10px 10px 10px 10px;
+			font: 12px verdana, arial, sans -serif;
+			text -align : center;
+			line -height : 160 %;
+			padding: 1em;
+		}
+
+		.sql {
+			background: none repeat scroll 0 0 #FFFFCC;
+			border: 1px solid #aaaaaa;
+			color: #000000;
+			font: arial,sans-serif;
+			font-size : 9pt;
+			line -height : 160 %;
+			margin-top : 1em;
+			padding: 4px;
+		}
+
+		-->
 	</style>
 </head>
-
 <body>
-<h1>Exception</h1>
+<div id="container">
+	<h1> RcPHP Error </h1>
 
-<h3>Description</h3>
+	<div class='info'><?php echo $message;?></div>
+	<div class="info">
+		<p><strong>PHP Debug</strong></p>
+		<table cellpadding="5" cellspacing="1" width="100%" class="table">
+			<tr class="bg2">
+				<td>No.</td>
+				<td>File</td>
+				<td>Line</td>
+				<td>Code</td>
+			</tr>
+			<?php echo $traceString;?>
+		</table>
+	</div>
 
-<p class="message">
-	<?php echo $message; ?>
-</p>
 
-<h3>Source File</h3>
-
-<p>
-	<?php echo $sourceFile; ?>
-</p>
-
-<h3>Stack Trace</h3>
-
-<div class="callstack">
-<pre>
-<?php echo $traceString; ?>
-</pre>
 </div>
 </body>
 </html>

@@ -41,6 +41,7 @@ abstract class RcController extends RcBase
 	 *
 	 * @param string $message
 	 * @param string $level
+	 * @return bool
 	 */
 	public static function halt($message, $level = 'Error')
 	{
@@ -53,6 +54,7 @@ abstract class RcController extends RcBase
 		{
 			//output message
 			$trace = debug_backtrace();
+			krsort($trace);
 
 			$sourceFile = $trace[0]['file'] . ' line:' . $trace[0]['line'];
 
@@ -70,29 +72,44 @@ abstract class RcController extends RcBase
 
 					$args = implode('.', $tempArgs);
 				}
-				$traceString .= '#' . $key . ' ' . $t['file'] . '(line:' . $t['line'] . ')' . $t['class'] . $t['type'] . $t['function'] . '(' . $args . ')<br/>';
+				if(substr(php_sapi_name(), 0, 3) === 'cli')
+				{
+					$traceString .= '#' . $key . ' ' . $t['file'] . '(line:' . $t['line'] . ')' . $t['class'] . $t['type'] . $t['function'] . '(' . $args . ')<br/>';
+				}
+				else
+				{
+					$traceString .= "<tr class='bg1'>";
+					$traceString .= "<td>" . $key . "</td>";
+					$traceString .= "<td>" . $t['file'] . "</td>";
+					$traceString .= "<td>" . $t['line'] . "</td>";
+					$traceString .= "<td>" . $t['class'] . $t['type'] . $t['function'] . "(" . $args . ")</td>";
+					$traceString .= "</tr>";
+				}
 			}
 
 			RcLog::write($message, $sourceFile, $level, date('Ymd', time()) . '_trace');
+
+			if(RCPHP_DEBUG)
+			{
+				if(substr(php_sapi_name(), 0, 3) !== 'cli')
+				{
+					header('HTTP/1.1 404 Not Found');
+					header('Status:404 Not Found');
+
+					include_once RCPHP_PATH . 'sources/html/exception.php';
+				}
+				else
+				{
+					echo '[Description]' . PHP_EOL . $message . PHP_EOL;
+					echo '[Source File]' . PHP_EOL . $sourceFile . PHP_EOL;
+					echo '[Stack Trace]' . PHP_EOL . str_replace('<br/>', "\r\n", $traceString) . PHP_EOL;
+				}
+				//exit
+				exit();
+			}
 		}
 
-		if(defined('RCPHP_DEBUG') && RCPHP_DEBUG)
-		{
-			if(substr(php_sapi_name(), 0, 3) !== 'cli')
-			{
-				header('HTTP/1.1 404 Not Found');
-				header('Status:404 Not Found');
-				include_once RCPHP_PATH . 'sources/html/exception.php';
-			}
-			else
-			{
-				echo '[Description]' . PHP_EOL . $message . PHP_EOL;
-				echo '[Source File]' . PHP_EOL . $sourceFile . PHP_EOL;
-				echo '[Stack Trace]' . PHP_EOL . str_replace('<br/>', "\r\n", $traceString) . PHP_EOL;
-			}
-			//exit
-			exit();
-		}
+		return true;
 	}
 
 	/**
