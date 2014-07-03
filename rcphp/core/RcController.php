@@ -55,10 +55,12 @@ abstract class RcController extends RcBase
 			//output message
 			$trace = debug_backtrace();
 			krsort($trace);
+			var_dump($trace);
 
 			$sourceFile = $trace[0]['file'] . ' line:' . $trace[0]['line'];
 
 			$traceString = '';
+			$i = 1;
 			foreach($trace as $key => $t)
 			{
 				$args = $t['args'];
@@ -74,17 +76,19 @@ abstract class RcController extends RcBase
 				}
 				if(substr(php_sapi_name(), 0, 3) === 'cli')
 				{
-					$traceString .= '#' . $key . ' ' . $t['file'] . '(line:' . $t['line'] . ')' . $t['class'] . $t['type'] . $t['function'] . '(' . $args . ')<br/>';
+					$traceString .= '#' . $i . ' ' . $t['file'] . '(line:' . $t['line'] . ')' . $t['class'] . $t['type'] . $t['function'] . '(' . $args . ')<br/>';
 				}
 				else
 				{
 					$traceString .= "<tr class='bg1'>";
-					$traceString .= "<td>" . $key . "</td>";
-					$traceString .= "<td>" . $t['file'] . "</td>";
+					$traceString .= "<td>" . $i . "</td>";
+					$traceString .= "<td>" . str_replace(PRO_PATH, "", $t['file']) . "</td>";
 					$traceString .= "<td>" . $t['line'] . "</td>";
 					$traceString .= "<td>" . $t['class'] . $t['type'] . $t['function'] . "(" . $args . ")</td>";
 					$traceString .= "</tr>";
 				}
+
+				$i++;
 			}
 
 			RcLog::write($message, $sourceFile, $level, date('Ymd', time()) . '_trace');
@@ -107,6 +111,10 @@ abstract class RcController extends RcBase
 				//exit
 				exit();
 			}
+		}
+		else
+		{
+			send_http_status(404);
 		}
 
 		return true;

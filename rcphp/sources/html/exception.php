@@ -96,6 +96,10 @@
 
 	<div class='info'><?php echo $message;?></div>
 	<div class="info">
+		<p><strong>Source File</strong></p>
+		<p><?php echo $sourceFile;?></p>
+	</div>
+	<div class="info">
 		<p><strong>PHP Debug</strong></p>
 		<table cellpadding="5" cellspacing="1" width="100%" class="table">
 			<tr class="bg2">
@@ -107,6 +111,7 @@
 			<?php echo $traceString;?>
 		</table>
 	</div>
+
 
 
 </div>
