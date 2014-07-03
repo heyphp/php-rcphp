@@ -93,9 +93,9 @@ class RcDbPdoMysql extends RcBase
 		}
 
 		//Record the slow query log
-		if($use >= 0.5)
+		if($use >= 0.5 && (defined("RC_SLOW_LOG") && RC_SLOW_LOG === true))
 		{
-			RcLog::write($use, $sql, 'Slow', 'slow_' . date('Ymd'));
+			RcLog::write($use, $sql, 'SLOW', 'slow_' . date('Ymd'));
 		}
 
 		//RcDebug调试信息
@@ -126,9 +126,9 @@ class RcDbPdoMysql extends RcBase
 		}
 
 		//Record the slow query log
-		if($use >= 0.5)
+		if($use >= 0.5 && (defined("RC_SLOW_LOG") && RC_SLOW_LOG === true))
 		{
-			RcLog::write($use, $sql, 'Slow', 'slow_' . date('Ymd'));
+			RcLog::write($use, $sql, 'SLOW', 'slow_' . date('Ymd'));
 		}
 
 		//RcDebug调试信息
@@ -187,7 +187,7 @@ class RcDbPdoMysql extends RcBase
 
 		if($result === false)
 		{
-			RcController::halt($sql . 'The SQL query failed. Error number：' . $this->errno() . ' Error message：' . $this->error());
+			RcController::halt('The SQL query failed. Error number:' . $this->errno() . ' Error message:' . $this->error());
 		}
 
 		$rows = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -215,7 +215,7 @@ class RcDbPdoMysql extends RcBase
 
 		if($result === false)
 		{
-			RcController::halt($sql . 'The SQL query failed. Error number：' . $this->errno() . ' Error message：' . $this->error());
+			RcController::halt('The SQL query failed. Error number:' . $this->errno() . ' Error message:' . $this->error());
 		}
 
 		$row = $result->fetch(PDO::FETCH_ASSOC);
@@ -243,7 +243,7 @@ class RcDbPdoMysql extends RcBase
 
 		if($result === false)
 		{
-			RcController::halt($sql . 'The SQL query failed. Error number：' . $this->errno() . ' Error message：' . $this->error());
+			RcController::halt('The SQL query failed. Error number:' . $this->errno() . ' Error message:' . $this->error());
 		}
 
 		$column = $result->fetchColumn();
@@ -287,7 +287,7 @@ class RcDbPdoMysql extends RcBase
 			}
 			else
 			{
-				RcController::halt('Transaction commit exception. Error number：' . $this->errno() . ' Error message：' . $this->error());
+				RcController::halt('Transaction commit exception. Error number:' . $this->errno() . ' Error message:' . $this->error());
 			}
 		}
 		else
@@ -316,7 +316,7 @@ class RcDbPdoMysql extends RcBase
 			}
 			else
 			{
-				RcController::halt('Transaction rollback exception Error number：' . $this->errno() . ' Error message：' . $this->error());
+				RcController::halt('Transaction rollback exception Error number:' . $this->errno() . ' Error message:' . $this->error());
 			}
 		}
 		else

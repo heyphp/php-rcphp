@@ -544,7 +544,7 @@ abstract class RcModel extends RcBase
 	 * @param bool   $insertId
 	 * @return mixed
 	 */
-	public function insert($tableName, $data, $insertId = true)
+	public function insert($tableName, array $data, $isReplace = false, $insertId = true)
 	{
 		//对函数的参数进行判断
 		if(empty($tableName))
@@ -577,7 +577,14 @@ abstract class RcModel extends RcBase
 
 		$tableName = !empty($this->_prefix) ? $this->_prefix . trim($tableName) : trim($tableName);
 
-		$sqlString = 'INSERT INTO `' . $tableName . '`(' . $fieldString . ') VALUES (' . $valueString . ')';
+		if($isReplace === true)
+		{
+			$sqlString = 'REPLACE INTO `' . $tableName . '`(' . $fieldString . ') VALUES (' . $valueString . ')';
+		}
+		else
+		{
+			$sqlString = 'INSERT INTO `' . $tableName . '`(' . $fieldString . ') VALUES (' . $valueString . ')';
+		}
 
 		//销毁不需要的变量
 		unset($fieldString, $valueString);
@@ -585,7 +592,7 @@ abstract class RcModel extends RcBase
 		$result = $this->master()
 					   ->execute($sqlString);
 
-		if($result && $insertId)
+		if($result && $insertId === true)
 		{
 			return $this->getInsertId();
 		}
