@@ -11,7 +11,7 @@
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class RcCacheEaccelerator extends RcbASE
+class RcCacheEaccelerator extends RcBase
 {
 
 	/**
@@ -29,10 +29,11 @@ class RcCacheEaccelerator extends RcbASE
 
 	/**
 	 * 设置缓存数据
+	 *
 	 * @param string|array $key
 	 * @param string       $value
 	 * @param int          $expire
-	 * @return boolen
+	 * @return bool
 	 */
 	public function set($key, $value = '', $expire = 60)
 	{
@@ -46,8 +47,9 @@ class RcCacheEaccelerator extends RcbASE
 
 	/**
 	 * 获取缓存数据
+	 *
 	 * @param string $key
-	 * @return mixed
+	 * @return string
 	 */
 	public function get($key)
 	{
@@ -61,8 +63,9 @@ class RcCacheEaccelerator extends RcbASE
 
 	/**
 	 * 删除缓存数据
+	 *
 	 * @param string $key
-	 * @return boolen
+	 * @return bool
 	 */
 	public function delete($key)
 	{
@@ -76,7 +79,8 @@ class RcCacheEaccelerator extends RcbASE
 
 	/**
 	 * 清除所有缓存数据 慎用
-	 * @return boolen
+	 *
+	 * @return bool
 	 */
 	public function clear()
 	{
@@ -87,8 +91,9 @@ class RcCacheEaccelerator extends RcbASE
 
 	/**
 	 * 检测指定缓存是否存在
+	 *
 	 * @param string $key
-	 * @return boolen
+	 * @return bool
 	 */
 	public function has($key)
 	{

@@ -16,6 +16,7 @@ class RcCache extends RcBase
 
 	/**
 	 * 工厂模式实例化缓存类
+	 *
 	 * @param string $adapter
 	 * @param array  $options
 	 * @return object
@@ -24,7 +25,7 @@ class RcCache extends RcBase
 	{
 		if(empty($adapter))
 		{
-			Controller::halt("The cache adapter cannot be empty.");
+			RcController::halt("The cache adapter cannot be empty.");
 		}
 
 		$adapter = strtolower($adapter);
@@ -32,17 +33,17 @@ class RcCache extends RcBase
 		//当为memcache时
 		if($adapter == 'memcache')
 		{
-			return is_null($options) ? cache_memcache::getInstance($options) : Structure::singleton('cache_memcache');
+			return is_null($options) ? RcCacheMemcache::getInstance($options) : RcStructure::singleton('RcCacheMemcache');
 		}
 		if(in_array($adapter, array(
-								   'file',
-								   'apc',
-								   'xcache',
-								   'eaccelerator'
-							  ))
+			'file',
+			'apc',
+			'xcache',
+			'eaccelerator'
+		))
 		)
 		{
-			return Controller::instance('cache_' . $adapter);
+			return RcController::instance('RcCache' . $adapter);
 		}
 
 		return false;

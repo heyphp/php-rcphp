@@ -29,10 +29,11 @@ class RcCacheWinCache extends RcBase
 
 	/**
 	 * 设置缓存数据
+	 *
 	 * @param string|array $key
 	 * @param string       $value
 	 * @param int          $expire
-	 * @return boolen
+	 * @return bool
 	 */
 	public function set($key, $value = '', $expire = 60)
 	{
@@ -46,6 +47,7 @@ class RcCacheWinCache extends RcBase
 
 	/**
 	 * 获取缓存数据
+	 *
 	 * @param string $key
 	 * @return mixed
 	 */
@@ -61,8 +63,9 @@ class RcCacheWinCache extends RcBase
 
 	/**
 	 * 删除缓存数据
+	 *
 	 * @param string $key
-	 * @return boolen
+	 * @return bool
 	 */
 	public function delete($key)
 	{
@@ -76,7 +79,8 @@ class RcCacheWinCache extends RcBase
 
 	/**
 	 * 清除所有缓存数据 慎用
-	 * @return boolen
+	 *
+	 * @return bool
 	 */
 	public function clear()
 	{
@@ -85,8 +89,9 @@ class RcCacheWinCache extends RcBase
 
 	/**
 	 * 检测指定缓存是否存在
+	 *
 	 * @param string $key
-	 * @return boolen
+	 * @return bool
 	 */
 	public function has($key)
 	{

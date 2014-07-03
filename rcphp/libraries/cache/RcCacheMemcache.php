@@ -3,7 +3,6 @@
  * RcCacheMemcache class file.
  *
  * @author         RcPHP Dev Team
- * @version        $Id: RcCacheMemcache.php 1.0 2013-08-27 17:45 zhangwj $
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
  * @package        cache
@@ -14,6 +13,7 @@ defined('IN_RCPHP') or exit('Access denied');
 
 /**
  * 使用说明
+ *
  * @example
  * 参数范例
  * $mem_options = array(
@@ -46,18 +46,21 @@ class RcCacheMemcache extends RcBase
 
 	/**
 	 * 单例模式实现化对象
+	 *
 	 * @var object
 	 */
 	protected static $_instance = null;
 
 	/**
 	 * 连接实例
-	 * @var objeact
+	 *
+	 * @var null|object
 	 */
 	private $_conn = null;
 
 	/**
 	 * 默认的缓存服务器
+	 *
 	 * @var array
 	 */
 	protected $_defaultServer = array(
@@ -67,6 +70,7 @@ class RcCacheMemcache extends RcBase
 
 	/**
 	 * 默认的缓存策略
+	 *
 	 * @var array
 	 */
 	protected $_defaultOptions = array(
@@ -78,6 +82,7 @@ class RcCacheMemcache extends RcBase
 
 	/**
 	 * 构造函数 判断模块的加载
+	 *
 	 * @return void
 	 */
 	private function __construct(array $options = null)
@@ -90,9 +95,9 @@ class RcCacheMemcache extends RcBase
 		//当参数为空时,程序则自动加载config目录中的memcache.ini.php的配置文件
 		if(is_null($options))
 		{
-			if(is_file(CONFIG_DIR . 'memcache.ini.php'))
+			if(is_file(CONFIG_PATH . 'memcache.ini.php'))
 			{
-				$options = RcController::getConfig('memcache');
+				$options = RcPHP::getConfig('memcache');
 			}
 		}
 
@@ -121,7 +126,8 @@ class RcCacheMemcache extends RcBase
 
 	/**
 	 * 单例模式 防止被外部使用
-	 * @return boolean
+	 *
+	 * @return bool
 	 */
 	private function __clone()
 	{
@@ -130,10 +136,11 @@ class RcCacheMemcache extends RcBase
 
 	/**
 	 * 写入缓存
+	 *
 	 * @param string $key
 	 * @param mixed  $data
 	 * @param int    $expire
-	 * @return void
+	 * @return bool
 	 */
 	public function set($key, $value, $expire = null)
 	{
@@ -152,6 +159,7 @@ class RcCacheMemcache extends RcBase
 
 	/**
 	 * 获取缓存数据
+	 *
 	 * @param string $key
 	 * @return string
 	 */
@@ -167,8 +175,9 @@ class RcCacheMemcache extends RcBase
 
 	/**
 	 * 删除缓存数据
+	 *
 	 * @param string $key
-	 * @return boolean
+	 * @return bool
 	 */
 	public function delete($key)
 	{
@@ -182,7 +191,8 @@ class RcCacheMemcache extends RcBase
 
 	/**
 	 * 清除所有的缓存数据
-	 * @return boolean
+	 *
+	 * @return bool
 	 */
 	public function clear()
 	{
@@ -201,6 +211,7 @@ class RcCacheMemcache extends RcBase
 
 	/**
 	 * 返回连接 调用更多方法
+	 *
 	 * @return object
 	 */
 	public function memcache()
@@ -210,6 +221,7 @@ class RcCacheMemcache extends RcBase
 
 	/**
 	 * 析构函数
+	 *
 	 * @return void
 	 */
 	public function __destruct()
@@ -222,6 +234,7 @@ class RcCacheMemcache extends RcBase
 
 	/**
 	 * 单例模式
+	 *
 	 * @return object
 	 */
 	public static function getInstance($options = null)

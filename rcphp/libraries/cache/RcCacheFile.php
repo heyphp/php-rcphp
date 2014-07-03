@@ -16,27 +16,28 @@ class RcCacheFile extends RcBase
 
 	/**
 	 * 缓存文件路径
+	 *
 	 * @var string
 	 */
 	private $path;
 
 	/**
 	 * 构造方法
+	 *
 	 * @return void
 	 */
 	public function __construct()
 	{
-		$this->path = PRO_PATH . 'runtime' . DS . 'cache' . DS;
-
-		$this->set_cache_path($this->path);
+		$this->path = PRO_PATH . 'runtime' . DS . 'cache' . DS . 'file' . DS;
 	}
 
 	/**
 	 * 设置缓存数据
+	 *
 	 * @param string $key
 	 * @param mixed  $value
 	 * @param int    $expire
-	 * @return boolen
+	 * @return bool
 	 */
 	public function set($key, $value, $expire = 60)
 	{
@@ -52,6 +53,7 @@ class RcCacheFile extends RcBase
 
 	/**
 	 * 获取缓存数据
+	 *
 	 * @param string $filename
 	 * @return string
 	 */
@@ -74,13 +76,13 @@ class RcCacheFile extends RcBase
 		/**
 		 * 截取文件创建时间
 		 */
-		$fileTime = substr($cacheData, 13, 10);
+		$fileTime = (int)substr($cacheData, 13, 10);
 
 		/**
 		 * 截取过期时间
 		 */
 		$pos = strpos($cacheData, ')');
-		$cacheTime = substr($cacheData, 24, $pos - 24);
+		$cacheTime = (int)substr($cacheData, 24, $pos - 24);
 
 		/**
 		 * 真是缓存数据 序列化后
@@ -104,8 +106,9 @@ class RcCacheFile extends RcBase
 
 	/**
 	 * 删除缓存数据
+	 *
 	 * @param string $key
-	 * @return boolen
+	 * @return bool
 	 */
 	public function delete($key)
 	{
@@ -128,7 +131,8 @@ class RcCacheFile extends RcBase
 
 	/**
 	 * 清除所有文件缓存 慎用
-	 * @return boolen
+	 *
+	 * @return bool
 	 */
 	public function clear()
 	{
@@ -139,8 +143,9 @@ class RcCacheFile extends RcBase
 
 	/**
 	 * 判断缓存数据是否存在
+	 *
 	 * @param string $key
-	 * @return boolean
+	 * @return bool
 	 */
 	public function has($key)
 	{

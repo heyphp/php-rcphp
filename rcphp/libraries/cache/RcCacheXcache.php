@@ -16,6 +16,7 @@ class RcCacheXcache extends RcBase
 
 	/**
 	 * 构造方法 判断扩展是否存在
+	 *
 	 * @return void
 	 */
 	public function __construct()
@@ -28,9 +29,11 @@ class RcCacheXcache extends RcBase
 
 	/**
 	 * 设置缓存数据
-	 * @param type $key
-	 * @param type $value
-	 * @param type $expire
+	 *
+	 * @param string $key
+	 * @param string $value
+	 * @param string $expire
+	 * @return bool
 	 */
 	public function set($key, $value, $expire = 3600)
 	{
@@ -44,8 +47,9 @@ class RcCacheXcache extends RcBase
 
 	/**
 	 * 获取缓存数据
-	 * @param type $key
-	 * @return string
+	 *
+	 * @param string $key
+	 * @return bool|string
 	 */
 	public function get($key)
 	{
@@ -60,8 +64,9 @@ class RcCacheXcache extends RcBase
 
 	/**
 	 * 删除缓存数据
-	 * @param type $key
-	 * @return boolen
+	 *
+	 * @param string $key
+	 * @return bool
 	 */
 	public function delete($key)
 	{
@@ -75,7 +80,8 @@ class RcCacheXcache extends RcBase
 
 	/**
 	 * 清除所有缓存数据 慎用
-	 * @return boolen
+	 *
+	 * @return bool
 	 */
 	public function clear()
 	{
@@ -90,8 +96,9 @@ class RcCacheXcache extends RcBase
 
 	/**
 	 * 判断缓存数据是否存在
+	 *
 	 * @param string $key
-	 * @return boolen
+	 * @return bool
 	 */
 	public function has($key)
 	{
