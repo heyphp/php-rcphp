@@ -59,7 +59,7 @@ define('VIEW_PATH', APP_PATH . 'views' . DS);
 /**
  * 定义项目config所在路径
  */
-define('CONFIG_PATH', PRO_PATH . 'config' . DS);
+define('CONFIG_PATH', APP_PATH . 'config' . DS);
 
 /**
  * 定义项目logs所在路径
