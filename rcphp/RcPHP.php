@@ -64,12 +64,12 @@ define('CONFIG_PATH', PRO_PATH . 'config' . DS);
 /**
  * 定义项目logs所在路径
  */
-define('LOG_PATH', PRO_PATH . 'runtime' . DS . 'logs' . DS);
+!defined('LOG_PATH') && define('LOG_PATH', PRO_PATH . 'runtime' . DS . 'logs' . DS);
 
 /**
  * 定义项目cache所在路径
  */
-define('CACHE_PATH', PRO_PATH . 'runtime' . DS . 'cache' . DS);
+!defined('CACHE_PATH') && define('CACHE_PATH', PRO_PATH . 'runtime' . DS . 'cache' . DS);
 
 /**
  * 设定默认Debug功能开启 默认为关闭Debug功能
@@ -147,13 +147,13 @@ abstract class RcPHP
 	public static function run()
 	{
 		self::loadFile(RCPHP_PATH . 'core' . DS . 'RcLoader.php');
-		
+
 		RcLoader::registerAutoloader();
-		
+
 		if(defined('RCPHP_DEBUG') && RCPHP_DEBUG === true)
 		{
 			error_reporting(E_ALL ^ E_NOTICE);
-			
+
 			//Open script computing time
 			RcDebug::start();
 			//Set to capture system anomalies
@@ -166,28 +166,28 @@ abstract class RcPHP
 		{
 			$error_log_path = PRO_PATH . 'runtime' . DS . 'error_log' . DS;
 			RcFile::makeDir($error_log_path);
-			
+
 			ini_set('display_errors', 'Off');
 			ini_set('log_errors', 'On');
 			ini_set('error_log', $error_log_path . 'error_log_' . date('Y_m_d', time()) . '.log');
 		}
-		
+
 		RcStructure::run();
-		
+
 		$urlParams = RcRoute::parseUrl();
-		
+
 		self::$_controller = $urlParams['c'];
 		self::$_action = $urlParams['a'];
-		
+
 		$controller = self::$_controller . 'Controller';
 		$action = self::$_action;
-		
+
 		$loadControllerName = CONTROLLER_PATH . $controller . '.class.php';
-		
+
 		self::loadFile($loadControllerName);
-		
+
 		$appObject = new $controller();
-		
+
 		if(method_exists($controller, $action))
 		{
 			$appObject->$action();
@@ -215,14 +215,14 @@ abstract class RcPHP
 		self::loadFile(RCPHP_PATH . 'core' . DS . 'RcController.php');
 		self::loadFile(RCPHP_PATH . 'core' . DS . 'RcLog.php');
 		self::loadFile(RCPHP_PATH . 'core' . DS . 'RcLoader.php');
-		
+
 		RcLoader::registerAutoloader();
-		
+
 		if(defined('RCPHP_DEBUG') && RCPHP_DEBUG === true)
 		{
 			$GLOBALS["debug"] = 1; // 初例化开启debug
 			error_reporting(E_ALL ^ E_NOTICE);
-			
+
 			//Open script computing time
 			RcDebug::start();
 			//Set to capture system anomalies
@@ -237,12 +237,12 @@ abstract class RcPHP
 			ini_set('log_errors', 'On');
 			ini_set('error_log', PRO_PATH . 'runtime/error_log.log');
 		}
-		
+
 		RcStructure::run();
-		
+
 		//Parsing the client parameters
 		$argvs = $_SERVER['argv'];
-		
+
 		if(in_array('--help', $argvs))
 		{
 			$str = "example" . PHP_EOL;
@@ -254,37 +254,37 @@ abstract class RcPHP
 			echo $str;
 			exit();
 		}
-		
+
 		//Control the debug
 		if(in_array('--debug', $argvs))
 		{
 			debug(intval($argvs['--debug']));
 		}
-		
+
 		$argvCount = count($argvs);
-		
+
 		if($argvCount > 1)
 		{
-			foreach ($argvs as $key => $argv)
+			foreach($argvs as $key => $argv)
 			{
 				if($key == 0)
 				{
 					continue;
 				}
-				
+
 				$tmp = explode('=', $argv);
 				if(strpos($tmp[0], '--') !== false && $tmp[0] != '--debug')
 				{
 					echo "Please input -- help for help" . PHP_EOL . PHP_EOL;
 					exit();
 				}
-				
+
 				$tmp[0] = str_replace('-', '', $tmp[0]);
 				$array[$tmp[0]] = $tmp[1];
 			}
-			
+
 			$urlParams = $array;
-			
+
 			if(!isset($array['c']))
 			{
 				$urlParams['c'] = DEFAULT_CONTROLLER;
@@ -299,19 +299,19 @@ abstract class RcPHP
 			$urlParams['c'] = DEFAULT_CONTROLLER;
 			$urlParams['a'] = DEFAULT_ACTION;
 		}
-		
+
 		self::$_controller = $urlParams['c'];
 		self::$_action = $urlParams['a'];
-		
+
 		$controller = self::$_controller . 'Controller';
 		$action = self::$_action;
-		
+
 		$loadControllerName = CONTROLLER_PATH . $controller . '.class.php';
-		
+
 		self::loadFile($loadControllerName);
-		
+
 		$appObject = new $controller();
-		
+
 		if(method_exists($controller, $action))
 		{
 			$appObject->$action();
@@ -359,13 +359,13 @@ abstract class RcPHP
 		if(empty(self::$_config[$fileName]))
 		{
 			$filePath = $fileName === 'config' ? PRO_PATH . 'config.inc.php' : CONFIG_PATH . $fileName . '.inc.php';
-			
+
 			if(file_exists($filePath))
 			{
 				self::$_config[$fileName] = include_once $filePath;
 			}
 		}
-		
+
 		return !empty(self::$_config[$fileName]) ? self::$_config[$fileName] : false;
 	}
 
@@ -383,7 +383,7 @@ abstract class RcPHP
 	 * Static load file is not repeated loading
 	 *
 	 * @param string $fileName
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function loadFile($fileName = null)
 	{
@@ -391,11 +391,11 @@ abstract class RcPHP
 		{
 			return false;
 		}
-		
+
 		//Judgment document ever loaded, loaded directly returns true
 		if(!isset(self::$_includes[$fileName]))
 		{
-			
+
 			//load file
 			if(file_exists($fileName))
 			{
@@ -403,7 +403,7 @@ abstract class RcPHP
 				self::$_includes[$fileName] = true;
 			}
 		}
-		
+
 		return !empty(self::$_includes[$fileName]) ? self::$_includes[$fileName] : false;
 	}
 }
