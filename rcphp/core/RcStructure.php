@@ -161,7 +161,7 @@ class RcStructure extends RcBase
 				APP_PATH . "controllers/",
 				APP_PATH . "config/",
 				APP_PATH . "views/",
-				APP_PATH . "views/layout"
+				APP_PATH . "views/Layout"
 			);
 
 			self::mkdir($appDirs);
