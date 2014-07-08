@@ -11,89 +11,32 @@
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-abstract class RcRoute
+class RcRoute
 {
 
 	/**
-	 * 路由配置
+	 * Route config
 	 *
 	 * @var array
 	 */
-	public static $config;
+	private static $config = array();
 
 	/**
-	 * 路由类型
-	 *
-	 * @var array
-	 */
-	public static $routeType = array(
-		1 => '普通模式',
-		2 => 'PATHINFO模式'
-	);
-
-	/**
-	 * 路由解析核心方法
-	 *
-	 * @param array $config
-	 * @return array
-	 */
-	public static function parseUrl($config = 1)
-	{
-		if(empty($config))
-		{
-			RcController::halt('The routing configuration errors');
-		}
-
-		self::$config = $config;
-
-		return self::analyze();
-	}
-
-	/**
-	 * 路由方式选择
+	 * Analyze route rule.
 	 *
 	 * @return array
 	 */
-	public static function analyze()
+	public static function parseUrl()
 	{
-		$urlType = empty(self::$config['url_type']) ? 1 : self::$config['url_type'];
-
-		if(!empty(self::$routeType[$urlType]))
-		{
-			return self::makeUrl();
-		}
-
-		return false;
+		return self::queryString();
 	}
 
 	/**
-	 * 调用路由主方法
-	 *
-	 * @return void
-	 */
-	public static function makeUrl()
-	{
-		$urlType = empty(self::$config['url_type']) ? 1 : intval(self::$config['url_type']);
-		switch($urlType)
-		{
-			case 1:
-				return self::querystring();
-				break;
-			case 2:
-				self::pathinfo();
-				break;
-			default:
-				return self::querystring();
-				break;
-		}
-	}
-
-	/**
-	 * 普通GET访问路由
+	 * Normal mode.
 	 *
 	 * @return array
 	 */
-	public static function querystring()
+	public static function queryString()
 	{
 		if(RcRequest::server('PATH_INFO') !== false)
 		{
@@ -101,90 +44,142 @@ abstract class RcRoute
 		}
 		else
 		{
-			$urlParams = array();
+			$params = array();
+
 			$queryString = RcRequest::server('QUERY_STRING', true);
+
 			if($queryString != false)
 			{
 				$queryArray = explode("&amp;", $queryString);
-				$tmp = $array = array();
+
+				$tmp = array();
+
+				$params = array();
+
 				if(count($queryArray) > 0)
 				{
 					foreach($queryArray as $item)
 					{
 						$tmp = explode('=', $item);
-						$array[$tmp[0]] = $tmp[1];
+						$params[$tmp[0]] = $tmp[1];
 					}
 
-					$urlParams = $array;
-
-					if(!isset($array['c']))
+					if(empty($params['c']))
 					{
-						$urlParams['c'] = $_GET['c'] = DEFAULT_CONTROLLER;
+						$params['c'] = $_GET['c'] = DEFAULT_CONTROLLER;
 					}
-					if(!isset($array['a']))
+
+					if(empty($params['a']))
 					{
-						$urlParams['a'] = $_GET['a'] = DEFAULT_ACTION;
+						$params['a'] = $_GET['a'] = DEFAULT_ACTION;
 					}
 				}
 				else
 				{
-					$urlParams['c'] = $_GET['c'] = DEFAULT_CONTROLLER;
-					$urlParams['a'] = $_GET['a'] = DEFAULT_ACTION;
+					$params['c'] = $_GET['c'] = DEFAULT_CONTROLLER;
+					$params['a'] = $_GET['a'] = DEFAULT_ACTION;
 				}
+
+				unset($tmp);
 			}
 			else
 			{
-				$urlParams['c'] = $_GET['c'] = DEFAULT_CONTROLLER;
-				$urlParams['a'] = $_GET['a'] = DEFAULT_ACTION;
+				$params['c'] = $_GET['c'] = DEFAULT_CONTROLLER;
+				$params['a'] = $_GET['a'] = DEFAULT_ACTION;
 			}
 
-			return $urlParams;
+			return $params;
 		}
 	}
 
 	/**
-	 * PATHINFO模式访问路由
+	 * pathinfo mode.
 	 *
 	 * @return array
 	 */
 	public static function pathinfo()
 	{
-		$urlParams = array();
-		if(!strpos($_SERVER['PATH_INFO'], '.'))
+		self::$config = RcPHP::getConfig("route");
+
+		if(empty(self::$config))
 		{
-			$str = $_SERVER['PATH_INFO'];
+			RcController::halt('The routing configuration errors');
+		}
+
+		$script_name = $_SERVER["SCRIPT_NAME"]; //获取当前文件的路径
+		$url = $_SERVER["REQUEST_URI"]; //获取完整的路径，包含"?"之后的字符串
+
+		if($url && strpos($url, $script_name, 0) !== false)
+		{
+			$url = substr($url, strlen($script_name));
 		}
 		else
 		{
-			$str = substr($_SERVER['PATH_INFO'], 0, strpos($_SERVER['PATH_INFO'], '.'));
+			$script_name = str_replace(basename($_SERVER["SCRIPT_NAME"]), '', $_SERVER["SCRIPT_NAME"]);
+			if($url && strpos($url, $script_name, 0) !== false)
+			{
+				$url = substr($url, strlen($script_name));
+			}
 		}
 
-		// 获取路径信息(pathinfo)
-		$pathinfo = explode('/', trim($str, '/'));
-
-		$num = count($pathinfo);
-		if($num > 0)
+		//第一个字符是'/'，则去掉
+		if($url[0] == '/')
 		{
-			for($i = 0; $i < $num; $i += 2)
-			{
-				$urlParams[addslashes($pathinfo[$i])] = $_GET[addslashes($pathinfo[$i])] = addslashes(empty($pathinfo[$i + 1]) ? '' : $pathinfo[$i + 1]);
-			}
+			$url = substr($url, 1);
+		}
 
-			if(empty($urlParams['c']))
-			{
-				$urlParams['c'] = $_GET['c'] = DEFAULT_CONTROLLER;
-			}
-			if(empty($urlParams['a']))
-			{
-				$urlParams['a'] = $_GET['a'] = DEFAULT_ACTION;
-			}
+		//去除问号后面的查询字符串
+		if($url && false !== ($pos = @strrpos($url, '?')))
+		{
+			$url = substr($url, 0, $pos);
+		}
+
+		//去除后缀
+		if($url && ($pos = strrpos($url, self::$config['URL_HTML_SUFFIX'])) > 0)
+		{
+			$url = substr($url, 0, $pos);
+		}
+
+		$params = array();
+
+		//获取模块名称
+		if($url && ($pos = @strpos($url, self::$config['URL_CONTROLLER_DEPR'], 1)) > 0)
+		{
+			$params['c'] = $_GET['c'] = substr($url, 0, $pos);
+
+			$url = substr($url, $pos + 1);
 		}
 		else
 		{
-			$urlParams['c'] = $_GET['c'] = DEFAULT_CONTROLLER;
-			$urlParams['a'] = $_GET['a'] = DEFAULT_ACTION;
+			$params['c'] = $_GET['c'] = DEFAULT_CONTROLLER;
 		}
 
-		return $urlParams;
+		//获取操作方法名称
+		if($url && ($pos = @strpos($url, self::$config['URL_ACTION_DEPR'], 1)) > 0)
+		{
+			$params['a'] = $_GET['a'] = substr($url, 0, $pos); //模块
+			$url = substr($url, $pos + 1);
+		}
+		else
+		{
+			$params['a'] = $_GET['a'] = DEFAULT_ACTION;
+		}
+
+		$param = explode(self::$config['URL_PARAM_DEPR'], $url);
+
+		$total = count($param);
+
+		for($i = 0; $i < $total; $i = $i + 2)
+		{
+			if(!empty($param[$i]))
+			{
+				$params[$param[$i]] = $_GET[$param[$i]] = empty($param[$i + 1]) ? '' : $param[$i + 1];
+			}
+		}
+
+		unset($param);
+		unset($total);
+
+		return $params;
 	}
 }
