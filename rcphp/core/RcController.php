@@ -55,7 +55,6 @@ abstract class RcController extends RcBase
 			//output message
 			$trace = debug_backtrace();
 			krsort($trace);
-			var_dump($trace);
 
 			$sourceFile = $trace[0]['file'] . ' line:' . $trace[0]['line'];
 
