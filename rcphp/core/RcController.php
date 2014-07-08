@@ -297,7 +297,7 @@ abstract class RcController extends RcBase
 	 *
 	 * @param string $fileName
 	 * @param array  $data
-	 * @return void
+	 * @return string
 	 */
 	public function fetch($fileName = null, $data = array())
 	{
