@@ -68,7 +68,7 @@ class RcView extends RcBase
 	 * @param string $fileName
 	 * @return void
 	 */
-	public function parseView($fileName = '')
+	private function parseView($fileName = '')
 	{
 		if(empty($fileName))
 		{
@@ -124,7 +124,6 @@ class RcView extends RcBase
 	 */
 	public function assign($keys, $value = null)
 	{
-
 		if(empty($keys))
 		{
 			return false;
