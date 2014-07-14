@@ -207,40 +207,6 @@ function load_class($class, $lib = '')
  *
  * @return string
  */
-function getIp()
-{
-	if(getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown"))
-	{
-		$ip = getenv("HTTP_CLIENT_IP");
-	}
-	else
-	{
-		if(getenv("HTTP_X_FORWARDED_FOR") && strcasecmp(getenv("HTTP_X_FORWARDED_FOR"), "unknown"))
-		{
-			$ip = getenv("HTTP_X_FORWARDED_FOR");
-		}
-		else
-		{
-			if(getenv("REMOTE_ADDR") && strcasecmp(getenv("REMOTE_ADDR"), "unknown"))
-			{
-				$ip = getenv("REMOTE_ADDR");
-			}
-			else
-			{
-				if(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], "unknown"))
-				{
-					$ip = $_SERVER['REMOTE_ADDR'];
-				}
-				else
-				{
-					$ip = "unknown";
-				}
-			}
-		}
-	}
-
-	return $ip;
-}
 
 /**
  * Size convert.
@@ -311,67 +277,6 @@ function multi_array_sort($multi_array, $sort_key, $sort = SORT_ASC)
 	array_multisort($key_array, $sort, $multi_array);
 
 	return $multi_array;
-}
-
-/**
- * Check the remote file is exists.
- *
- * @param string $url
- * @return bool
- */
-function remote_file_exists($url)
-{
-	$url = trim($url);
-	if(empty($url))
-	{
-		return false;
-	}
-
-	if(RcCheck::isUrl($url) === false)
-	{
-		return false;
-	}
-
-	$url_arr = parse_url($url);
-
-	if(!is_array($url_arr) || empty($url_arr))
-	{
-		return false;
-	}
-
-	// 获取请求数据
-	$host = $url_arr['host'];
-	$path = $url_arr['path'] . "?" . $url_arr['query'];
-	$port = isset($url_arr['port']) ? $url_arr['port'] : "80";
-
-	// 连接服务器
-	$fp = fsockopen($host, $port, $err_no, $err_str, 30);
-	if(!$fp)
-	{
-		return false;
-	}
-
-	// 构造请求协议
-	$request_str = "GET " . $path . "HTTP/1.1\r\n";
-	$request_str .= "Host:" . $host . "\r\n";
-	$request_str .= "Connection:Close\r\n\r\n";
-
-	// 发送请求
-	fwrite($fp, $request_str);
-	$first_header = fgets($fp, 1024);
-	fclose($fp);
-
-	// 判断文件是否存在
-	if(trim($first_header) == "")
-	{
-		return false;
-	}
-	if(!preg_match("/200/", $first_header))
-	{
-		return false;
-	}
-
-	return true;
 }
 
 /**
@@ -710,73 +615,6 @@ function ubb($text)
 	$text = preg_replace("/\\n/is", "<br/>", $text);
 
 	return $text;
-}
-
-/**
- * 发送HTTP状态
- *
- * @param integer $code 状态码
- * @return void
- */
-function send_http_status($code)
-{
-	static $_status = array(
-		// Informational 1xx
-		100 => 'Continue',
-		101 => 'Switching Protocols',
-		// Success 2xx
-		200 => 'OK',
-		201 => 'Created',
-		202 => 'Accepted',
-		203 => 'Non-Authoritative Information',
-		204 => 'No Content',
-		205 => 'Reset Content',
-		206 => 'Partial Content',
-		// Redirection 3xx
-		300 => 'Multiple Choices',
-		301 => 'Moved Permanently',
-		302 => 'Moved Temporarily ',
-		// 1.1
-		303 => 'See Other',
-		304 => 'Not Modified',
-		305 => 'Use Proxy',
-		// 306 is deprecated but reserved
-		307 => 'Temporary Redirect',
-		// Client Error 4xx
-		400 => 'Bad Request',
-		401 => 'Unauthorized',
-		402 => 'Payment Required',
-		403 => 'Forbidden',
-		404 => 'Not Found',
-		405 => 'Method Not Allowed',
-		406 => 'Not Acceptable',
-		407 => 'Proxy Authentication Required',
-		408 => 'Request Timeout',
-		409 => 'Conflict',
-		410 => 'Gone',
-		411 => 'Length Required',
-		412 => 'Precondition Failed',
-		413 => 'Request Entity Too Large',
-		414 => 'Request-URI Too Long',
-		415 => 'Unsupported Media Type',
-		416 => 'Requested Range Not Satisfiable',
-		417 => 'Expectation Failed',
-		// Server Error 5xx
-		500 => 'Internal Server Error',
-		501 => 'Not Implemented',
-		502 => 'Bad Gateway',
-		503 => 'Service Unavailable',
-		504 => 'Gateway Timeout',
-		505 => 'HTTP Version Not Supported',
-		509 => 'Bandwidth Limit Exceeded'
-	);
-
-	if(isset($_status[$code]))
-	{
-		header('HTTP/1.1 ' . $code . ' ' . $_status[$code]);
-		// 确保FastCGI模式下正常
-		header('Status:' . $code . ' ' . $_status[$code]);
-	}
 }
 
 /**
