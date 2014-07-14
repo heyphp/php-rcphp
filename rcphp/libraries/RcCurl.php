@@ -140,7 +140,7 @@ class RcCurl extends RcBase
 	 * @param string $cookie_file
 	 * @return void
 	 */
-	public function cookie($cookie_file)
+	public function setCookie($cookie_file)
 	{
 		if(file_exists($cookie_file))
 		{
@@ -178,13 +178,13 @@ class RcCurl extends RcBase
 
 		if($this->cookies == true)
 		{
-			$this->cookie($this->cookie_file);
+			$this->setCookie($this->cookie_file);
 			curl_setopt($process, CURLOPT_COOKIEFILE, $this->cookie_file);
 		}
 
 		if($this->cookies == true)
 		{
-			$this->cookie($this->cookie_file);
+			$this->setCookie($this->cookie_file);
 			curl_setopt($process, CURLOPT_COOKIEJAR, $this->cookie_file);
 		}
 
@@ -237,13 +237,13 @@ class RcCurl extends RcBase
 
 		if($this->cookies == true)
 		{
-			$this->cookie($this->cookie_file);
+			$this->setCookie($this->cookie_file);
 			curl_setopt($process, CURLOPT_COOKIEFILE, $this->cookie_file);
 		}
 
 		if($this->cookies == true)
 		{
-			$this->cookie($this->cookie_file);
+			$this->setCookie($this->cookie_file);
 			curl_setopt($process, CURLOPT_COOKIEJAR, $this->cookie_file);
 		}
 
