@@ -2,7 +2,7 @@
 /**
  * Check class file.
  *
-*@author         RcPHP Dev Team
+ * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
  * @package        Library.Util
@@ -16,9 +16,8 @@ class Check
 
 	/**
 	 * 验证Email
-
 	 *
-*@param string $str
+	 * @param string $str
 	 * @return bool
 	 */
 	public static function isEmail($str)
@@ -33,9 +32,8 @@ class Check
 
 	/**
 	 * 验证URL
-
 	 *
-*@param string $str
+	 * @param string $str
 	 * @return bool
 	 */
 	public static function isUrl($str)
