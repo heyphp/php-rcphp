@@ -2,7 +2,7 @@
 /**
  * Captcha class file.
  *
-*@author         RcPHP Dev Team
+ * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
  * @package        Library.Util
@@ -17,76 +17,70 @@ class Captcha
 	/**
 	 * 随机因子
 	 *
-*@var string
+	 * @var string
 	 */
 	private $charset = 'abcdefghkmnprstuvwxyzABCDEFGHKMNPRSTUVWXYZ234567890';
 
 	/**
 	 * 验证码
 	 *
-*@var string
+	 * @var string
 	 */
 	private $code;
 
 	/**
 	 * 验证码长度
 	 *
-*@var int
+	 * @var int
 	 */
 	private $codelen = 4;
 
 	/**
 	 * 宽度
 	 *
-*@var int
+	 * @var int
 	 */
 	private $width = 80;
 
 	/**
 	 * 高度
-
 	 *
-*@var int
+	 * @var int
 	 */
 	private $height = 30;
 
 	/**
 	 * 图形资源句柄
-
 	 *
-*@var object
+	 * @var object
 	 */
 	private $img;
 
 	/**
 	 * 指定的字体
-
 	 *
-*@var string
+	 * @var string
 	 */
 	private $font;
 
 	/**
 	 * 指定字体大小
-
 	 *
-*@var int
+	 * @var int
 	 */
 	private $fontsize = 20;
 
 	/**
 	 * 指定字体颜色
-
 	 *
-*@var string
+	 * @var string
 	 */
 	private $fontcolor;
 
 	/**
 	 * 构造方法
-
 	 *
-*@return void
+	 * @return void
 	 */
 	public function __construct()
 	{
@@ -95,9 +89,8 @@ class Captcha
 
 	/**
 	 * Set the font
-
 	 *
-*@param $fontName
+	 * @param $fontName
 	 * @return $this
 	 */
 	public function setFont($fontName)
@@ -138,9 +131,8 @@ class Captcha
 
 	/**
 	 * 生成背景
-
 	 *
-*@return void
+	 * @return void
 	 */
 	private function createBg()
 	{
@@ -166,9 +158,8 @@ class Captcha
 
 	/**
 	 * 生成线条、雪花
-
 	 *
-*@return void
+	 *@return void
 	 */
 	private function createLine()
 	{
