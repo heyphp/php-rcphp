@@ -159,7 +159,7 @@ class Captcha
 	/**
 	 * 生成线条、雪花
 	 *
-	 *@return void
+	 * @return void
 	 */
 	private function createLine()
 	{
