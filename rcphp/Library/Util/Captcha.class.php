@@ -1,76 +1,92 @@
 <?php
 /**
- * RcCaptcha class file.
+ * Captcha class file.
  *
- * @author         RcPHP Dev Team
+*@author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        utility
+ * @package        Library.Util
  * @since          1.0
  * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class RcCaptcha extends RcBase
+class Captcha
 {
 
 	/**
-	 * éšæœºå› å­
-	 * @var string
+	 * Ëæ»úÒò×Ó
+	 *
+*@var string
 	 */
 	private $charset = 'abcdefghkmnprstuvwxyzABCDEFGHKMNPRSTUVWXYZ234567890';
 
 	/**
-	 * éªŒè¯ç 
-	 * @var string
+	 * ÑéÖ¤Âë
+	 *
+*@var string
 	 */
 	private $code;
 
 	/**
-	 * éªŒè¯ç é•¿åº¦
-	 * @var int
+	 * ÑéÖ¤Âë³¤¶È
+	 *
+*@var int
 	 */
 	private $codelen = 4;
 
 	/**
-	 * å®½åº¦
-	 * @var int
+	 * ¿í¶È
+	 *
+*@var int
 	 */
 	private $width = 80;
 
 	/**
-	 * é«˜åº¦
-	 * @var int
+	 * ¸ß¶È
+
+	 *
+*@var int
 	 */
 	private $height = 30;
 
 	/**
-	 * å›¾å½¢èµ„æºå¥æŸ„
-	 * @var object
+	 * Í¼ĞÎ×ÊÔ´¾ä±ú
+
+	 *
+*@var object
 	 */
 	private $img;
 
 	/**
-	 * æŒ‡å®šçš„å­—ä½“
-	 * @var string
+	 * Ö¸¶¨µÄ×ÖÌå
+
+	 *
+*@var string
 	 */
 	private $font;
 
 	/**
-	 * æŒ‡å®šå­—ä½“å¤§å°
-	 * @var int
+	 * Ö¸¶¨×ÖÌå´óĞ¡
+
+	 *
+*@var int
 	 */
 	private $fontsize = 20;
 
 	/**
-	 * æŒ‡å®šå­—ä½“é¢œè‰²
-	 * @var string
+	 * Ö¸¶¨×ÖÌåÑÕÉ«
+
+	 *
+*@var string
 	 */
 	private $fontcolor;
 
 	/**
-	 * æ„é€ æ–¹æ³•
-	 * @return void
+	 * ¹¹Ôì·½·¨
+
+	 *
+*@return void
 	 */
 	public function __construct()
 	{
@@ -79,17 +95,35 @@ class RcCaptcha extends RcBase
 
 	/**
 	 * Set the font
+
 	 *
-	 * @param $fontName
-	 * @return void
+*@param $fontName
+	 * @return $this
 	 */
 	public function setFont($fontName)
 	{
 		$this->font = $fontName;
+
+		return $this;
 	}
 
 	/**
-	 * Create Rand Code
+	 * ÉèÖÃÍ¼Æ¬´óĞ¡
+	 *
+	 * @param int $width
+	 * @param int $height
+	 * @return $this
+	 */
+	public function setSize($width, $height)
+	{
+		$this->width = intval($width);
+		$this->height = intval($height);
+
+		return $this;
+	}
+
+	/**
+	 * Éú³ÉËæ»ú´®
 	 *
 	 * @return void
 	 */
@@ -103,8 +137,10 @@ class RcCaptcha extends RcBase
 	}
 
 	/**
-	 * ç”ŸæˆèƒŒæ™¯
-	 * @return void
+	 * Éú³É±³¾°
+
+	 *
+*@return void
 	 */
 	private function createBg()
 	{
@@ -114,7 +150,8 @@ class RcCaptcha extends RcBase
 	}
 
 	/**
-	 * ç”Ÿæˆæ–‡å­—
+	 * Éú³ÉÎÄ×Ö
+	 *
 	 * @return void
 	 */
 	private function createFont()
@@ -128,8 +165,10 @@ class RcCaptcha extends RcBase
 	}
 
 	/**
-	 * ç”Ÿæˆçº¿æ¡ã€é›ªèŠ±
-	 * @return void
+	 * Éú³ÉÏßÌõ¡¢Ñ©»¨
+
+	 *
+*@return void
 	 */
 	private function createLine()
 	{
@@ -146,7 +185,8 @@ class RcCaptcha extends RcBase
 	}
 
 	/**
-	 * è¾“å‡º
+	 * Êä³ö
+	 *
 	 * @return void
 	 */
 	private function outPut()
@@ -160,7 +200,8 @@ class RcCaptcha extends RcBase
 	}
 
 	/**
-	 * å¯¹å¤–ç”Ÿæˆ
+	 * ¶ÔÍâÉú³É
+	 *
 	 * @return void
 	 */
 	public function doimg()
@@ -173,7 +214,8 @@ class RcCaptcha extends RcBase
 	}
 
 	/**
-	 * è·å–éªŒè¯ç 
+	 * »ñÈ¡ÑéÖ¤Âë
+	 *
 	 * @return string
 	 */
 	public function getCode()
