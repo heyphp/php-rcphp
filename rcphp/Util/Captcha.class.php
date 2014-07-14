@@ -7,7 +7,6 @@
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
  * @package        Library.Util
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
