@@ -2,7 +2,7 @@
 /**
  * Upload class file.
  *
-*@author         RcPHP Dev Team
+ * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
  * @package        Library.Util
@@ -65,16 +65,15 @@ class Upload
 		// Set default upload file size.
 		$this->allowFileSize = 2097152;
 
-		RcDebug::addMessage('Upload Class Initialized');
+		Debug::addMessage('Upload Class Initialized');
 
 		return true;
 	}
 
 	/**
 	 * Additional allowed to upload the file type.
-
 	 *
-*@param array $file
+	 * @param array $file
 	 * @return $this
 	 */
 	public function setAllowType($type = array())
@@ -94,9 +93,8 @@ class Upload
 
 	/**
 	 * Setting allows the upload file type.
-
 	 *
-*@param array $type
+	 * @param array $type
 	 * @return $this
 	 */
 	public function setCheckAllowType(array $type)
