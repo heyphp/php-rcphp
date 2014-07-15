@@ -1,17 +1,16 @@
 <?php
 /**
- * RcCurl class file.
+ * Curl class file.
  *
- * @author         RcPHP Dev Team
+*@author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        libraries
+ * @package        Library.Util
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class RcCurl extends RcBase
+class Curl
 {
 
 	/**
@@ -38,7 +37,7 @@ class RcCurl extends RcBase
 	/**
 	 * cookie信息
 	 *
-	 * @var boolen
+	 * @var bool
 	 */
 	private $cookies = false;
 
@@ -52,7 +51,7 @@ class RcCurl extends RcBase
 	/**
 	 * 开启代理模式 默认关闭
 	 *
-	 * @var boolen
+	 * @var bool
 	 */
 	private $isProxy = false;
 
@@ -78,9 +77,10 @@ class RcCurl extends RcBase
 
 	/**
 	 * Set the HTTP request header
+
 	 *
-	 * @param array $header
-	 * @return object
+*@param array $header
+	 * @return $this
 	 */
 	public function setHeader($header = array())
 	{
@@ -101,9 +101,10 @@ class RcCurl extends RcBase
 
 	/**
 	 * Set the browser UA
+
 	 *
-	 * @param string $ua
-	 * @return object
+*@param string $ua
+	 * @return $this
 	 */
 	public function setUserAgent($ua)
 	{
@@ -119,9 +120,10 @@ class RcCurl extends RcBase
 
 	/**
 	 * Set the proxy
+
 	 *
-	 * @param string $proxy
-	 * @return object
+*@param string $proxy
+	 * @return $this
 	 */
 	public function setProxy($proxy)
 	{
