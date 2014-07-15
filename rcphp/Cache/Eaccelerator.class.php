@@ -1,17 +1,16 @@
 <?php
 /**
- * RcCacheEaccelerator class file.
+ * Eaccelerator class file.
  *
- * @author         RcPHP Dev Team
+*@author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        cache
+ * @package        Cache
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class RcCacheEaccelerator extends RcBase
+class Eaccelerator
 {
 
 	/**
