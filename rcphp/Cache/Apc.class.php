@@ -3,7 +3,7 @@
 /**
  * Apc class file.
  *
-*@author         RcPHP Dev Team
+ * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
  * @package        Cache
@@ -28,7 +28,7 @@ class Apc
 	/**
 	 * 设置缓存数据
 	 *
-*@param string|array $key
+	 * @param string|array $key
 	 * @param string       $value
 	 * @param int          $expire
 	 * @return bool
@@ -48,7 +48,7 @@ class Apc
 	/**
 	 * 获取缓存数据
 	 *
-*@param string $key
+	 * @param string $key
 	 * @return mixed
 	 */
 	public function get($key)
@@ -59,7 +59,7 @@ class Apc
 	/**
 	 * 删除缓存数据
 	 *
-*@param string $key
+	 * @param string $key
 	 * @return bool
 	 */
 	public function delete($key)
@@ -70,7 +70,7 @@ class Apc
 	/**
 	 * 清除所有缓存数据 慎用
 	 *
-*@return bool
+	 * @return bool
 	 */
 	public function clear()
 	{
@@ -79,9 +79,8 @@ class Apc
 
 	/**
 	 * 检测指定缓存是否存在
-
 	 *
-*@param string $key
+	 * @param string $key
 	 * @return bool
 	 */
 	public function has($key)
