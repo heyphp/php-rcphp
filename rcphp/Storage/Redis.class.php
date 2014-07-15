@@ -2,7 +2,7 @@
 /**
  * Redis class file.
  *
-*@author         RcPHP Dev Team
+ * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
  * @package        Storage
@@ -60,7 +60,7 @@ class Redis
 			Controller::halt('The Redis connection failed');
 		}
 
-		RcDebug::addMessage('Redis has been connected');
+		Debug::addMessage('Redis has been connected');
 
 		//需要密码操作
 		if(!empty($config['password']))
@@ -71,9 +71,8 @@ class Redis
 
 	/**
 	 * 设置key
-
 	 *
-*@param string $key
+	 * @param string $key
 	 * @param string $value
 	 * @param int    $timeOut
 	 * @return bool
@@ -87,7 +86,7 @@ class Redis
 			$this->dbLink->setTimeout($key, $timeOut);
 		}
 
-		RcDebug::addMessage("Set redis cache, cache name is ：" . $key);
+		Debug::addMessage("Set redis cache, cache name is ：" . $key);
 
 		return $result;
 	}
@@ -105,10 +104,8 @@ class Redis
 
 	/**
 	 * 删除key
-
-
-*
-*@param string $key
+	 *
+	 * @param string $key
 	 * @return bool
 	 */
 	public function delete($key)
@@ -142,9 +139,8 @@ class Redis
 
 	/**
 	 * 判断key是否存在
-
 	 *
-*@param string $key
+	 * @param string $key
 	 * @return bool
 	 */
 	public function exists($key)
@@ -154,11 +150,10 @@ class Redis
 
 	/**
 	 * 设置过期时间
-
 	 *
-*@param string $key
-	 * @param int  $time
-	 * @param bool $flag
+	 * @param string $key
+	 * @param int    $time
+	 * @param bool   $flag
 	 * @return bool
 	 */
 	public function expire($key, $time, $flag = false)
@@ -193,7 +188,7 @@ class Redis
 	 */
 	public function __destruct()
 	{
-		RcDebug::addMessage('Redis is close.');
+		Debug::addMessage('Redis is close.');
 
 		$this->close();
 	}
