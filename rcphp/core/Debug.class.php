@@ -1,6 +1,6 @@
 <?php
 /**
- * RcDebug class file.
+ * Debug class file.
  *
  * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
@@ -11,7 +11,7 @@
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class RcDebug extends RcBase
+class Debug extends Base
 {
 
 	/**
@@ -116,6 +116,7 @@ class RcDebug extends RcBase
 	 * @param string $errstr
 	 * @param string $errfile
 	 * @param number $errline
+	 * @return void
 	 */
 	public static function catcher($errno, $errstr, $errfile, $errline)
 	{
