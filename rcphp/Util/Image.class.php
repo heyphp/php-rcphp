@@ -2,7 +2,7 @@
 /**
  * Image class file.
  *
-*@author         RcPHP Dev Team
+ * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
  * @package        Library.Util
@@ -16,7 +16,7 @@ class Image
 	/**
 	 * 原图片路径,在水印图片时指水印图片.
 	 *
-*@var string
+	 * @var string
 	 */
 	public $imageUrl;
 
@@ -37,7 +37,7 @@ class Image
 	/**
 	 * 图片实例化名称
 	 *
-*@var object
+	 * @var object
 	 */
 	protected $image;
 
@@ -72,65 +72,63 @@ class Image
 	/**
 	 * 文字的纵坐标
 	 *
-	 *@var int
+	 * @var int
 	 */
 	public $fontY;
 
 	/**
 	 * 字体颜色
-
 	 *
-*@var string
+	 * @var string
 	 */
 	protected $fontColor;
 
 	/**
 	 * 生成水印图片的原始图片的宽度
 	 *
-	 *@var int
+	 * @var int
 	 */
 	protected $imageWidth;
 
 	/**
 	 * 生成水印图片的原始图片的高度
 	 *
-*@var int
+	 * @var int
 	 */
 	protected $imageHeight;
 
 	/**
 	 * 生成缩略图的实际宽度
 	 *
-*@var int
+	 * @var int
 	 */
 	protected $widthNew;
 
 	/**
 	 * 生成缩略图的实际高度
 	 *
-*@var int
+	 * @var int
 	 */
 	protected $heightNew;
 
 	/**
 	 * 水印图片的实例化对象
-
 	 *
-*@var object
+	 * @var object
 	 */
 	protected $waterImage;
 
 	/**
 	 * 生成水印区域的横坐标
 	 *
-*@var int
+	 *@var int
 	 */
 	protected $waterX;
 
 	/**
 	 * 生成水印区域的纵坐标
 	 *
-*@var int
+	 *@var int
 	 */
 	protected $waterY;
 
@@ -306,9 +304,8 @@ class Image
 
 	/**
 	 * 设置文字水印字符串内容.
-
 	 *
-*@param string $content
+	 * @param string $content
 	 * @return $this
 	 */
 	public function setTextContent($content)
@@ -323,9 +320,8 @@ class Image
 
 	/**
 	 * 设置文字水印图片文字的坐标位置.
-
 	 *
-*@param integer $x
+	 * @param integer $x
 	 * @param integer $y
 	 * @return $this
 	 */
@@ -345,9 +341,8 @@ class Image
 
 	/**
 	 * 设置水印图片水印的坐标位置.
-
 	 *
-*@param integer $x
+	 * @param integer $x
 	 * @param integer $y
 	 * @return $this
 	 */
@@ -367,9 +362,8 @@ class Image
 
 	/**
 	 * 设置水印图片水印区域的透明度.
-
 	 *
-*@param integer $param
+	 * @param integer $param
 	 * @return $this
 	 */
 	public function setWatermarkAlpha($param)
@@ -394,7 +388,7 @@ class Image
 		{
 			if(!$this->textContent)
 			{
-				RcController::halt('The watermark text set the image error');
+				Controller::halt('The watermark text set the image error');
 			}
 
 			$bbox = imagettfbbox($this->fontSize, 0, $this->fontName, $this->textContent);
@@ -422,7 +416,6 @@ class Image
 
 	/**
 	 * 常设置的文字颜色转换为图片信息.
-
 	 *
 *@return bool
 	 */
@@ -452,7 +445,7 @@ class Image
 		//当没有所生成的图片的宽度和高度设置时.
 		if(!$this->width || !$this->height)
 		{
-			RcController::halt('The height or width size set the image error');
+			Controller::halt('The height or width size set the image error');
 		}
 
 		if($scale !== true)
@@ -482,9 +475,8 @@ class Image
 
 	/**
 	 * 生成图片的缩略图.
-
 	 *
-*@param string $url
+	 * @param string $url
 	 * @param string $distName
 	 * @param bool   $scale
 	 * @return bool
@@ -510,9 +502,8 @@ class Image
 
 	/**
 	 * 生成目标图片.
-
 	 *
-*@param string $imageDist
+	 * @param string $imageDist
 	 * @param string $distName
 	 * @param string $imageType
 	 * @return bool
@@ -581,7 +572,7 @@ class Image
 	/**
 	 * 生成文字水印图片.
 	 *
-*@param string $imageUrl
+	 * @param string $imageUrl
 	 * @param string $distName
 	 * @return bool
 	 */
@@ -641,7 +632,7 @@ class Image
 		{
 			if(empty($this->imageUrl))
 			{
-				RcController::halt('The watermark image is not set');
+				Controller::halt('The watermark image is not set');
 			}
 
 			$waterUrl = $this->imageUrl;
@@ -674,7 +665,6 @@ class Image
 
 	/**
 	 * 调整水印区域的位置,默认位置距图片右下角边沿5像素.
-
 	 *
 *@return bool
 	 */
@@ -702,9 +692,8 @@ class Image
 
 	/**
 	 * 生成图片水印.
-
 	 *
-*@param string $imageUrl
+	 * @param string $imageUrl
 	 * @param string $distName
 	 * @return bool
 	 */

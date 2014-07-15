@@ -89,12 +89,6 @@ class Xml
 	 */
 	public static function xmlEncode($data, $root = null, $encoding = 'UTF-8')
 	{
-
-		if(!$data)
-		{
-			return false;
-		}
-
 		$root = is_null($root) ? 'root' : trim($root);
 		$xml = "<?xml version=\"1.0\" encoding=\"{$encoding}\" ?>\r";
 		$xml .= "<" . $root . ">\r";
