@@ -37,7 +37,7 @@ class Redis
 	{
 		if(!extension_loaded('redis'))
 		{
-			RcController::halt('Does not support the Redis extension');
+			Controller::halt('Does not support the Redis extension');
 		}
 
 		//加载Redis配置
@@ -47,7 +47,7 @@ class Redis
 
 			if(empty($config))
 			{
-				RcController::halt('The Redis configuration failed to load');
+				Controller::halt('The Redis configuration failed to load');
 			}
 		}
 
@@ -57,7 +57,7 @@ class Redis
 
 		if(!$this->dbLink)
 		{
-			RcController::halt('The Redis connection failed');
+			Controller::halt('The Redis connection failed');
 		}
 
 		RcDebug::addMessage('Redis has been connected');

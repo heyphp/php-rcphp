@@ -46,7 +46,7 @@ class File
 		{
 			if(!is_dir($dirName))
 			{
-				RcController::halt('The dir ' . $dirName . ' is not exists!');
+				Controller::halt('The dir ' . $dirName . ' is not exists!');
 			}
 		}
 
