@@ -1,52 +1,57 @@
 <?php
 /**
- * RcImage class file.
+ * Image class file.
  *
- * @author         RcPHP Dev Team
+*@author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        libraries
+ * @package        Library.Util
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class RcImage extends RcBase
+class Image
 {
 
 	/**
 	 * 原图片路径,在水印图片时指水印图片.
-	 * @var string
+	 *
+*@var string
 	 */
 	public $imageUrl;
 
 	/**
 	 * 字体名称
-	 * @var sting
+	 *
+	 * @var string
 	 */
 	public $fontName;
 
 	/**
 	 * 字体大小
-	 * @var integer
+	 *
+	 * @var int
 	 */
 	public $fontSize;
 
 	/**
 	 * 图片实例化名称
-	 * @var object
+	 *
+*@var object
 	 */
 	protected $image;
 
 	/**
 	 * 图象宽度
-	 * @var integer
+	 *
+	 * @var int
 	 */
 	protected $width;
 
 	/**
 	 * 图象高度
-	 * @var integer
+	 *
+	 * @var int
 	 */
 	protected $height;
 
@@ -59,114 +64,126 @@ class RcImage extends RcBase
 
 	/**
 	 * 文字的横坐标
-	 * @var integer
+	 *
+	 * @var int
 	 */
 	public $fontX;
 
 	/**
 	 * 文字的纵坐标
-	 * @var integer
+	 *
+	 *@var int
 	 */
 	public $fontY;
 
 	/**
 	 * 字体颜色
-	 * @var string
+
+	 *
+*@var string
 	 */
 	protected $fontColor;
 
 	/**
 	 * 生成水印图片的原始图片的宽度
-	 * @var integer
+	 *
+	 *@var int
 	 */
 	protected $imageWidth;
 
 	/**
 	 * 生成水印图片的原始图片的高度
-	 * @var integer
+	 *
+*@var int
 	 */
 	protected $imageHeight;
 
 	/**
 	 * 生成缩略图的实际宽度
-	 * @var integer
+	 *
+*@var int
 	 */
 	protected $widthNew;
 
 	/**
 	 * 生成缩略图的实际高度
-	 * @var integer
+	 *
+*@var int
 	 */
 	protected $heightNew;
 
 	/**
 	 * 水印图片的实例化对象
-	 * @var object
+
+	 *
+*@var object
 	 */
 	protected $waterImage;
 
 	/**
 	 * 生成水印区域的横坐标
-	 * @var integer
+	 *
+*@var int
 	 */
 	protected $waterX;
 
 	/**
 	 * 生成水印区域的纵坐标
-	 * @var integer
+	 *
+*@var int
 	 */
 	protected $waterY;
 
 	/**
 	 * 生成水印图片的水印区域的透明度
-	 * @var integer
+	 *
+*@var int
 	 */
 	protected $alpha;
 
 	/**
 	 * 文字水印字符内容
+	 *
 	 * @var string
 	 */
 	protected $textContent;
 
 	/**
 	 * 水印图片的宽度
-	 * @var integer
+	 *
+	 * @var int
 	 */
 	protected $waterWidth;
 
 	/**
 	 * 水印图片的高度
-	 * @var integer
+	 *
+	 * @var int
 	 */
 	protected $waterHeight;
 
 	/**
 	 * 构造函数
-	 * @access public
-	 * @return boolean
+	 *
+	 * @return void
 	 */
 	public function __construct()
 	{
 
 		$this->fontSize = 14;
 		$this->fontName = RCPHP_PATH . 'sources/font/aispec.ttf';
-
-		return true;
 	}
 
 	/**
 	 * 初始化运行环境,获取图片格式并实例化.
-	 * @param string $url 图片路径
-	 * @return boolean
+	 *
+	 * @param string $url
+	 * @return bool
 	 */
 	protected function parseImageInfo($url)
 	{
-		if(empty($url))
-		{
-			return false;
-		}
 		list ($this->imageWidth, $this->imageHeight, $type) = getimagesize($url);
+
 		$typeArr = array(
 			1 => 'gif',
 			2 => 'jpg',
@@ -189,16 +206,18 @@ class RcImage extends RcBase
 
 	/**
 	 * 设置字体名称.
-	 * @param sting   $name 字体名称(字体的路径)
-	 * @param integer $size 字体大小
+	 *
+	 * @param string  $name
+	 * @param integer $size
+	 * @return $this
 	 */
 	public function setFontName($name, $size = null)
 	{
-
 		if(!empty($name))
 		{
 			$this->fontName = $name;
 		}
+
 		if(!is_null($size))
 		{
 			$this->fontSize = (int)$size;
@@ -209,6 +228,7 @@ class RcImage extends RcBase
 
 	/**
 	 * 设置字体大小.
+	 *
 	 * @param integer $size
 	 * @return $this
 	 */
@@ -225,6 +245,7 @@ class RcImage extends RcBase
 
 	/**
 	 * 获取颜色参数.
+	 *
 	 * @param integer $r
 	 * @param integer $g
 	 * @param integer $b
@@ -254,7 +275,6 @@ class RcImage extends RcBase
 	 */
 	public function setImageUrl($url)
 	{
-
 		if(!empty($url))
 		{
 			$this->imageUrl = $url;
@@ -265,13 +285,13 @@ class RcImage extends RcBase
 
 	/**
 	 * 设置生成图片的大小.
+	 *
 	 * @param integer $width
 	 * @param integer $height
 	 * @return $this
 	 */
 	public function setImageSize($width, $height)
 	{
-
 		if(!empty($width))
 		{
 			$this->width = intval($width);
@@ -286,12 +306,13 @@ class RcImage extends RcBase
 
 	/**
 	 * 设置文字水印字符串内容.
-	 * @param string $content
+
+	 *
+*@param string $content
 	 * @return $this
 	 */
 	public function setTextContent($content)
 	{
-
 		if(!empty($content))
 		{
 			$this->textContent = $content;
@@ -302,13 +323,14 @@ class RcImage extends RcBase
 
 	/**
 	 * 设置文字水印图片文字的坐标位置.
-	 * @param integer $x
+
+	 *
+*@param integer $x
 	 * @param integer $y
 	 * @return $this
 	 */
 	public function setTextPosition($x, $y)
 	{
-
 		if(!empty($x))
 		{
 			$this->fontX = intval($x);
@@ -323,13 +345,14 @@ class RcImage extends RcBase
 
 	/**
 	 * 设置水印图片水印的坐标位置.
-	 * @param integer $x
+
+	 *
+*@param integer $x
 	 * @param integer $y
 	 * @return $this
 	 */
 	public function setWatermarkPosition($x, $y)
 	{
-
 		if(!empty($x))
 		{
 			$this->waterX = intval($x);
@@ -344,12 +367,13 @@ class RcImage extends RcBase
 
 	/**
 	 * 设置水印图片水印区域的透明度.
-	 * @param integer $param
+
+	 *
+*@param integer $param
 	 * @return $this
 	 */
 	public function setWatermarkAlpha($param)
 	{
-
 		if(!empty($param))
 		{
 			$this->alpha = intval($param);
@@ -360,12 +384,12 @@ class RcImage extends RcBase
 
 	/**
 	 * 调整文字水印区域的位置
-	 * @param boolen $limitOption
-	 * @return boolean
+	 *
+	 * @param bool $limitOption
+	 * @return bool
 	 */
 	protected function handleWatermarkFontPlace($limitOption = false)
 	{
-
 		if(!$this->fontX || !$this->fontY)
 		{
 			if(!$this->textContent)
@@ -398,7 +422,9 @@ class RcImage extends RcBase
 
 	/**
 	 * 常设置的文字颜色转换为图片信息.
-	 * @return boolean
+
+	 *
+*@return bool
 	 */
 	protected function handleFontColor()
 	{
@@ -417,19 +443,19 @@ class RcImage extends RcBase
 
 	/**
 	 * 根据图片原来的宽和高的比例,自适应性处理缩略图的宽度和高度
+	 *
 	 * @param bool $scale
-	 * @return boolean
+	 * @return bool
 	 */
-	protected function handleImageSize($scale = 1)
+	protected function handleImageSize($scale = true)
 	{
-
 		//当没有所生成的图片的宽度和高度设置时.
 		if(!$this->width || !$this->height)
 		{
 			RcController::halt('The height or width size set the image error');
 		}
 
-		if(!$scale)
+		if($scale !== true)
 		{
 			$this->widthNew = $this->width;
 			$this->heightNew = $this->height;
@@ -456,20 +482,15 @@ class RcImage extends RcBase
 
 	/**
 	 * 生成图片的缩略图.
-	 * @param string $url
+
+	 *
+*@param string $url
 	 * @param string $distName
 	 * @param bool   $scale
-	 * @return boolean
+	 * @return bool
 	 */
-	public function makeLimitImage($url, $distName = null, $scale = 1)
+	public function makeLimitImage($url, $distName = null, $scale = true)
 	{
-
-		//参数分析
-		if(!$url)
-		{
-			return false;
-		}
-
 		//原图片分析.
 		$this->parseImageInfo($url);
 		$this->handleImageSize($scale);
@@ -489,9 +510,12 @@ class RcImage extends RcBase
 
 	/**
 	 * 生成目标图片.
-	 * @param string $imageDist
+
+	 *
+*@param string $imageDist
 	 * @param string $distName
 	 * @param string $imageType
+	 * @return bool
 	 */
 	protected function createImage($imageDist, $distName = null, $imageType)
 	{
@@ -556,19 +580,13 @@ class RcImage extends RcBase
 
 	/**
 	 * 生成文字水印图片.
-	 * @param stirng $imageUrl
+	 *
+*@param string $imageUrl
 	 * @param string $distName
-	 * @return boolean
+	 * @return bool
 	 */
 	public function makeTextWatermark($imageUrl, $distName = null)
 	{
-
-		//参数判断
-		if(!$imageUrl)
-		{
-			return false;
-		}
-
 		//分析原图片.
 		$this->parseImageInfo($imageUrl);
 
@@ -613,7 +631,8 @@ class RcImage extends RcBase
 
 	/**
 	 * 获取水印图片信息
-	 * @return boolean
+	 *
+	 * @return bool
 	 */
 	protected function handleWatermarkImage()
 	{
@@ -655,11 +674,12 @@ class RcImage extends RcBase
 
 	/**
 	 * 调整水印区域的位置,默认位置距图片右下角边沿5像素.
-	 * @return boolean
+
+	 *
+*@return bool
 	 */
 	protected function handleWatermarkImagePlace($limitOption = false)
 	{
-
 		if(!$this->waterX || !$this->waterY)
 		{
 
@@ -682,18 +702,14 @@ class RcImage extends RcBase
 
 	/**
 	 * 生成图片水印.
-	 * @param string $imageUrl
+
+	 *
+*@param string $imageUrl
 	 * @param string $distName
-	 * @return boolean
+	 * @return bool
 	 */
 	public function makeImageWatermark($imageUrl, $distName = null)
 	{
-
-		//参数分析
-		if(!$imageUrl)
-		{
-			return false;
-		}
 
 		//分析图片信息.
 		$this->parseImageInfo($imageUrl);
