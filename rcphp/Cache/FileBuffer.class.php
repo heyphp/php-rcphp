@@ -1,17 +1,16 @@
 <?php
 /**
- * RcCacheFile class file.
+ * FileBuffer class file.
  *
- * @author         RcPHP Dev Team
+*@author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        cache
+ * @package        Cache
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class RcCacheFile extends RcBase
+class FileBuffer
 {
 
 	/**
@@ -32,6 +31,19 @@ class RcCacheFile extends RcBase
 	}
 
 	/**
+	 * 设置缓存路径
+	 *
+	 * @param string $path
+	 * @return $this
+	 */
+	public function set_path($path)
+	{
+		$this->path = $path;
+
+		return $this;
+	}
+
+	/**
 	 * 设置缓存数据
 	 *
 	 * @param string $key
@@ -48,7 +60,7 @@ class RcCacheFile extends RcBase
 
 		$tmpDir = $this->path . $key . '.cae';
 
-		return RcFile::writeFile($tmpDir, '<?php exit;?>' . time() . '(' . $expire . ')' . serialize($value));
+		return File::write($tmpDir, '<?php exit;?>' . time() . '(' . $expire . ')' . serialize($value));
 	}
 
 	/**
@@ -59,11 +71,6 @@ class RcCacheFile extends RcBase
 	 */
 	public function get($key)
 	{
-		if(empty($key))
-		{
-			return false;
-		}
-
 		$tmpDir = $this->path . $key . '.cae';
 
 		if(!file_exists($tmpDir))
@@ -138,7 +145,7 @@ class RcCacheFile extends RcBase
 	{
 		@set_time_limit(3600);
 
-		return RcFile::clearDir($this->path);
+		return File::clear($this->path);
 	}
 
 	/**
