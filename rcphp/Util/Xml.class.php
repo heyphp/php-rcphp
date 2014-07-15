@@ -1,17 +1,16 @@
 <?php
 /**
- * RcXml class php
+ * XML class php
  *
- * @author         RcPHP Dev Team
+*@author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        libraries
+ * @package        Library.Util
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class RcXml extends RcBase
+class Xml
 {
 
 	/**
@@ -23,18 +22,12 @@ class RcXml extends RcBase
 	public static function loadXml($fileName)
 	{
 
-		if(!$fileName)
-		{
-			return false;
-		}
-
-		return (strpos($fileName, '<?xml') === false) ? simplexml_load_file($fileName) : simplexml_load_string($fileName);
+		return is_file($fileName) ? simplexml_load_file($fileName) : simplexml_load_string($fileName);
 	}
 
 	/**
 	 * 将XML代码转化为数组
 	 *
-	 * @access public
 	 * @param string $string
 	 * @return array
 	 */
@@ -66,20 +59,20 @@ class RcXml extends RcBase
 			is_numeric($key) && $key = "item id=\"$key\"";
 			$xml .= "<$key>";
 			$xml .= (is_array($val) || is_object($val)) ? self::dataToXml($val) : str_replace(array(
-																								   "&",
-																								   "<",
-																								   ">",
-																								   "\"",
-																								   "'",
-																								   "-"
-																							  ), array(
-																									  "&amp;",
-																									  "&lt;",
-																									  "&gt;",
-																									  "&quot;",
-																									  "&apos;",
-																									  "&#45;"
-																								 ), $val);
+				"&",
+				"<",
+				">",
+				"\"",
+				"'",
+				"-"
+			), array(
+				"&amp;",
+				"&lt;",
+				"&gt;",
+				"&quot;",
+				"&apos;",
+				"&#45;"
+			), $val);
 			list ($key,) = explode(' ', $key);
 			$xml .= "</$key>";
 		}
