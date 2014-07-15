@@ -1,55 +1,17 @@
 <?php
 /**
- * RcCacheMemcache class file.
+ * Memcache class file.
  *
- * @author         RcPHP Dev Team
+*@author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        cache
+ * @package        Cache
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-/**
- * 使用说明
- *
- * @example
- * 参数范例
- * $mem_options = array(
- * 'servers'=> array(
- * array('host'=>'127.0.0.1', 'port'=>11211, 'persistent'=>true, 'weight'=>1, 'timeout'=>60),
- * array('host'=>'192.168.0.101', 'port'=>11211, 'persistent'=>true, 'weight'=>2, 'timeout'=>60),
- * ),
- * 'compressed'=>true,
- * 'lifeTime' => 3600,
- * 'persistent' => true,
- * );
- * 或在config项目目录中配置文件:memcache.ini.php,内容如下:
- * <?php
- * if(!defined('IN_RCPHP')) exit('Access denied');
- * return array(
- * 'servers'=> array(
- * array('host'=>'127.0.0.1', 'port'=>11211, 'persistent'=>true, 'timeout'=>60),
- * array('host'=>'192.168.0.101', 'port'=>11211, 'persistent'=>true, 'timeout'=>60),
- * ),
- * 'compressed'=>true,
- * 'lifeTime' => 3600,
- * 'persistent' => true,
- * );
- * 实例化
- * 法一:
- * $memcache = new RcCacheMemcache($mem_options);
- */
-class RcCacheMemcache extends RcBase
+class Memcache
 {
-
-	/**
-	 * 单例模式实现化对象
-	 *
-	 * @var object
-	 */
-	protected static $_instance = null;
 
 	/**
 	 * 连接实例
@@ -85,21 +47,14 @@ class RcCacheMemcache extends RcBase
 	 *
 	 * @return void
 	 */
-	private function __construct(array $options = null)
+	public function __construct()
 	{
 		if(!extension_loaded('memcache'))
 		{
 			RcController::halt('The memcache extension must be loaded before use!');
 		}
 
-		//当参数为空时,程序则自动加载config目录中的memcache.ini.php的配置文件
-		if(is_null($options))
-		{
-			if(is_file(CONFIG_PATH . 'memcache.ini.php'))
-			{
-				$options = RcPHP::getConfig('memcache');
-			}
-		}
+		$options = RcPHP::getConfig('memcache');
 
 		if(is_array($options))
 		{
@@ -125,20 +80,11 @@ class RcCacheMemcache extends RcBase
 	}
 
 	/**
-	 * 单例模式 防止被外部使用
-	 *
-	 * @return bool
-	 */
-	private function __clone()
-	{
-		return true;
-	}
-
-	/**
 	 * 写入缓存
+
 	 *
-	 * @param string $key
-	 * @param mixed  $data
+*@param string $key
+	 * @param string $data
 	 * @param int    $expire
 	 * @return bool
 	 */
@@ -230,21 +176,5 @@ class RcCacheMemcache extends RcBase
 		{
 			$this->_conn->close();
 		}
-	}
-
-	/**
-	 * 单例模式
-	 *
-	 * @return object
-	 */
-	public static function getInstance($options = null)
-	{
-
-		if(self::$_instance === null)
-		{
-			self::$_instance = new RcCacheMemcache($options);
-		}
-
-		return self::$_instance;
 	}
 }
