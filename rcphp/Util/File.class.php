@@ -294,7 +294,7 @@ class File
 	 */
 	public static function write($fileName, $content = '', $lock = true)
 	{
-		self::parseDir(dirname($fileName), true);
+		self::parse(dirname($fileName), true);
 
 		if($lock === true)
 		{
