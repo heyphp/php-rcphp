@@ -1,15 +1,15 @@
 <?php
+
 /**
- * RcCacheApc class file.
+ * Apc class file.
  *
- * @author         RcPHP Dev Team
+*@author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        cache
+ * @package        Cache
  * @since          1.0
- * @filesource
  */
-class RcCacheApc extends RcBase
+class Apc
 {
 
 	/**
@@ -27,18 +27,14 @@ class RcCacheApc extends RcBase
 
 	/**
 	 * 设置缓存数据
-	 * @param string|array $key
+	 *
+*@param string|array $key
 	 * @param string       $value
 	 * @param int          $expire
 	 * @return bool
 	 */
 	public function set($key, $value = '', $expire = 60)
 	{
-		if(empty($key))
-		{
-			return false;
-		}
-
 		if(is_array($key))
 		{
 			return apc_store($key, $expire);
@@ -51,37 +47,30 @@ class RcCacheApc extends RcBase
 
 	/**
 	 * 获取缓存数据
-	 * @param string $key
+	 *
+*@param string $key
 	 * @return mixed
 	 */
 	public function get($key)
 	{
-		if(empty($key))
-		{
-			return false;
-		}
-
 		return apc_fetch($key);
 	}
 
 	/**
 	 * 删除缓存数据
-	 * @param string $key
+	 *
+*@param string $key
 	 * @return bool
 	 */
 	public function delete($key)
 	{
-		if(empty($key))
-		{
-			return false;
-		}
-
 		return apc_delete($key);
 	}
 
 	/**
 	 * 清除所有缓存数据 慎用
-	 * @return bool
+	 *
+*@return bool
 	 */
 	public function clear()
 	{
@@ -90,16 +79,13 @@ class RcCacheApc extends RcBase
 
 	/**
 	 * 检测指定缓存是否存在
-	 * @param string $key
+
+	 *
+*@param string $key
 	 * @return bool
 	 */
 	public function has($key)
 	{
-		if(empty($key))
-		{
-			return false;
-		}
-
 		return apc_exists($key);
 	}
 }
