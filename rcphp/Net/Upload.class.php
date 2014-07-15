@@ -1,17 +1,16 @@
 <?php
 /**
- * RcUpload class file.
+ * Upload class file.
  *
- * @author         RcPHP Dev Team
+*@author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        libraries
+ * @package        Library.Util
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class RcUpload extends RcBase
+class Upload
 {
 
 	/**
@@ -73,9 +72,10 @@ class RcUpload extends RcBase
 
 	/**
 	 * Additional allowed to upload the file type.
+
 	 *
-	 * @param array $file
-	 * @return bool
+*@param array $file
+	 * @return $this
 	 */
 	public function setAllowType($type = array())
 	{
@@ -89,20 +89,21 @@ class RcUpload extends RcBase
 			$this->allowType[$key] = $val;
 		}
 
-		return true;
+		return $this;
 	}
 
 	/**
 	 * Setting allows the upload file type.
+
 	 *
-	 * @param array $type
-	 * @return object|bool
+*@param array $type
+	 * @return $this
 	 */
-	public function setCheckAllowType($type = array())
+	public function setCheckAllowType(array $type)
 	{
-		if(empty($type) || !is_array($type))
+		if(empty($type))
 		{
-			return false;
+			return $this;
 		}
 
 		$this->checkAllowType = $type;
@@ -118,11 +119,6 @@ class RcUpload extends RcBase
 	 */
 	public function setAllowFileSize($size)
 	{
-		if(empty($size))
-		{
-			return false;
-		}
-
 		$this->allowFileSize = intval($size);
 
 		return $this;
