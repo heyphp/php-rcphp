@@ -128,13 +128,12 @@ class Session
 	/**
 	 * Session storage paths
 	 *
-	 * @param string $type
 	 * @param string $path
 	 * @return bool|string
 	 */
-	public function save_path($type = "get", $path = null)
+	public function save_path($path = null)
 	{
-		if($type === "get")
+		if(is_null($path))
 		{
 			return session_save_path();
 		}
@@ -152,13 +151,12 @@ class Session
 	/**
 	 * Session timeout
 	 *
-	 * @param string $type
 	 * @param string $time
 	 * @return bool|int|string
 	 */
-	public function timeout($type = "get", $time = null)
+	public function timeout($time = null)
 	{
-		if($type === "get")
+		if(is_null($time))
 		{
 			return intval(ini_get('session.gc_maxlifetime'));
 		}
@@ -176,13 +174,12 @@ class Session
 	/**
 	 * Seesion id
 	 *
-	 * @param string $type
 	 * @param string $id
 	 * @return bool|string
 	 */
-	public function session_id($type = "get", $id = null)
+	public function session_id($id = null)
 	{
-		if($type === "get")
+		if(is_null($id))
 		{
 			return session_id();
 		}
@@ -200,13 +197,12 @@ class Session
 	/**
 	 * Seesion name
 	 *
-	 * @param string $type
 	 * @param string $name
 	 * @return bool|string
 	 */
-	public function session_name($type = "get", $name = null)
+	public function session_name($name = null)
 	{
-		if($type === "get")
+		if(is_null($name))
 		{
 			return session_name();
 		}
