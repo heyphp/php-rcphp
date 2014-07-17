@@ -5,14 +5,13 @@
  * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        function
+ * @package        Function
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
 /**
- * æµè§ˆå™¨å‹å¥½çš„å˜é‡è¾“å‡º
+ * ä¯ÀÀÆ÷ÓÑºÃµÄ±äÁ¿Êä³ö
  *
  * @param mixed   $var
  * @param boolean $echo
@@ -68,7 +67,7 @@ function C($class)
 {
 	if(empty($class))
 	{
-		RcController::halt('The controller name is empty');
+		Controller::halt('The controller name is empty');
 	}
 
 	$controller = APP_PATH . "controllers/" . $class . "Controller.class.php";
@@ -79,11 +78,11 @@ function C($class)
 
 		$class = $class . 'Controller';
 
-		return RcStructure::singleton($class);
+		return Structure::singleton($class);
 	}
 	else
 	{
-		RcController::halt('The controller file does not exist');
+		Controller::halt('The controller file does not exist');
 	}
 
 	return false;
@@ -105,11 +104,11 @@ function M($class = '')
 
 		$class = $class . 'Model';
 
-		return RcStructure::singleton($class);
+		return Structure::singleton($class);
 	}
 	else
 	{
-		RcController::halt("The " . $model . " file does not exist");
+		Controller::halt("The " . $model . " file does not exist");
 	}
 
 	return false;
@@ -128,7 +127,7 @@ function G($key)
 		return false;
 	}
 
-	return RcRequest::get($key, true);
+	return Request::get($key, true);
 }
 
 /**
@@ -144,7 +143,7 @@ function P($key)
 		return false;
 	}
 
-	return RcRequest::post($key, true);
+	return Request::post($key, true);
 }
 
 /**
@@ -160,13 +159,13 @@ function F($func)
 		return false;
 	}
 
-	RcPHP::loadFile(RCPHP_PATH . 'functions' . DS . $func . '.php');
+	RcPHP::loadFile(RCPHP_PATH . 'Function' . DS . $func . '.php');
 
 	return true;
 }
 
 /**
- * åŠ è½½ç±»åº“
+ * ¼ÓÔØÀà¿â
  *
  * @param string $class
  * @param string $lib
@@ -192,21 +191,15 @@ function load_class($class, $lib = '')
 	{
 		RcPHP::loadFile($fileName);
 
-		return RcStructure::singleton($class);
+		return Structure::singleton($class);
 	}
 	else
 	{
-		RcController::halt('The ' . $fileName . ' file does not exist');
+		Controller::halt('The ' . $fileName . ' file does not exist');
 	}
 
 	return false;
 }
-
-/**
- * è·å–å®¢æˆ·ç«¯IP
- *
- * @return string
- */
 
 /**
  * Size convert.
@@ -246,7 +239,7 @@ function tosize($bytes)
 }
 
 /**
- * äºŒç»´æ•°ç»„æ’åº
+ * ¶şÎ¬Êı×éÅÅĞò
  *
  * @param array  $multi_array
  * @param string $sort_key
@@ -502,7 +495,7 @@ function remove_xss($val)
 }
 
 /**
- * è¾“å‡ºå®‰å…¨çš„html
+ * Êä³ö°²È«µÄhtml
  *
  * @param string $text
  * @param string $tags
@@ -511,23 +504,23 @@ function remove_xss($val)
 function html_replace($text, $tags = null)
 {
 	$text = trim($text);
-	//å®Œå…¨è¿‡æ»¤æ³¨é‡Š
+	//ÍêÈ«¹ıÂË×¢ÊÍ
 	$text = preg_replace('/<!--?.*-->/', '', $text);
-	//å®Œå…¨è¿‡æ»¤åŠ¨æ€ä»£ç 
+	//ÍêÈ«¹ıÂË¶¯Ì¬´úÂë
 	$text = preg_replace('/<\?|\?' . '>/', '', $text);
-	//å®Œå…¨è¿‡æ»¤js
+	//ÍêÈ«¹ıÂËjs
 	$text = preg_replace('/<script?.*\/script>/', '', $text);
 
 	$text = str_replace('[', '&#091;', $text);
 	$text = str_replace(']', '&#093;', $text);
 	$text = str_replace('|', '&#124;', $text);
-	//è¿‡æ»¤æ¢è¡Œç¬¦
+	//¹ıÂË»»ĞĞ·û
 	$text = preg_replace('/\r?\n/', '', $text);
 	//br
 	$text = preg_replace('/<br(\s\/)?' . '>/i', '[br]', $text);
 	$text = preg_replace('/<p(\s\/)?' . '>/i', '[br]', $text);
 	$text = preg_replace('/(\[br\]\s*){10,}/i', '[br]', $text);
-	//è¿‡æ»¤å±é™©çš„å±æ€§ï¼Œå¦‚ï¼šè¿‡æ»¤onäº‹ä»¶lang js
+	//¹ıÂËÎ£ÏÕµÄÊôĞÔ£¬Èç£º¹ıÂËonÊÂ¼şlang js
 	while(preg_match('/(<[^><]+)( lang|on|action|background|codebase|dynsrc|lowsrc)[^><]+/i', $text, $mat))
 	{
 		$text = str_replace($mat[0], $mat[1], $text);
@@ -540,42 +533,42 @@ function html_replace($text, $tags = null)
 	{
 		$tags = 'table|td|th|tr|i|b|u|strong|img|p|br|div|strong|em|ul|ol|li|dl|dd|dt|a';
 	}
-	//å…è®¸çš„HTMLæ ‡ç­¾
+	//ÔÊĞíµÄHTML±êÇ©
 	$text = preg_replace('/<(' . $tags . ')( [^><\[\]]*)>/i', '[\1\2]', $text);
 	$text = preg_replace('/<\/(' . $tags . ')>/Ui', '[/\1]', $text);
-	//è¿‡æ»¤å¤šä½™html
+	//¹ıÂË¶àÓàhtml
 	$text = preg_replace('/<\/?(html|head|meta|link|base|basefont|body|bgsound|title|style|script|form|iframe|frame|frameset|applet|id|ilayer|layer|name|script|style|xml)[^><]*>/i', '', $text);
-	//è¿‡æ»¤åˆæ³•çš„htmlæ ‡ç­¾
+	//¹ıÂËºÏ·¨µÄhtml±êÇ©
 	while(preg_match('/<([a-z]+)[^><\[\]]*>[^><]*<\/\1>/i', $text, $mat))
 	{
 		$text = str_replace($mat[0], str_replace('>', ']', str_replace('<', '[', $mat[0])), $text);
 	}
-	//è½¬æ¢å¼•å·
+	//×ª»»ÒıºÅ
 	while(preg_match('/(\[[^\[\]]*=\s*)(\"|\')([^\2=\[\]]+)\2([^\[\]]*\])/i', $text, $mat))
 	{
 		$text = str_replace($mat[0], $mat[1] . '|' . $mat[3] . '|' . $mat[4], $text);
 	}
-	//è¿‡æ»¤é”™è¯¯çš„å•ä¸ªå¼•å·
+	//¹ıÂË´íÎóµÄµ¥¸öÒıºÅ
 	while(preg_match('/\[[^\[\]]*(\"|\')[^\[\]]*\]/i', $text, $mat))
 	{
 		$text = str_replace($mat[0], str_replace($mat[1], '', $mat[0]), $text);
 	}
-	//è½¬æ¢å…¶å®ƒæ‰€æœ‰ä¸åˆæ³•çš„ < >
+	//×ª»»ÆäËüËùÓĞ²»ºÏ·¨µÄ < >
 	$text = str_replace('<', '&lt;', $text);
 	$text = str_replace('>', '&gt;', $text);
 	$text = str_replace('"', '&quot;', $text);
-	//åè½¬æ¢
+	//·´×ª»»
 	$text = str_replace('[', '<', $text);
 	$text = str_replace(']', '>', $text);
 	$text = str_replace('|', '"', $text);
-	//è¿‡æ»¤å¤šä½™ç©ºæ ¼
+	//¹ıÂË¶àÓà¿Õ¸ñ
 	$text = str_replace('  ', ' ', $text);
 
 	return $text;
 }
 
 /**
- * UBBä»£ç è½¬æ¢
+ * UBB´úÂë×ª»»
  *
  * @param string $Text
  * @return string
@@ -608,7 +601,7 @@ function ubb($text)
 	$text = preg_replace("/\[i\](.+?)\[\/i\]/is", "<i>\\1</i>", $text);
 	$text = preg_replace("/\[u\](.+?)\[\/u\]/is", "<u>\\1</u>", $text);
 	$text = preg_replace("/\[b\](.+?)\[\/b\]/is", "<b>\\1</b>", $text);
-	$text = preg_replace("/\[quote\](.+?)\[\/quote\]/is", " <div class='quote'><h5>å¼•ç”¨:</h5><blockquote>\\1</blockquote></div>", $text);
+	$text = preg_replace("/\[quote\](.+?)\[\/quote\]/is", " <div class='quote'><h5>ÒıÓÃ:</h5><blockquote>\\1</blockquote></div>", $text);
 	$text = preg_replace("/\[code\](.+?)\[\/code\]/eis", "highlight_code('\\1')", $text);
 	$text = preg_replace("/\[php\](.+?)\[\/php\]/eis", "highlight_code('\\1')", $text);
 	$text = preg_replace("/\[sig\](.+?)\[\/sig\]/is", "<div class='sign'>\\1</div>", $text);
@@ -618,7 +611,7 @@ function ubb($text)
 }
 
 /**
- * åŠŸèƒ½ç­‰åŒhtmlspecialchars
+ * ¹¦ÄÜµÈÍ¬htmlspecialchars
  *
  * @param string $string
  * @param string $charset
@@ -642,7 +635,7 @@ function dhtmlspecialchars($string, $charset = '')
  */
 function dip2long($ip)
 {
-	if(RcCheck::isIpv4($ip) === true)
+	if(Check::isIpv4($ip) === true)
 	{
 		return bindec(decbin(ip2long($ip)));
 	}
