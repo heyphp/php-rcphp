@@ -45,7 +45,7 @@ class Route
 		{
 			$params = array();
 
-			$queryString = $_SERVER['PATH_INFO'];
+			$queryString = $_SERVER['QUERY_STRING'];
 
 			if($queryString != false)
 			{
