@@ -1,17 +1,16 @@
 <?php
 /**
- * RcModel class file.
+ * Model class file.
  *
  * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        core
+ * @package        Core
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-abstract class RcModel extends RcBase
+class Model
 {
 
 	/**
@@ -121,7 +120,7 @@ abstract class RcModel extends RcBase
 	{
 		if(is_null($tableName))
 		{
-			RcController::halt('Table name is empty');
+			Controller::halt('Table name is empty');
 		}
 
 		$tableStr = (!empty($this->_prefix)) ? $this->_prefix . trim($tableName) : trim($tableName);
@@ -152,7 +151,7 @@ abstract class RcModel extends RcBase
 	{
 		if(is_null($fields))
 		{
-			RcController::halt('Table fields is empty');
+			Controller::halt('Table fields is empty');
 		}
 
 		$fieldsStr = "";
@@ -230,7 +229,7 @@ abstract class RcModel extends RcBase
 	{
 		if(empty($where))
 		{
-			RcController::halt('SQL query condition is empty');
+			Controller::halt('SQL query condition is empty');
 		}
 
 		if(is_array($where))
@@ -273,7 +272,7 @@ abstract class RcModel extends RcBase
 	{
 		if(empty($order))
 		{
-			RcController::halt('SQL query sort is empty');
+			Controller::halt('SQL query sort is empty');
 		}
 
 		if(is_array($order))
@@ -343,7 +342,7 @@ abstract class RcModel extends RcBase
 		//参数分析
 		if(empty($tableName) || empty($where))
 		{
-			RcController::halt('The name of the table or the condition is empty');
+			Controller::halt('The name of the table or the condition is empty');
 		}
 
 		$tableNameStr = (!empty($this->_prefix)) ? $this->_prefix . trim($tableName) : '`' . trim($tableName) . '`';
@@ -365,7 +364,7 @@ abstract class RcModel extends RcBase
 	{
 		if(empty($fieldName))
 		{
-			RcController::halt('The SQL statement grouping field does not exist');
+			Controller::halt('The SQL statement grouping field does not exist');
 		}
 
 		if(is_array($fieldName))
@@ -421,7 +420,7 @@ abstract class RcModel extends RcBase
 	{
 		if(empty($where))
 		{
-			RcController::halt('SQL query packets condition is empty');
+			Controller::halt('SQL query packets condition is empty');
 		}
 
 		if(is_array($where))
@@ -549,12 +548,12 @@ abstract class RcModel extends RcBase
 		//对函数的参数进行判断
 		if(empty($tableName))
 		{
-			RcController::halt('Table name is empty');
+			Controller::halt('Table name is empty');
 		}
 
 		if(!is_array($data))
 		{
-			RcController::halt('The data format is not correct');
+			Controller::halt('The data format is not correct');
 		}
 
 		if(empty($data))
@@ -612,12 +611,12 @@ abstract class RcModel extends RcBase
 	{
 		if(empty($tableName))
 		{
-			RcController::halt('Table name is empty');
+			Controller::halt('Table name is empty');
 		}
 
 		if(!is_array($data))
 		{
-			RcController::halt('The data format is not correct');
+			Controller::halt('The data format is not correct');
 		}
 
 		if(empty($data))
@@ -667,7 +666,7 @@ abstract class RcModel extends RcBase
 	{
 		if(empty($tableName))
 		{
-			RcController::halt('Table name is empty');
+			Controller::halt('Table name is empty');
 		}
 
 		if(!is_null($where))
@@ -814,7 +813,7 @@ abstract class RcModel extends RcBase
 
 		if(!is_array($params))
 		{
-			RcController::halt('Error loading the database configuration');
+			Controller::halt('Error loading the database configuration');
 		}
 
 		//数据库表前缀
@@ -924,10 +923,6 @@ abstract class RcModel extends RcBase
 			switch($driver)
 			{
 				case 'mysql':
-				case 'mysqli':
-					$this->_links[$linkNum] = new RcDbMysqli($config);
-					break;
-				case 'pdo_mysql':
 					//组合dsn信息
 					if(!isset($config['dsn']))
 					{
@@ -941,10 +936,10 @@ abstract class RcModel extends RcBase
 						}
 						$config['dsn'] = sprintf('%s:%s', 'mysql', http_build_query($dsnArray, '', ';'));
 					}
-					$this->_links[$linkNum] = new RcDbPdoMysql($config);
+					$this->_links[$linkNum] = new Mysql($config);
 					break;
 				default:
-					$this->_links[$linkNum] = new RcDbMysqli($config);
+					$this->_links[$linkNum] = new Mysql($config);
 			}
 		}
 
