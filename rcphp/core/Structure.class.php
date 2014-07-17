@@ -1,17 +1,16 @@
 <?php
 /**
- * RcStructure class file.
+ * Structure class file.
  *
  * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        core
+ * @package        Core
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class RcStructure extends RcBase
+class Structure extends Base
 {
 
 	/**
@@ -41,8 +40,8 @@ class RcStructure extends RcBase
 		{
 			if(file_put_contents($fileName, $str))
 			{
-				self::$message[] = date('Y-m-d H:i:s', time()) . "¡¡Create file " . $fileName . " success.";
-				RcDebug::addMessage("Create file " . $fileName . " success.");
+				self::$message[] = date('Y-m-d H:i:s', time()) . " Create file " . $fileName . " success.";
+				Debug::addMessage("Create file " . $fileName . " success.");
 			}
 		}
 	}
@@ -64,7 +63,7 @@ class RcStructure extends RcBase
 					if(mkdir($dir, 0755))
 					{
 						self::$message[] = date('Y-m-d H:i:s', time()) . "¡¡Create directory " . $dir . " success.";
-						RcDebug::addMessage("Create directory " . $dir . " success.");
+						Debug::addMessage("Create directory " . $dir . " success.");
 					}
 				}
 			}
@@ -76,7 +75,7 @@ class RcStructure extends RcBase
 				if(mkdir($dirs, 0755))
 				{
 					self::$message[] = date('Y-m-d H:i:s', time()) . "¡¡Create directory " . $dirs . " success.";
-					RcDebug::addMessage("Create directory " . $dirs . " success.");
+					Debug::addMessage("Create directory " . $dirs . " success.");
 				}
 			}
 		}
@@ -91,7 +90,7 @@ class RcStructure extends RcBase
 	{
 		if(!is_writable(PRO_PATH . 'runtime'))
 		{
-			RcController::halt('Do not write the runtime directory');
+			Controller::halt('Do not write the runtime directory');
 		}
 
 		$dirs = array(
@@ -120,7 +119,7 @@ class RcStructure extends RcBase
 		{
 			if(!is_writable(PRO_PATH))
 			{
-				RcController::halt('Do not write the [' . PRO_PATH . '] directory');
+				Controller::halt('Do not write the [' . PRO_PATH . '] directory');
 			}
 
 			$fileName = PRO_PATH . 'config.inc.php';
@@ -152,7 +151,7 @@ class RcStructure extends RcBase
 
 			if(!is_writable(APP_PATH))
 			{
-				RcController::halt('Application [' . APP_PATH . '] cannot write, directory cannot be automatically generated');
+				Controller::halt('Application [' . APP_PATH . '] cannot write, directory cannot be automatically generated');
 			}
 
 			$appDirs = array(
