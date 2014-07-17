@@ -1,17 +1,16 @@
 <?php
 /**
- * RcRoute class file.
+ * Route class file.
  *
  * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        core
+ * @package        Core
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class RcRoute
+class Route
 {
 
 	/**
