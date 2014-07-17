@@ -1,6 +1,6 @@
 <?php
 /**
- * RcPinyin class file.
+ * Pinyin class file.
  *
  * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
@@ -11,7 +11,7 @@
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class RcPinyin extends RcBase
+class Pinyin
 {
 
 	/**
@@ -23,6 +23,7 @@ class RcPinyin extends RcBase
 
 	/**
 	 * 构造函数
+	 *
 	 * @return void
 	 */
 	public function __construct()
@@ -70,6 +71,7 @@ class RcPinyin extends RcBase
 
 	/**
 	 * 返回汉字编码库
+	 *
 	 * @return array
 	 */
 	protected function parseLib()
@@ -1669,6 +1671,7 @@ class RcPinyin extends RcBase
 
 	/**
 	 * 汉字转化并输出拼音
+	 *
 	 * @param string  $str
 	 * @param boolean $utf8
 	 * @return string
@@ -1704,6 +1707,7 @@ class RcPinyin extends RcBase
 
 	/**
 	 * 析构函数
+	 *
 	 * @return void
 	 */
 	public function __destruct()
