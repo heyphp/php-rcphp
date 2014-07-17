@@ -1,17 +1,16 @@
 <?php
 /**
- * RcView class file.
+ * View class file.
  *
  * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        core
+ * @package        Core
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class RcView extends RcBase
+class View extends Base
 {
 
 	/**
@@ -50,7 +49,7 @@ class RcView extends RcBase
 	protected function __construct()
 	{
 		// Print debug info.
-		RcDebug::addMessage('RcView Class Initialized');
+		Debug::addMessage('View Class Initialized');
 	}
 
 	/**
@@ -66,7 +65,7 @@ class RcView extends RcBase
 	 * 分析视图文件
 	 *
 	 * @param string $fileName
-	 * @return void
+	 * @return string
 	 */
 	private function parseView($fileName = '')
 	{
@@ -88,7 +87,7 @@ class RcView extends RcBase
 		//分析视图文件是否存在
 		if(!file_exists($viewFile))
 		{
-			RcController::halt('The view file:' . $viewFile . ' is not exists!');
+			Controller::halt('The view file:' . $viewFile . ' is not exists!');
 		}
 
 		return $viewFile;
@@ -98,12 +97,13 @@ class RcView extends RcBase
 	 * 加载布局文件
 	 *
 	 * @param string $fileName
+	 * @return void
 	 */
 	public function layout($fileName)
 	{
 		if(empty($fileName) || !is_string($fileName))
 		{
-			RcController::halt('The layout file is not empty!');
+			Controller::halt('The layout file is not empty!');
 		}
 
 		extract($this->_data, EXTR_PREFIX_SAME, 'data');
@@ -118,7 +118,7 @@ class RcView extends RcBase
 	/**
 	 * 视图变量赋值操作
 	 *
-	 * @param mixted $keys
+	 * @param string $keys
 	 * @param string $value
 	 * @return bool
 	 */
@@ -187,7 +187,7 @@ class RcView extends RcBase
 	{
 		if(empty($fileName))
 		{
-			RcController::halt('The view file is not empty!');
+			Controller::halt('The view file is not empty!');
 		}
 
 		$viewFile = $this->parseView($fileName);
