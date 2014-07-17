@@ -201,8 +201,7 @@ class Structure extends Base
 	 */
 	public static function singleton($className)
 	{
-
-		if(!$className)
+		if(empty($className))
 		{
 			return false;
 		}
