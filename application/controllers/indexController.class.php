@@ -10,16 +10,23 @@
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class indexController extends RcController
+class indexController extends Controller
 {
 
 	public function index()
 	{
-		echo 123;
+		$numbers = range (1,20); //将1到20组成一个数组
+		shuffle ($numbers); //对数组进行随机排序
+		$result = array_slice($numbers,1,5); //取数组前5个元素
+		print_r($result);
+
+		echo implode("",$result);
+
+
 	}
 
 	public function test()
 	{
-		echo RcRequest::get("id");
+		echo Request::get("id");
 	}
 }

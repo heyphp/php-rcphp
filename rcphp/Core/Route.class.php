@@ -37,7 +37,7 @@ class Route
 	 */
 	public static function queryString()
 	{
-		if(RcRequest::server('PATH_INFO') !== false)
+		if(!empty($_SERVER['PATH_INFO']))
 		{
 			return self::pathinfo();
 		}
@@ -45,11 +45,11 @@ class Route
 		{
 			$params = array();
 
-			$queryString = RcRequest::server('QUERY_STRING', true);
+			$queryString = $_SERVER['PATH_INFO'];
 
 			if($queryString != false)
 			{
-				$queryArray = explode("&amp;", $queryString);
+				$queryArray = explode("&", $queryString);
 
 				$tmp = array();
 
@@ -102,7 +102,7 @@ class Route
 
 		if(empty(self::$config))
 		{
-			RcController::halt('The routing configuration errors');
+			Controller::halt('The routing configuration errors');
 		}
 
 		$script_name = $_SERVER["SCRIPT_NAME"]; //获取当前文件的路径

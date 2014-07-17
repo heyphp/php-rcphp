@@ -10,7 +10,7 @@
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class Structure extends Base
+class 	Structure extends Base
 {
 
 	/**

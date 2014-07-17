@@ -38,7 +38,12 @@ define('DS', DIRECTORY_SEPARATOR);
 /**
  * 定义项目的根路径
  */
-define("PRO_PATH", dirname(RCPHP_PATH) . '/');
+define("PRO_PATH", dirname(RCPHP_PATH) . DS);
+
+/**
+ * 定义扩展目录路径
+ */
+define("EXT_PATH", PRO_PATH . "classes" . DS);
 
 /**
  * 定义项目controller所在路径
@@ -93,14 +98,9 @@ define('CONFIG_PATH', APP_PATH . 'config' . DS);
 /**
  * 包含框架内置函数库
  */
-include_once RCPHP_PATH . 'functions' . DS . 'common.php';
+include_once RCPHP_PATH . 'Function' . DS . 'Common.php';
 
-/**
- * 包含路由解析类
- */
-include_once RCPHP_PATH . 'Core' . DS . 'RcRoute.php';
-
-abstract class RcPHP
+class RcPHP
 {
 
 	/**
@@ -145,9 +145,9 @@ abstract class RcPHP
 	 */
 	public static function run()
 	{
-		self::loadFile(RCPHP_PATH . 'Core' . DS . 'RcLoader.php');
+		self::loadFile(RCPHP_PATH . 'Core' . DS . 'Loader.class.php');
 
-		RcLoader::registerAutoloader();
+		Loader::registerAutoloader();
 
 		if(defined('RCPHP_DEBUG') && RCPHP_DEBUG === true)
 		{
@@ -157,7 +157,7 @@ abstract class RcPHP
 			Debug::start();
 			//Set to capture system anomalies
 			set_error_handler(array(
-				"RcDebug",
+				"Debug",
 				'catcher'
 			));
 		}
@@ -173,10 +173,10 @@ abstract class RcPHP
 
 		Structure::run();
 
-		$urlParams = RcRoute::parseUrl();
+		$params = Route::parseUrl();
 
-		self::$_controller = $urlParams['c'];
-		self::$_action = $urlParams['a'];
+		self::$_controller = $params['c'];
+		self::$_action = $params['a'];
 
 		$controller = self::$_controller . 'Controller';
 		$action = self::$_action;
@@ -193,7 +193,7 @@ abstract class RcPHP
 		}
 		else
 		{
-			RcController::halt('The controller method ' . $action . ' does not exist');
+			Controller::halt('The controller method ' . $action . ' does not exist');
 		}
 		//End time output debugging information.
 		if(defined('RCPHP_DEBUG') && RCPHP_DEBUG === true)
