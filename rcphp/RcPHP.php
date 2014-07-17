@@ -5,9 +5,8 @@
  * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        core
+ * @package        Core
  * @since          1.0
- * @filesource
  */
 defined('IN_RCPHP') or exit('Access denied');
 
@@ -99,7 +98,7 @@ include_once RCPHP_PATH . 'functions' . DS . 'common.php';
 /**
  * 包含路由解析类
  */
-include_once RCPHP_PATH . 'core' . DS . 'RcRoute.php';
+include_once RCPHP_PATH . 'Core' . DS . 'RcRoute.php';
 
 abstract class RcPHP
 {
@@ -146,7 +145,7 @@ abstract class RcPHP
 	 */
 	public static function run()
 	{
-		self::loadFile(RCPHP_PATH . 'core' . DS . 'RcLoader.php');
+		self::loadFile(RCPHP_PATH . 'Core' . DS . 'RcLoader.php');
 
 		RcLoader::registerAutoloader();
 
@@ -155,7 +154,7 @@ abstract class RcPHP
 			error_reporting(E_ALL ^ E_NOTICE);
 
 			//Open script computing time
-			RcDebug::start();
+			Debug::start();
 			//Set to capture system anomalies
 			set_error_handler(array(
 				"RcDebug",
@@ -165,14 +164,14 @@ abstract class RcPHP
 		else
 		{
 			$error_log_path = PRO_PATH . 'runtime' . DS . 'error_log' . DS;
-			RcFile::makeDir($error_log_path);
+			File::mkdir($error_log_path);
 
 			ini_set('display_errors', 'Off');
 			ini_set('log_errors', 'On');
 			ini_set('error_log', $error_log_path . 'error_log_' . date('Y_m_d', time()) . '.log');
 		}
 
-		RcStructure::run();
+		Structure::run();
 
 		$urlParams = RcRoute::parseUrl();
 
@@ -199,132 +198,8 @@ abstract class RcPHP
 		//End time output debugging information.
 		if(defined('RCPHP_DEBUG') && RCPHP_DEBUG === true)
 		{
-			RcDebug::stop();
-			RcDebug::output();
-		}
-	}
-
-	/**
-	 * Client Mode
-	 *
-	 * @return object
-	 */
-	public static function client()
-	{
-		self::loadFile(RCPHP_PATH . 'core' . DS . 'RcBase.php');
-		self::loadFile(RCPHP_PATH . 'core' . DS . 'RcController.php');
-		self::loadFile(RCPHP_PATH . 'core' . DS . 'RcLog.php');
-		self::loadFile(RCPHP_PATH . 'core' . DS . 'RcLoader.php');
-
-		RcLoader::registerAutoloader();
-
-		if(defined('RCPHP_DEBUG') && RCPHP_DEBUG === true)
-		{
-			$GLOBALS["debug"] = 1; // 初例化开启debug
-			error_reporting(E_ALL ^ E_NOTICE);
-
-			//Open script computing time
-			RcDebug::start();
-			//Set to capture system anomalies
-			set_error_handler(array(
-				"RcDebug",
-				'catcher'
-			));
-		}
-		else
-		{
-			ini_set('display_errors', 'Off');
-			ini_set('log_errors', 'On');
-			ini_set('error_log', PRO_PATH . 'runtime/error_log.log');
-		}
-
-		RcStructure::run();
-
-		//Parsing the client parameters
-		$argvs = $_SERVER['argv'];
-
-		if(in_array('--help', $argvs))
-		{
-			$str = "example" . PHP_EOL;
-			$str .= "\tphp index.php -c=test -a=index -category=xiuzhen" . PHP_EOL;
-			$str .= "parameters" . PHP_EOL;
-			$str .= "\t-c\tController Name example:\$_GET['c']" . PHP_EOL;
-			$str .= "\t-a\tAction Name example:\$_GET['a']" . PHP_EOL;
-			$str .= "\t-category\tParameter example:\$_GET['category']" . PHP_EOL . PHP_EOL;
-			echo $str;
-			exit();
-		}
-
-		//Control the debug
-		if(in_array('--debug', $argvs))
-		{
-			debug(intval($argvs['--debug']));
-		}
-
-		$argvCount = count($argvs);
-
-		if($argvCount > 1)
-		{
-			foreach($argvs as $key => $argv)
-			{
-				if($key == 0)
-				{
-					continue;
-				}
-
-				$tmp = explode('=', $argv);
-				if(strpos($tmp[0], '--') !== false && $tmp[0] != '--debug')
-				{
-					echo "Please input -- help for help" . PHP_EOL . PHP_EOL;
-					exit();
-				}
-
-				$tmp[0] = str_replace('-', '', $tmp[0]);
-				$array[$tmp[0]] = $tmp[1];
-			}
-
-			$urlParams = $array;
-
-			if(!isset($array['c']))
-			{
-				$urlParams['c'] = DEFAULT_CONTROLLER;
-			}
-			if(!isset($array['a']))
-			{
-				$urlParams['a'] = DEFAULT_ACTION;
-			}
-		}
-		else
-		{
-			$urlParams['c'] = DEFAULT_CONTROLLER;
-			$urlParams['a'] = DEFAULT_ACTION;
-		}
-
-		self::$_controller = $urlParams['c'];
-		self::$_action = $urlParams['a'];
-
-		$controller = self::$_controller . 'Controller';
-		$action = self::$_action;
-
-		$loadControllerName = CONTROLLER_PATH . $controller . '.class.php';
-
-		self::loadFile($loadControllerName);
-
-		$appObject = new $controller();
-
-		if(method_exists($controller, $action))
-		{
-			$appObject->$action();
-		}
-		else
-		{
-			RcController::halt('The controller method ' . $action . ' does not exist');
-		}
-		//End time output debugging information.
-		if(defined('RCPHP_DEBUG') && RCPHP_DEBUG === true)
-		{
-			RcDebug::stop();
-			RcDebug::output();
+			Debug::stop();
+			Debug::output();
 		}
 	}
 
@@ -358,7 +233,7 @@ abstract class RcPHP
 	{
 		if(empty(self::$_config[$fileName]))
 		{
-			$filePath = $fileName === 'config' ? PRO_PATH . 'config.inc.php' : CONFIG_PATH . $fileName . '.inc.php';
+			$filePath = CONFIG_PATH . $fileName . '.inc.php';
 
 			if(file_exists($filePath))
 			{
