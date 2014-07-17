@@ -621,7 +621,7 @@ function dhtmlspecialchars($string, $charset = '')
 {
 	if(empty($charset))
 	{
-		$charset = RcCheck::isUtf8($string) === true ? 'UTF-8' : 'GB2312';
+		$charset = Check::isUtf8($string) === true ? 'UTF-8' : 'GB2312';
 	}
 
 	return version_compare(PHP_VERSION, '5.4', '>=') ? htmlspecialchars($string, ENT_QUOTES, $charset) : htmlspecialchars($string, ENT_QUOTES);
