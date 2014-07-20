@@ -54,6 +54,7 @@ defined('LOG_PATH') or define('LOG_PATH', RUNTIME_PATH . 'Logs' . DS);
 defined('CACHE_PATH') or define('CACHE_PATH', RUNTIME_PATH . 'Cache' . DS);
 defined('DATA_PATH') or define('DATA_PATH', PRO_PATH . 'Data' . DS);
 defined('EXT_PATH') or define('EXT_PATH', PRO_PATH . 'Class' . DS);
+defined('UPLOAD_PATH') or define('UPLOAD_PATH', PRO_PATH . 'Public' . DS . 'Upload' . DS);
 
 defined("URL_MODEL") or define("URL_MODEL", 1);
 defined("RCPHP_LOG") or define("RCPHP_LOG", true);
