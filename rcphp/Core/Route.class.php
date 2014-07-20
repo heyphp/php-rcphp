@@ -14,171 +14,129 @@ class Route
 {
 
 	/**
-	 * Route config
+	 * Route dispatch
 	 *
-	 * @var array
+	 * @return void
 	 */
-	private static $config = array();
-
-	/**
-	 * Analyze route rule.
-	 *
-	 * @return array
-	 */
-	public static function parseUrl()
+	public static function dispatch()
 	{
-		return self::queryString();
+		switch(URL_MODEL)
+		{
+			case 1:
+				self::queryString();
+				break;
+			case 2:
+				self::rest();
+				break;
+			case 3:
+				self::compat();
+				break;
+			default :
+				self::queryString();
+				break;
+		}
 	}
 
 	/**
-	 * Normal mode.
+	 * Route for rest.
 	 *
 	 * @return array
 	 */
-	public static function queryString()
+	public static function rest()
 	{
-		if(!empty($_SERVER['PATH_INFO']))
+		$reqUri = $_SERVER['REQUEST_URI'];
+		$reqStr = str_replace(BASE_URI, '', $reqUri);
+
+		if(substr($reqStr, 0, 1) == '/')
 		{
-			return self::pathinfo();
+			$reqStr = substr($reqStr, 1, strlen($reqStr));
 		}
-		else
+
+		if(substr($reqStr, strlen($reqStr) - 1) == '/')
 		{
+			$reqStr = substr($reqStr, 0, -1);
+		}
+
+		// convert uri into array
+		$reqArr = explode('/', $reqStr);
+		unset($reqStr);
+		unset($reqStr);
+
+		// first two segments is controller/action
+		RcPHP::$_controller = empty($reqArr['0']) ? DEFAULT_CONTROLLER : $reqArr['0'];
+		RcPHP::$_action = empty($reqArr['1']) ? DEFAULT_ACTION : $reqArr['1'];
+
+		// uri parameters
+		for($i = 2; $i < count($reqArr); $i++)
+		{
+			$f = $i % 2;
+			if($f == 0) $_GET[$reqArr[$i]] = RcPHP::$_params[$reqArr[$i]] = empty($reqArr[$i + 1]) ? null : $reqArr[$i + 1];
+		}
+	}
+
+	/**
+	 * Route for querystring.
+	 *
+	 * @return void
+	 */
+	private static function queryString()
+	{
+		$params = array();
+
+		$queryString = $_SERVER['QUERY_STRING'];
+
+		if($queryString != false)
+		{
+			$queryArray = explode("&", $queryString);
+
+			$tmp = array();
+
 			$params = array();
 
-			$queryString = $_SERVER['QUERY_STRING'];
-
-			if($queryString != false)
+			if(count($queryArray) > 0)
 			{
-				$queryArray = explode("&", $queryString);
-
-				$tmp = array();
-
-				$params = array();
-
-				if(count($queryArray) > 0)
+				foreach($queryArray as $item)
 				{
-					foreach($queryArray as $item)
-					{
-						$tmp = explode('=', $item);
-						$params[$tmp[0]] = $tmp[1];
-					}
-
-					if(empty($params['c']))
-					{
-						$params['c'] = $_GET['c'] = DEFAULT_CONTROLLER;
-					}
-
-					if(empty($params['a']))
-					{
-						$params['a'] = $_GET['a'] = DEFAULT_ACTION;
-					}
-				}
-				else
-				{
-					$params['c'] = $_GET['c'] = DEFAULT_CONTROLLER;
-					$params['a'] = $_GET['a'] = DEFAULT_ACTION;
+					$tmp = explode('=', $item);
+					$params[$tmp[0]] = $tmp[1];
 				}
 
-				unset($tmp);
+				if(empty($params['c']))
+				{
+					RcPHP::$_controller = $_GET['c'] = DEFAULT_CONTROLLER;
+					unset($params['c']);
+				}
+
+				if(empty($params['a']))
+				{
+					RcPHP::$_action = $_GET['a'] = DEFAULT_ACTION;
+					unset($params['a']);
+				}
+
+				RcPHP::$_params = $params;
 			}
 			else
 			{
-				$params['c'] = $_GET['c'] = DEFAULT_CONTROLLER;
-				$params['a'] = $_GET['a'] = DEFAULT_ACTION;
+				RcPHP::$_controller = $_GET['c'] = DEFAULT_CONTROLLER;
+				RcPHP::$_action = $_GET['a'] = DEFAULT_ACTION;
 			}
 
-			return $params;
+			unset($tmp);
+			unset($params);
+		}
+		else
+		{
+			RcPHP::$_controller = $_GET['c'] = DEFAULT_CONTROLLER;
+			RcPHP::$_action = $_GET['a'] = DEFAULT_ACTION;
 		}
 	}
 
 	/**
-	 * pathinfo mode.
+	 * Route fot compat.
 	 *
-	 * @return array
+	 * @return void
 	 */
-	public static function pathinfo()
+	public static function compat()
 	{
-		self::$config = RcPHP::getConfig("route");
-
-		if(empty(self::$config))
-		{
-			Controller::halt('The routing configuration errors');
-		}
-
-		$script_name = $_SERVER["SCRIPT_NAME"]; //获取当前文件的路径
-		$url = $_SERVER["REQUEST_URI"]; //获取完整的路径，包含"?"之后的字符串
-
-		if($url && strpos($url, $script_name, 0) !== false)
-		{
-			$url = substr($url, strlen($script_name));
-		}
-		else
-		{
-			$script_name = str_replace(basename($_SERVER["SCRIPT_NAME"]), '', $_SERVER["SCRIPT_NAME"]);
-			if($url && strpos($url, $script_name, 0) !== false)
-			{
-				$url = substr($url, strlen($script_name));
-			}
-		}
-
-		//第一个字符是'/'，则去掉
-		if($url[0] == '/')
-		{
-			$url = substr($url, 1);
-		}
-
-		//去除问号后面的查询字符串
-		if($url && false !== ($pos = @strrpos($url, '?')))
-		{
-			$url = substr($url, 0, $pos);
-		}
-
-		//去除后缀
-		if($url && ($pos = strrpos($url, self::$config['URL_HTML_SUFFIX'])) > 0)
-		{
-			$url = substr($url, 0, $pos);
-		}
-
-		$params = array();
-
-		//获取模块名称
-		if($url && ($pos = @strpos($url, self::$config['URL_CONTROLLER_DEPR'], 1)) > 0)
-		{
-			$params['c'] = $_GET['c'] = substr($url, 0, $pos);
-
-			$url = substr($url, $pos + 1);
-		}
-		else
-		{
-			$params['c'] = $_GET['c'] = DEFAULT_CONTROLLER;
-		}
-
-		//获取操作方法名称
-		if($url && ($pos = @strpos($url, self::$config['URL_ACTION_DEPR'], 1)) > 0)
-		{
-			$params['a'] = $_GET['a'] = substr($url, 0, $pos); //模块
-			$url = substr($url, $pos + 1);
-		}
-		else
-		{
-			$params['a'] = $_GET['a'] = DEFAULT_ACTION;
-		}
-
-		$param = explode(self::$config['URL_PARAM_DEPR'], $url);
-
-		$total = count($param);
-
-		for($i = 0; $i < $total; $i = $i + 2)
-		{
-			if(!empty($param[$i]))
-			{
-				$params[$param[$i]] = $_GET[$param[$i]] = empty($param[$i + 1]) ? '' : $param[$i + 1];
-			}
-		}
-
-		unset($param);
-		unset($total);
-
-		return $params;
 	}
 }
