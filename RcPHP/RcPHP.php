@@ -46,7 +46,7 @@ defined('CONTROLLER_PATH') or define('CONTROLLER_PATH', APP_PATH . 'Controller' 
 defined('MODEL_PATH') or define('MODEL_PATH', APP_PATH . 'Model' . DS);
 defined('VIEW_PATH') or define('VIEW_PATH', APP_PATH . 'View' . DS);
 
-defined('RUNTIME_PATH') or define('RUNTIME_PATH', APP_PATH . 'Runtime' . DS);
+defined('RUNTIME_PATH') or define('RUNTIME_PATH', PRO_PATH . 'Runtime' . DS);
 defined('CORE_PATH') or define('CORE_PATH', RCPHP_PATH . 'Core' . DS);
 defined('COMMON_PATH') or define('COMMON_PATH', PRO_PATH . 'Common' . DS);
 defined('CONF_PATH') or define('CONF_PATH', PRO_PATH . 'Conf' . DS);

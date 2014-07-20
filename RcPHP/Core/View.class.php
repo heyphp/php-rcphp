@@ -72,14 +72,14 @@ class View extends Base
 		if(empty($fileName))
 		{
 			//当前App下的views目录中
-			$fileName = APP_PATH . 'views' . DS . ucfirst(RcPHP::getController()) . DS . RcPHP::getAction();
+			$fileName = APP_PATH . 'View' . DS . ucfirst(RcPHP::getController()) . DS . RcPHP::getAction();
 
 			$viewFile = $fileName . $this->_ext;
 		}
 		else
 		{
 			//当前App下的views目录中
-			$fileName = APP_PATH . 'views' . DS . $fileName;
+			$fileName = APP_PATH . 'View' . DS . $fileName;
 
 			$viewFile = $fileName . $this->_ext;
 		}
@@ -110,7 +110,7 @@ class View extends Base
 
 		$this->layout = $fileName;
 
-		$layoutName = APP_PATH . DS . 'views' . DS . 'layout' . DS . $this->layout . '.php';
+		$layoutName = APP_PATH . DS . 'View' . DS . 'Layout' . DS . $this->layout . '.php';
 
 		include $layoutName;
 	}
