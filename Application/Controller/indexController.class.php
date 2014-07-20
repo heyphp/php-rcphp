@@ -15,11 +15,6 @@ class indexController extends Controller
 
 	public function index()
 	{
-		foreach($_ENV as $key => $value)
-		{
-			echo "{$key}: {$value}<br />";
-		}
-		exit();
 		$this->assign(array())
 			 ->display();
 	}

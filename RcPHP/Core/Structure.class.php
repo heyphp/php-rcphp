@@ -136,6 +136,7 @@ class    Structure extends Base
 				PRO_PATH . $remote . "Public" . DS . "Image" . DS,
 				PRO_PATH . "Class" . DS,
 				PRO_PATH . "Common" . DS,
+				PRO_PATH . "Conf" . DS,
 				PRO_PATH . "Data" . DS
 			);
 

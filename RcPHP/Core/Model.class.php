@@ -905,7 +905,7 @@ class Model
 	 */
 	protected function getConfig()
 	{
-		return RcPHP::getConfig('config');
+		return RcPHP::getConfig('database');
 	}
 
 	/**
