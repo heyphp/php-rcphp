@@ -707,8 +707,6 @@ class Model
 			return false;
 		}
 
-		$sql = strtolower($sql);
-
 		if($isSelect == true)
 		{
 			return $lines == true ? $this->slave()
@@ -716,10 +714,10 @@ class Model
 																 ->fetchRow($sql);
 		}
 
-		return substr($sql, 0, 6) == 'select' ? ($lines == true ? $this->master()
-																	   ->fetchAll($sql) : $this->master()
-																							   ->fetchRow($sql)) : $this->master()
-																														->execute($sql);
+		return substr(strtolower($sql), 0, 6) == 'select' ? ($lines == true ? $this->master()
+																				   ->fetchAll($sql) : $this->master()
+																										   ->fetchRow($sql)) : $this->master()
+																																	->execute($sql);
 	}
 
 	/**
@@ -866,7 +864,7 @@ class Model
 	 */
 	protected function master()
 	{
-		RcDebug::addMessage("Master connection");
+		Debug::addMessage("Master connection");
 
 		return $this->_master = $this->factory($this->_config['master'], 0);
 	}
@@ -882,6 +880,7 @@ class Model
 		{
 			return $this->_master = $this->factory($this->_config['master'], 0);
 		}
+		Debug::addMessage("Slave connection");
 
 		//获得从数据库配置的索引
 		$config_slave = $this->_config['slave'];
