@@ -31,6 +31,7 @@ class Loader
 		'Curl' => 'Net/Curl.class.php',
 		'Http' => 'Net/Http.class.php',
 		'Upload' => 'Net/Upload.class.php',
+		'Location' => 'Net/Location.class.php',
 		'Redis' => 'Storage/Redis.class.php',
 		'Captcha' => 'Util/Captcha.class.php',
 		'Check' => 'Util/Check.class.php',

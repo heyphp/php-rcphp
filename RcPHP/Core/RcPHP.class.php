@@ -194,6 +194,52 @@ class RcPHP
 	}
 
 	/**
+	 * 引用类库 同java的Import
+	 *
+	 * @param $package
+	 * @return bool|null
+	 */
+	public static function import($package)
+	{
+		if(empty($package))
+		{
+			return false;
+		}
+
+		$class = str_replace('.', DS, $package);
+
+		$class_strut = explode('/', $class);
+
+		$classfile = '';
+
+		if(in_array($class_strut[0], array(
+			'Cache',
+			'Core',
+			'DB',
+			'Mcrypt',
+			'Net',
+			'Storage',
+			'Util'
+		))
+		)
+		{
+			$classfile = RCPHP_PATH . $class . '.class.php';
+		}
+		elseif(is_dir(EXT_PATH . $class_strut[0]))
+		{
+			$classfile = EXT_PATH . $class . '.class.php';
+		}
+
+		if(class_exists(basename($class)) === true && !empty($classfile))
+		{
+			// 如果类不存在 则导入类库文件
+			return self::loadFile($classfile);
+		}
+
+		return null;
+	}
+
+	/**
 	 * Static load file is not repeated loading
 	 *
 	 * @param string $fileName
