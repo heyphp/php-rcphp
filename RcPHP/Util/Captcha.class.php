@@ -115,6 +115,22 @@ class Captcha
 	}
 
 	/**
+	 * 设置验证码长度
+	 *
+	 * @param int $len
+	 * @return $this
+	 */
+	public function setLength($len)
+	{
+		if(!empty($len))
+		{
+			$this->codelen = (int)$len;
+		}
+
+		return $this;
+	}
+
+	/**
 	 * 生成随机串
 	 *
 	 * @return void
