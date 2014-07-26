@@ -233,7 +233,9 @@ class RcPHP
 		if(class_exists(basename($class)) === true && !empty($classfile))
 		{
 			// 如果类不存在 则导入类库文件
-			return self::loadFile($classfile);
+			self::loadFile($classfile);
+
+			return Structure::singleton(basename($class));
 		}
 
 		return null;
