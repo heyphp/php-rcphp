@@ -110,7 +110,7 @@ class Curl
 		{
 			$this->userAgent = $ua;
 
-			RcDebug::addMessage("Set curl ua");
+			Debug::addMessage("Set curl ua");
 		}
 
 		return $this;

@@ -195,18 +195,20 @@ class Github
 	 */
 	private function http($url, $postfields = '', $method = 'GET', $headers = array())
 	{
-		$headers[] = "User-Agent: GitHub.PHP(piscdong.com)";
+		$ua = "User-Agent: GitHub.PHP(piscdong.com)";
 
 		if($method == "post")
 		{
 			return RcPHP::import("Net/Curl")
 						->setHeader($headers)
+						->setUserAgent($ua)
 						->post($url, $postfields);
 		}
 		else
 		{
 			return RcPHP::import("Net/Curl")
 						->setHeader($headers)
+						->setUserAgent($ua)
 						->get($url);
 		}
 	}
