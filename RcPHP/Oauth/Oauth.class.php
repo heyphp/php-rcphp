@@ -123,6 +123,13 @@ abstract class Oauth
 	}
 
 	/**
+	 * 获取当前授权用户信息
+	 *
+	 * @return mixed
+	 */
+	abstract public function me();
+
+	/**
 	 * 获取登录用户ID
 	 *
 	 * @return mixed
