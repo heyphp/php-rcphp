@@ -63,7 +63,7 @@ class Github
 	}
 
 	/**
-	 * 授权
+	 * 生成授权网址
 	 *
 	 * @param string $callback_url
 	 * @param string $scope
@@ -114,13 +114,14 @@ class Github
 
 		$result = $this->http($url, http_build_query($params), 'POST');
 
-		$json_result = array();
 		if(!empty($result))
 		{
-			parse_str($result, $json_result);
+			return json_decode($result, true);
 		}
-
-		return $json_result;
+		else
+		{
+			return array();
+		}
 	}
 
 	/**
@@ -130,9 +131,7 @@ class Github
 	 */
 	public function me()
 	{
-		$params = array();
-
-		return $this->api('user', $params);
+		return $this->api('user', array());
 	}
 
 	/**
@@ -142,9 +141,7 @@ class Github
 	 */
 	public function repos()
 	{
-		$params = array();
-
-		return $this->api('user/repos', $params);
+		return $this->api('user/repos', array());
 	}
 
 	/**
@@ -174,14 +171,14 @@ class Github
 			$result = $this->http($url, http_build_query($params), 'POST');
 		}
 
-		$return = array();
-
 		if(!empty($result))
 		{
-			$return = json_decode($result, true);
+			return json_decode($result, true);
 		}
-
-		return $return;
+		else
+		{
+			return array();
+		}
 	}
 
 	/**

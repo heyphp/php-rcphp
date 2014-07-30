@@ -50,6 +50,11 @@ class Loader
 		'Memcache' => 'Cache/Memcache.class.php',
 		'Xcache' => 'Cache/Xcache.class.php',
 		'Mysql' => 'Db/Mysql.class.php',
+		'Oauth' => 'Oauth/Oauth.class.php',
+		'Baidu' => 'Oauth/Baidu.class.php',
+		'Github' => 'Oauth/Github.class.php',
+		'Weibo' => 'Oauth/Weibo.class.php',
+		'Google' => 'Oauth/Google.class.php',
 	);
 
 	/**
