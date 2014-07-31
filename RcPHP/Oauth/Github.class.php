@@ -10,7 +10,7 @@
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class Github
+class Github extends Oauth
 {
 
 	/**
@@ -18,28 +18,7 @@ class Github
 	 *
 	 * @var string
 	 */
-	private $api_url = 'https://api.github.com/';
-
-	/**
-	 * Client ID.
-	 *
-	 * @var null|string
-	 */
-	private $client_id = null;
-
-	/**
-	 * Client Secret.
-	 *
-	 * @var null|string
-	 */
-	private $client_secret = null;
-
-	/**
-	 * Access token.
-	 *
-	 * @var null|string
-	 */
-	private $access_token = null;
+	private $apiBase = 'https://api.github.com/';
 
 	/**
 	 * 构造方法 Github配置
@@ -48,13 +27,15 @@ class Github
 	 */
 	public function __construct()
 	{
+		parent::__construct();
+
 		$conf = RcPHP::getConfig("github");
 
-		if(!empty($conf) && !empty($conf['client_id']) && !empty($conf['client_secret']))
+		if(!empty($conf) && !empty($conf['appKey']) && !empty($conf['appSecret']) && !empty($conf['callback']))
 		{
-			$this->client_id = $conf['client_id'];
-			$this->client_secret = $conf['client_secret'];
-			empty($conf['access_token']) or $this->access_token = $conf['access_token'];
+			$this->appKey = $conf['appKey'];
+			$this->appSecret = $conf['appSecret'];
+			$this->callback = $conf['callback'];
 		}
 		else
 		{
@@ -69,11 +50,11 @@ class Github
 	 * @param string $scope
 	 * @return string
 	 */
-	public function login_url($callback_url, $scope = '')
+	public function login_url($callback_url = '', $scope = '')
 	{
-		if(empty($callback_url))
+		if(!empty($callback))
 		{
-			Controller::halt("The callback param is null.");
+			$this->callback = $callback;
 		}
 
 		$params = array(
@@ -88,17 +69,11 @@ class Github
 	/**
 	 * 获取access_token
 	 *
-	 * @param string $callback_url
 	 * @param string $code
 	 * @return array
 	 */
-	public function access_token($callback_url, $code)
+	public function access_token($code)
 	{
-		if(empty($callback_url))
-		{
-			Controller::halt("The callback param is null.");
-		}
-
 		if(empty($code))
 		{
 			Controller::halt("The code param is null.");
@@ -106,9 +81,9 @@ class Github
 
 		$params = array(
 			'code' => $code,
-			'client_id' => $this->client_id,
-			'client_secret' => $this->client_secret,
-			'redirect_uri' => $callback_url
+			'client_id' => $this->appKey,
+			'client_secret' => $this->responseType,
+			'redirect_uri' => $this->callback
 		);
 		$url = 'https://github.com/login/oauth/access_token';
 
@@ -116,7 +91,9 @@ class Github
 
 		if(!empty($result))
 		{
-			return json_decode($result, true);
+			$this->token = $this->parseToken($result);
+
+			return $this->token;
 		}
 		else
 		{
@@ -145,6 +122,32 @@ class Github
 	}
 
 	/**
+	 * 获取登录用户ID
+	 *
+	 * @return null|string
+	 */
+	public function getOpenId()
+	{
+		if(!empty($this->token['openid']))
+		{
+			return $this->token['openid'];
+		}
+
+		$data = $this->me();
+
+		if(!empty($data))
+		{
+			$data = json_decode($data, true);
+
+			return empty($data['id']) ? null : $data['id'];
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
 	 * 其他Api调用
 	 *
 	 * @param string $url
@@ -152,23 +155,21 @@ class Github
 	 * @param string $method
 	 * @return array|mixed
 	 */
-	public function api($url, $params = array(), $method = 'GET')
+	public function api($url, array $params = array(), $method = 'GET')
 	{
 		if(empty($url))
 		{
 			Controller::halt("The url param is null.");
 		}
 
-		$url = $this->api_url . $url;
-		$params['access_token'] = $this->access_token;
-
-		if($method == 'GET')
+		$url = $this->$apiBase . $url;
+		if(!empty($this->token['token']))
 		{
-			$result = $this->http($url . '?' . http_build_query($params));
+			$params['access_token'] = $this->token['token'];
 		}
 		else
 		{
-			$result = $this->http($url, http_build_query($params), 'POST');
+			throw new Exception("The access token is null.");
 		}
 
 		if(!empty($result))
@@ -178,35 +179,6 @@ class Github
 		else
 		{
 			return array();
-		}
-	}
-
-	/**
-	 * 提交请求
-	 *
-	 * @param string $url
-	 * @param string $postfields
-	 * @param string $method
-	 * @param array  $headers
-	 * @return mixed
-	 */
-	private function http($url, $postfields = '', $method = 'GET', $headers = array())
-	{
-		$ua = "User-Agent: GitHub.PHP(piscdong.com)";
-
-		if($method == "post")
-		{
-			return RcPHP::import("Net/Curl")
-						->setHeader($headers)
-						->setUserAgent($ua)
-						->post($url, $postfields);
-		}
-		else
-		{
-			return RcPHP::import("Net/Curl")
-						->setHeader($headers)
-						->setUserAgent($ua)
-						->get($url);
 		}
 	}
 }
