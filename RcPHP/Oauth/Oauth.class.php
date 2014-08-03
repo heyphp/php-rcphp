@@ -81,7 +81,7 @@ abstract class Oauth
 
 		$data = json_decode($data, true);
 
-		if($data['access_token'] && $data['expires_in'] && $data['refresh_token'])
+		if($data['access_token'] && $data['expires_in'])
 		{
 			$data['openid'] = $this->getOpenId();
 
@@ -102,7 +102,7 @@ abstract class Oauth
 	 * @param array  $headers
 	 * @return mixed
 	 */
-	protected function http($url, $postfields = '', $method = 'GET', $headers = array())
+	protected function http($url, array $params = array(), $method = 'GET', $headers = array())
 	{
 		$ua = "User-Agent: RcPHP.PHP(piscdong.com)";
 
@@ -111,8 +111,9 @@ abstract class Oauth
 			return RcPHP::import("Net/Curl")
 						->setHeader($headers)
 						->setUserAgent($ua)
-						->post($url, $postfields);
+						->post($url, $params);
 		}
+
 		else
 		{
 			return RcPHP::import("Net/Curl")

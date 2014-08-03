@@ -58,8 +58,8 @@ class Github extends Oauth
 		}
 
 		$params = array(
-			'client_id' => $this->client_id,
-			'redirect_uri' => $callback_url,
+			'client_id' => $this->appKey,
+			'redirect_uri' => $this->callback,
 			'scope' => $scope
 		);
 
@@ -137,8 +137,6 @@ class Github extends Oauth
 
 		if(!empty($data))
 		{
-			$data = json_decode($data, true);
-
 			return empty($data['id']) ? null : $data['id'];
 		}
 		else
@@ -171,6 +169,8 @@ class Github extends Oauth
 		{
 			throw new Exception("The access token is null.");
 		}
+
+		$result = $this->http($url, $params, $method);
 
 		if(!empty($result))
 		{
