@@ -235,7 +235,7 @@ class Model
 	{
 		if(empty($order))
 		{
-			Controller::halt('SQL query sort is empty');
+			Controller::halt('The order param is empty.');
 		}
 
 		if(is_array($order))
