@@ -184,7 +184,7 @@ class Check
 			return false;
 		}
 
-		return preg_match('#^(13|15|18)[0-9]{9}$#', $num) ? true : false;
+		return preg_match('#^(13|15|18|17)[0-9]{9}$#', $num) ? true : false;
 	}
 
 	/**
