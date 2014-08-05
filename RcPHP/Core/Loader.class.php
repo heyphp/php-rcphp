@@ -46,7 +46,6 @@ class Loader
 		'Xml' => 'Util/Xml.class.php',
 		'Apc' => 'Cache/Apc.class.php',
 		'Eaccelerator' => 'Cache/Eaccelerator.class.php',
-		'FileBuffer' => 'Cache/FileBuffer.class.php',
 		'Memcache' => 'Cache/Memcache.class.php',
 		'Xcache' => 'Cache/Xcache.class.php',
 		'Mysql' => 'Db/Mysql.class.php',
