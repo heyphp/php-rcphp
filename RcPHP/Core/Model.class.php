@@ -114,23 +114,18 @@ class Model
 	 *
 	 * @param string $tableName
 	 * @param array  $fields
-	 * @return object
+	 * @return $this
 	 */
-	public function from($tableName = null, $fields = null)
+	public function from($tableName, $fields = '*')
 	{
 		if(is_null($tableName))
 		{
-			Controller::halt('Table name is empty');
+			Controller::halt('The table name is empty.');
 		}
 
 		$tableStr = (!empty($this->_prefix)) ? $this->_prefix . trim($tableName) : trim($tableName);
 
-		if(is_array($fields))
-		{
-			$fields = $this->_parseFields($fields);
-		}
-
-		if(is_null($fields))
+		if(empty($fields))
 		{
 			$fields = $this->getTableFields($tableName);
 			$fields = implode(',', $fields);
@@ -142,49 +137,17 @@ class Model
 	}
 
 	/**
-	 * 解析数据表字段信息
-	 *
-	 * @param array $fields
-	 * @return string
-	 */
-	protected function _parseFields($fields = null)
-	{
-		if(is_null($fields))
-		{
-			Controller::halt('Table fields is empty');
-		}
-
-		$fieldsStr = "";
-
-		if(is_array($fields))
-		{
-			$fieldArray = array();
-			foreach($fields as $key => $value)
-			{
-				$fieldArray[] = is_int($key) ? $value : "`" . $value . "` AS `" . $key . "`";
-			}
-
-			$fieldsStr = implode(',', $fieldArray);
-			//销毁不必要的数据 减少内存占用
-			unset($fieldArray);
-		}
-		else
-		{
-			$fieldsStr = "`" . $fields . "`";
-		}
-
-		return $fieldsStr;
-	}
-
-	/**
 	 * 组装SQL语句的WHERE语句
 	 *
 	 * @param string|array $where
-	 * @return object
+	 * @return $this
 	 */
 	public function where($where)
 	{
-
+		if(empty($where))
+		{
+			Controller::halt("The where param is empty.");
+		}
 		//直接传入条件字符串
 		if(!is_array($where))
 		{
