@@ -61,7 +61,6 @@ class Location
 	/**
 	 * 返回读取的长整型数
 	 *
-	 * @access private
 	 * @return int
 	 */
 	private function getlong()
