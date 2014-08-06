@@ -139,83 +139,29 @@ class Model
 	/**
 	 * 组装SQL语句的WHERE语句
 	 *
-	 * @param string|array $where
+	 * @param string $where
+	 * @param string $cond
 	 * @return $this
 	 */
-	public function where($where)
+	public function where($where, $cond = '')
 	{
 		if(empty($where))
 		{
 			Controller::halt("The where param is empty.");
 		}
-		//直接传入条件字符串
-		if(!is_array($where))
+
+		if(!empty($cond) && is_string($where))
 		{
-			$this->_params['where'] = isset($this->_params['where']) ? $this->_params['where'] . ' AND ' . $where : ' WHERE ' . $where;
-
-			return $this;
-		}
-		$this->_parseWhere($where, true);
-
-		return $this;
-	}
-
-	/**
-	 * 组装SQL语句的ORWHERE语句
-	 *
-	 * @param string|array $where
-	 * @return object
-	 */
-	public function orwhere($where)
-	{
-
-		//直接传入条件字符串
-		if(!is_array($where))
-		{
-			$this->_params['orWhere'] = isset($this->_params['where']) ? $this->_params['where'] . ' AND ' . $where : ' WHERE ' . $where;
-
-			return $this;
-		}
-		$this->_parseWhere($where, false);
-
-		return $this;
-	}
-
-	/**
-	 * 解析where条件
-	 *
-	 * @param string $where
-	 * @param bool   $isWhere
-	 * @return object
-	 */
-	protected function _parseWhere($where, $isWhere = true)
-	{
-		if(empty($where))
-		{
-			Controller::halt('SQL query condition is empty');
-		}
-
-		if(is_array($where))
-		{
-			$wheres = array();
-			foreach($where as $string)
+			if(!is_array($cond))
 			{
-				$wheres[] = trim($string);
+				$parse = func_get_args();
+				array_shift($parse);
 			}
-
-			$where = implode(' AND ', $wheres);
-
-			unset($wheres);
+			$parse = array_map($this->quote(), $parse);
+			$where = vsprintf($where, $parse);
 		}
 
-		if($isWhere == true)
-		{
-			$this->_params['where'] = isset($this->_params['where']) ? $this->_params['where'] . ' AND ' . $where : ' WHERE ' . $where;
-		}
-		else
-		{
-			$this->_params['orWhere'] = isset($this->_params['orWhere']) ? $this->_params['orWhere'] . ' AND ' . $where : ' OR ' . $where;
-		}
+		$this->_params['where'] = !empty($this->_params['where']) ? $this->_params['where'] . ' AND ' . $where : ' WHERE ' . $where;
 
 		return $this;
 	}
@@ -701,8 +647,6 @@ class Model
 	 */
 	public function quote($value = null)
 	{
-
-		//参数判断
 		if(is_null($value))
 		{
 			return false;
