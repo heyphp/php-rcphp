@@ -175,7 +175,7 @@ class Model
 	 * 2.
 	 * $this->order(array('id desc','price asc'));
 	 * @param string|array $order
-	 * @return object
+	 * @return $this
 	 */
 	public function order($order)
 	{
@@ -198,7 +198,7 @@ class Model
 
 		$order = trim($order);
 
-		$this->_params['order'] = isset($this->_params['order']) ? $this->_params['order'] . ',' . $order : ' ORDER BY ' . $order;
+		$this->_params['order'] = !empty($this->_params['order']) ? $this->_params['order'] . ',' . $order : ' ORDER BY ' . $order;
 
 		return $this;
 	}
