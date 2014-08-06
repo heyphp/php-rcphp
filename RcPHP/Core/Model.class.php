@@ -248,7 +248,6 @@ class Model
 	 */
 	public function join($tableName, $where, $join = 'INNER')
 	{
-		//²ÎÊý·ÖÎö
 		if(empty($tableName) || empty($where))
 		{
 			Controller::halt('The name of the table or the condition is empty');
