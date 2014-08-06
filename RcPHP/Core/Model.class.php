@@ -208,7 +208,7 @@ class Model
 	 *
 	 * @param int $offset
 	 * @param int $count
-	 * @return object
+	 * @return $this
 	 */
 	public function limit($offset, $count = null)
 	{
@@ -227,7 +227,7 @@ class Model
 	 *
 	 * @param int $page
 	 * @param int $count
-	 * @return object
+	 * @return $this
 	 */
 	public function page($page, $count)
 	{
@@ -244,7 +244,7 @@ class Model
 	 * @param string $tableName
 	 * @param string $where
 	 * @param string $join
-	 * @return object
+	 * @return $this
 	 */
 	public function join($tableName, $where, $join = 'INNER')
 	{
@@ -253,11 +253,11 @@ class Model
 			Controller::halt('The name of the table or the condition is empty');
 		}
 
-		$tableNameStr = (!empty($this->_prefix)) ? $this->_prefix . trim($tableName) : '`' . trim($tableName) . '`';
+		$tableName = (!empty($this->_prefix)) ? $this->_prefix . trim($tableName) : '`' . trim($tableName) . '`';
 
 		//处理条件语句
 		$where = trim($where);
-		$this->_params['join'] = isset($this->_params['join']) ? $this->_params['join'] . ' ' . $join . ' JOIN ' . $tableNameStr . ' ON ' . $where : ' ' . $join . ' JOIN ' . $tableNameStr . ' ON ' . $where;
+		$this->_params['join'] = !empty($this->_params['join']) ? $this->_params['join'] . ' ' . $join . ' JOIN ' . $tableName . ' ON ' . $where : ' ' . $join . ' JOIN ' . $tableName . ' ON ' . $where;
 
 		return $this;
 	}
@@ -265,28 +265,17 @@ class Model
 	/**
 	 * 组装group语句
 	 *
-	 * @param array|string $fieldName
-	 * @return object
+	 * @param string $field
+	 * @return $this
 	 */
-	public function group($fieldName)
+	public function group($field)
 	{
-		if(empty($fieldName))
+		if(empty($field))
 		{
-			Controller::halt('The SQL statement grouping field does not exist');
+			Controller::halt('The SQL statement grouping field does not exist.');
 		}
 
-		if(is_array($fieldName))
-		{
-			$groupArray = array();
-			foreach($fieldName as $field)
-			{
-				$groupArray[] = trim($field);
-			}
-			$fieldName = implode(',', $groupArray);
-			unset($groupArray);
-		}
-
-		$this->_params['group'] = isset($this->_params['group']) ? $this->_params['group'] . ', ' . $fieldName : ' GROUP BY ' . $fieldName;
+		$this->_params['group'] = !empty($this->_params['group']) ? $this->_params['group'] . ', ' . $field : ' GROUP BY ' . $field;
 
 		return $this;
 	}
@@ -294,64 +283,29 @@ class Model
 	/**
 	 * 组装SQL语句的having语句
 	 *
-	 * @param string|array $where
-	 * @return object
-	 */
-	public function having($where)
-	{
-		$this->_parseWhere($where, true);
-
-		return $this;
-	}
-
-	/**
-	 * 组装SQL语句的orhaving语句
-	 *
-	 * @param string|array $where
-	 * @return object
-	 */
-	public function orhaving($where)
-	{
-		$this->_parseWhere($where, false);
-
-		return $this;
-	}
-
-	/**
-	 * 解析where条件
-	 *
 	 * @param string $where
-	 * @param bool   $isWhere
-	 * @return object
+	 * @param string $cond
+	 * @return $this
 	 */
-	protected function _parseHaving($where, $isWhere = true)
+	public function having($where, $cond = '')
 	{
 		if(empty($where))
 		{
-			Controller::halt('SQL query packets condition is empty');
+			Controller::halt("The where param is empty.");
 		}
 
-		if(is_array($where))
+		if(!empty($cond) && is_string($where))
 		{
-			$wheres = array();
-			foreach($where as $string)
+			if(!is_array($cond))
 			{
-				$wheres[] = trim($string);
+				$parse = func_get_args();
+				array_shift($parse);
 			}
-
-			$where = implode(' AND ', $wheres);
-
-			unset($wheres);
+			$parse = array_map($this->quote(), $parse);
+			$where = vsprintf($where, $parse);
 		}
 
-		if($isWhere == true)
-		{
-			$this->_params['having'] = isset($this->_params['having']) ? $this->_params['having'] . ' AND ' . $where : ' WHERE ' . $where;
-		}
-		else
-		{
-			$this->_params['orHaving'] = isset($this->_params['orHaving']) ? $this->_params['orHaving'] . ' AND ' . $where : ' OR ' . $where;
-		}
+		$this->_params['having'] = !empty($this->_params['having']) ? $this->_params['having'] . ' AND ' . $where : ' WHERE ' . $where;
 
 		return $this;
 	}
@@ -451,22 +405,16 @@ class Model
 	 * @param bool   $insertId
 	 * @return mixed
 	 */
-	public function insert($tableName, array $data, $isReplace = false, $insertId = true)
+	public function insert($tableName, array $data, $replace = false, $insertId = true)
 	{
-		//对函数的参数进行判断
 		if(empty($tableName))
 		{
-			Controller::halt('Table name is empty');
+			Controller::halt('Table name is empty.');
 		}
 
-		if(!is_array($data))
+		if(!is_array($data) || empty($data))
 		{
-			Controller::halt('The data format is not correct');
-		}
-
-		if(empty($data))
-		{
-			return false;
+			Controller::halt('The data format is not correct.');
 		}
 
 		//组装SQL语句
@@ -484,7 +432,7 @@ class Model
 
 		$tableName = !empty($this->_prefix) ? $this->_prefix . trim($tableName) : trim($tableName);
 
-		if($isReplace === true)
+		if($replace === true)
 		{
 			$sqlString = 'REPLACE INTO `' . $tableName . '`(' . $fieldString . ') VALUES (' . $valueString . ')';
 		}
@@ -510,26 +458,21 @@ class Model
 	/**
 	 * 更新数据
 	 *
-	 * @param string       $tableName
-	 * @param array        $data
-	 * @param string|array $where
+	 * @param string $tableName
+	 * @param array  $data
+	 * @param string $where
 	 * @return object
 	 */
-	public function update($tableName, $data, $where = null)
+	public function update($tableName, $data, $where = '')
 	{
 		if(empty($tableName))
 		{
-			Controller::halt('Table name is empty');
+			Controller::halt('Table name is empty.');
 		}
 
-		if(!is_array($data))
+		if(!is_array($data) || empty($data))
 		{
-			Controller::halt('The data format is not correct');
-		}
-
-		if(empty($data))
-		{
-			return false;
+			Controller::halt('The data format is not correct.');
 		}
 
 		$values = array();
@@ -540,17 +483,9 @@ class Model
 		$valueStr = implode(',', $values);
 		unset($values);
 
-		if(!is_null($where))
-		{
-			if(is_array($where))
-			{
-				$where = implode(" AND ", $where);
-			}
-		}
-
 		$tableName = !empty($this->_prefix) ? $this->_prefix . trim($tableName) : trim($tableName);
 
-		if(!is_null($where))
+		if(!empty($where))
 		{
 			$sqlStr = 'UPDATE ' . $tableName . ' SET ' . $valueStr . ' WHERE ' . $where;
 		}
@@ -566,28 +501,20 @@ class Model
 	/**
 	 * 删除数据
 	 *
-	 * @param string       $tableName
-	 * @param string|array $where
+	 * @param string $tableName
+	 * @param string $where
 	 * @return object
 	 */
 	public function delete($tableName, $where = null)
 	{
 		if(empty($tableName))
 		{
-			Controller::halt('Table name is empty');
-		}
-
-		if(!is_null($where))
-		{
-			if(is_array($where))
-			{
-				$where = implode(" AND ", $where);
-			}
+			Controller::halt('Table name is empty.');
 		}
 
 		$tableName = !empty($this->_prefix) ? $this->_prefix . trim($tableName) : trim($tableName);
 
-		if(!is_null($where))
+		if(!empty($where))
 		{
 			$sqlStr = 'DELETE FROM ' . $tableName . ' WHERE ' . $where;
 		}
@@ -644,9 +571,9 @@ class Model
 	 *
 	 * @return string
 	 */
-	public function quote($value = null)
+	public function quote($value)
 	{
-		if(is_null($value))
+		if(empty($value))
 		{
 			return false;
 		}
@@ -717,7 +644,7 @@ class Model
 
 		if(!is_array($params))
 		{
-			Controller::halt('Error loading the database configuration');
+			Controller::halt('Error loading the database configuration.');
 		}
 
 		//数据库表前缀
@@ -852,12 +779,26 @@ class Model
 	}
 
 	/**
+	 * 关闭数据库链接
+	 *
+	 * @return void
+	 */
+	public function close()
+	{
+		$this->master()
+			 ->close();
+		$this->slave()
+			 ->close();
+	}
+
+	/**
 	 * 析构函数
 	 *
 	 * @return void
 	 */
 	public function __destruct()
 	{
+		$this->close();
 		unset($this->_params);
 	}
 }
