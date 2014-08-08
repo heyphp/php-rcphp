@@ -14,13 +14,6 @@ class Captcha
 {
 
 	/**
-	 * 随机因子
-	 *
-	 * @var string
-	 */
-	private $charset = 'abcdefghkmnprstuvwxyzABCDEFGHKMNPRSTUVWXYZ234567890';
-
-	/**
 	 * 验证码
 	 *
 	 * @var string
@@ -83,7 +76,7 @@ class Captcha
 	 */
 	public function __construct()
 	{
-		$this->font = RCPHP_PATH . 'sources/font/elephant.ttf';
+		$this->font = RCPHP_PATH . 'Tpl' . DS . 'ttfs' . DS . 'elephant.ttf';
 	}
 
 	/**
@@ -94,7 +87,7 @@ class Captcha
 	 */
 	public function setFont($fontName)
 	{
-		$this->font = $fontName;
+		$this->font = RCPHP_PATH . 'Tpl' . DS . 'ttfs' . DS . $fontName . '.ttf';
 
 		return $this;
 	}
@@ -137,11 +130,7 @@ class Captcha
 	 */
 	private function createCode()
 	{
-		$_len = strlen($this->charset) - 1;
-		for($i = 0; $i < $this->codelen; $i++)
-		{
-			$this->code .= $this->charset[mt_rand(0, $_len)];
-		}
+		String::rand_string($this->codelen);
 	}
 
 	/**
