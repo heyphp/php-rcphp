@@ -44,6 +44,7 @@ class Loader
 		'Session' => 'Util/Session.class.php',
 		'String' => 'Util/String.class.php',
 		'Xml' => 'Util/Xml.class.php',
+		'Yac' => 'Cache/Yac.class.php',
 		'Apc' => 'Cache/Apc.class.php',
 		'Memcache' => 'Cache/Memcache.class.php',
 		'Xcache' => 'Cache/Xcache.class.php',
