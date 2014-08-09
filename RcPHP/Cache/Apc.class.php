@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Apc class file.
  *
@@ -9,6 +8,8 @@
  * @package        Cache
  * @since          1.0
  */
+defined('IN_RCPHP') or exit('Access denied');
+
 class Apc
 {
 
