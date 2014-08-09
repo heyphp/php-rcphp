@@ -68,7 +68,7 @@ class Structure extends Base
 
 			self::buildRuntime();
 
-			file_put_contents($runFile, implode("\n", self::$message));
+			file_put_contents($runFile, implode("\n", $sourceDirs));
 		}
 	}
 
