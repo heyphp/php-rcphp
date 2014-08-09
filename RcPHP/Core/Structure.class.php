@@ -10,15 +10,8 @@
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class    Structure extends Base
+class Structure extends Base
 {
-
-	/**
-	 * Infomation
-	 *
-	 * @var array
-	 */
-	public static $message = array();
 
 	/**
 	 * Objects
@@ -28,88 +21,12 @@ class    Structure extends Base
 	public static $_objects = array();
 
 	/**
-	 * Create file.
-	 *
-	 * @param string $fileName
-	 * @param string $str
-	 * @return void
-	 */
-	public static function touch($fileName, $str)
-	{
-		if(!file_exists($fileName))
-		{
-			if(file_put_contents($fileName, $str))
-			{
-				self::$message[] = date('Y-m-d H:i:s', time()) . " Create file " . $fileName . " success.";
-				Debug::addMessage("Create file " . $fileName . " success.");
-			}
-		}
-	}
-
-	/**
-	 * Create dir.
-	 *
-	 * @param array|string $dirs
-	 * @return void
-	 */
-	public static function mkdir($dirs)
-	{
-		if(is_array($dirs))
-		{
-			foreach($dirs as $dir)
-			{
-				if(!is_dir($dir))
-				{
-					if(mkdir($dir, 0755))
-					{
-						self::$message[] = date('Y-m-d H:i:s', time()) . "　Create directory " . $dir . " success.";
-						Debug::addMessage("Create directory " . $dir . " success.");
-					}
-				}
-			}
-		}
-		else
-		{
-			if(!is_dir($dirs))
-			{
-				if(mkdir($dirs, 0755))
-				{
-					self::$message[] = date('Y-m-d H:i:s', time()) . "　Create directory " . $dirs . " success.";
-					Debug::addMessage("Create directory " . $dirs . " success.");
-				}
-			}
-		}
-	}
-
-	/**
-	 * Create runtime dir.
-	 *
-	 * @return void
-	 */
-	public static function runtime()
-	{
-		if(!is_writable(PRO_PATH . 'Runtime'))
-		{
-			Controller::halt('Do not write the runtime directory');
-		}
-
-		$dirs = array(
-			PRO_PATH . "Runtime" . DS . "Cache" . DS,
-			PRO_PATH . "Runtime" . DS . "Logs" . DS
-		);
-
-		self::mkdir($dirs);
-	}
-
-	/**
 	 * 初始化系统结构
 	 *
 	 * @return void
 	 */
 	public static function run()
 	{
-		self::mkdir(PRO_PATH . 'Runtime' . DS);
-
 		//locked file.
 		$runFile = RUNTIME_PATH . md5(APP_PATH);
 
@@ -117,7 +34,7 @@ class    Structure extends Base
 		{
 			if(!is_writable(PRO_PATH))
 			{
-				Controller::halt('Do not write the [' . PRO_PATH . '] directory');
+				Controller::halt('Do not write the [' . PRO_PATH . '] directory.');
 			}
 
 			$remote = '';
@@ -125,7 +42,7 @@ class    Structure extends Base
 			if(defined('REMOTE_PATH'))
 			{
 				$remote = REMOTE_PATH . DS;
-				self::mkdir(PRO_PATH . REMOTE_PATH . DS);
+				if(!is_dir(PRO_PATH . REMOTE_PATH . DS)) mkdir(PRO_PATH . REMOTE_PATH . DS, 0755, true);
 			}
 
 			$sourceDirs = array(
@@ -134,57 +51,91 @@ class    Structure extends Base
 				PRO_PATH . $remote . "Public" . DS . "Style" . DS,
 				PRO_PATH . $remote . "Public" . DS . "Script" . DS,
 				PRO_PATH . $remote . "Public" . DS . "Image" . DS,
-				PRO_PATH . "Class" . DS,
-				PRO_PATH . "Common" . DS,
-				PRO_PATH . "Conf" . DS,
-				PRO_PATH . "Data" . DS
+				EXT_PATH,
+				COMMON_PATH,
+				CONF_PATH,
+				DATA_PATH
 			);
 
-			self::mkdir($sourceDirs);
-
-			// Create app directory.
-			self::mkdir(APP_PATH);
-
-			if(!is_writable(APP_PATH))
+			foreach($sourceDirs as $dir)
 			{
-				Controller::halt('Application [' . APP_PATH . '] cannot write, directory cannot be automatically generated');
+				if(!is_dir($dir)) mkdir($dir, 0755, true);
 			}
 
-			$appDirs = array(
-				APP_PATH,
-				APP_PATH . "Model" . DS,
-				APP_PATH . "Controller" . DS,
-				APP_PATH . "View" . DS,
-				APP_PATH . "View" . DS . "Layout" . DS
-			);
-
-			self::mkdir($appDirs);
+			self::buildApp();
 
 			self::buildController();
-		}
 
-		self::runtime();
+			self::buildRuntime();
 
-		if(!file_exists($runFile))
-		{
-			self::touch($runFile, implode("\n", self::$message));
+			file_put_contents($runFile, implode("\n", self::$message));
 		}
 	}
 
 	/**
-	 * Write defaulr controller files.
+	 * Create app dir.
+	 *
+	 * @return void
+	 */
+	public static function buildApp()
+	{
+		// Create app directory.
+		if(!is_dir(APP_PATH)) mkdir(APP_PATH, 0755, true);
+
+		if(!is_writable(APP_PATH))
+		{
+			Controller::halt('Application [' . APP_PATH . '] cannot write, directory cannot be automatically generated.');
+		}
+
+		$appDirs = array(
+			CONTROLLER_PATH,
+			MODEL_PATH,
+			VIEW_PATH,
+			VIEW_PATH . "Layout" . DS
+		);
+
+		foreach($appDirs as $dir)
+		{
+			if(!is_dir($dir)) mkdir($dir, 0755, true);
+		}
+	}
+
+	/**
+	 * Create runtime dir.
+	 *
+	 * @return void
+	 */
+	public static function buildRuntime()
+	{
+		if(!is_dir(RUNTIME_PATH)) mkdir(RUNTIME_PATH, 0755, true);
+
+		if(!is_writable(RUNTIME_PATH))
+		{
+			Controller::halt('Do not write the runtime directory.');
+		}
+
+		if(!is_dir(CACHE_PATH)) mkdir(CACHE_PATH, 0755);
+		if(!is_dir(LOG_PATH)) mkdir(LOG_PATH, 0755);
+	}
+
+	/**
+	 * Write default controller files.
 	 *
 	 * @return void
 	 */
 	public static function buildController()
 	{
-		// Copy default controller file.
-		$destFile = CONTROLLER_PATH . 'indexController.class.php';
+		$file = CONTROLLER_PATH . 'indexController.class.php';
 
-		if(!file_exists($destFile))
+		if(!file_exists($file))
 		{
-			$content = file_get_contents(RCPHP_PATH . 'sources' . DS . 'html' . DS . 'defaultIndex.php');
-			file_put_contents($destFile, $content);
+			$controller = '<?php
+class indexController extends Controller {
+    public function index(){
+        echo \'<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: "微软雅黑"; color: #333;} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.8em; font-size: 36px }</style><div style="padding: 24px 48px;"> <h1>:)</h1><p>Welcome <b>RcPHP</b>!</p></div>\';
+    }
+}';
+			file_put_contents($file, $controller);
 		}
 	}
 
