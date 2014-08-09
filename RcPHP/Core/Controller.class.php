@@ -98,7 +98,7 @@ class Controller extends Base
 					header('HTTP/1.1 404 Not Found');
 					header('Status:404 Not Found');
 
-					include_once RCPHP_PATH . 'sources/html/exception.php';
+					include_once RCPHP_PATH . 'Tpl' . DS . 'exception.php';
 				}
 				else
 				{
@@ -106,7 +106,6 @@ class Controller extends Base
 					echo '[Source File]' . PHP_EOL . $sourceFile . PHP_EOL;
 					echo '[Stack Trace]' . PHP_EOL . str_replace('<br/>', "\r\n", $traceString) . PHP_EOL;
 				}
-				//exit
 				exit();
 			}
 		}
@@ -143,7 +142,7 @@ class Controller extends Base
 			}
 		}
 
-		include_once RCPHP_PATH . 'sources/html/message.php';
+		include_once RCPHP_PATH . 'Tpl' . DS . 'message.php';
 
 		exit();
 	}
