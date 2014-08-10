@@ -70,6 +70,20 @@ class Captcha
 	private $fontcolor;
 
 	/**
+	 * 混淆字符串
+	 *
+	 * @var string
+	 */
+	private $key = "RcPHP.2345";
+
+	/**
+	 * 过期时间
+	 *
+	 * @var int
+	 */
+	private $expire = 1200;
+
+	/**
 	 * 构造方法
 	 *
 	 * @return void
@@ -180,21 +194,6 @@ class Captcha
 	}
 
 	/**
-	 * 输出
-	 *
-	 * @return void
-	 */
-	private function outPut()
-	{
-		header('Content-type:image/png');
-		header("Expires: -1");
-		header("Cache-Control: no-store, private, post-check=0, pre-check=0, max-age=0");
-		header("Pragma: no-cache");
-		imagepng($this->img);
-		imagedestroy($this->img);
-	}
-
-	/**
 	 * 对外生成
 	 *
 	 * @return void
@@ -205,18 +204,80 @@ class Captcha
 		$this->createCode();
 		$this->createLine();
 		$this->createFont();
-		$this->outPut();
+
+		$key = $this->authcode($this->key);
+
+		$code = array();
+		$code['verify_code'] = $this->authcode(strtolower($this->code)); // 把校验码保存到session
+		$code['verify_time'] = time(); // 验证码创建时间
+
+		$session = RcPHP::import("Util/Session");
+		$session->set($key, $code);
+		unset($session);
+
+		header('Content-type:image/png');
+		header("Expires: -1");
+		header("Cache-Control: no-store, private, post-check=0, pre-check=0, max-age=0");
+		header("Pragma: no-cache");
+		imagepng($this->img);
+		imagedestroy($this->img);
 	}
 
 	/**
-	 * 获取验证码
+	 * 验证
 	 *
+	 * @param string $code
+	 * @return bool
+	 */
+	public function check($code)
+	{
+		if(empty($code))
+		{
+			return false;
+		}
+
+		$key = $this->authcode($this->key);
+
+		$session = RcPHP::import("Util/Session");
+		$secode = $session->get($key);
+
+		if(empty($key))
+		{
+			return false;
+		}
+
+		if(time() - $secode['verify_time'] > $this->expire)
+		{
+			$session->set($key, null);
+			unset($session);
+
+			return false;
+		}
+
+		if($session['verify_code'] == $this->authcode(strtolower($code)))
+		{
+			$session->set($key, null);
+			unset($session);
+
+			return true;
+		}
+
+		unset($session);
+
+		return false;
+	}
+
+	/**
+	 * 加密运算
+	 *
+	 * @param stirng $str
 	 * @return string
 	 */
-	public function getCode()
+	private function authcode($str)
 	{
-		$code = strtolower($this->code);
+		$key = substr(md5($this->key), 5, 8);
+		$str = substr(md5($str), 8, 10);
 
-		return $code;
+		return md5($key . $str);
 	}
 }
