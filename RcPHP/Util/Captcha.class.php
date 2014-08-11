@@ -144,7 +144,7 @@ class Captcha
 	 */
 	private function createCode()
 	{
-		String::rand_string($this->codelen);
+		$this->code = String::rand_string($this->codelen);
 	}
 
 	/**
