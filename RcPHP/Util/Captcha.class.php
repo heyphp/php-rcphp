@@ -254,7 +254,7 @@ class Captcha
 			return false;
 		}
 
-		if($session['verify_code'] == $this->authcode(strtolower($code)))
+		if($secode['verify_code'] == $this->authcode(strtolower($code)))
 		{
 			$session->set($key, null);
 			unset($session);
