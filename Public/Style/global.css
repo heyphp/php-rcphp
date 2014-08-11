@@ -1,0 +1,42 @@
+@charset "GB18030";
+
+.top-search-input {
+    width: 350px !important;
+}
+
+.container {
+    width: 990px;
+    margin: 0 auto;
+}
+
+.clearfix {
+    zoom: 1;
+}
+
+.mt51 {
+    margin-top: 51px;
+}
+
+.footer a {
+    color: #888;
+}
+
+.footer .site-link {
+    margin: 0 0 40px
+}
+
+.footer .site-link dt {
+    margin-bottom: 20px;
+    color: #333
+}
+
+.footer .site-link dd {
+    margin: 5px 0;
+    font-size: 13px
+}
+
+.footer .copyright {
+    text-align: center;
+    font-size: 13px;
+    margin-top: 10px;
+}
