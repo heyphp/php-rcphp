@@ -191,7 +191,7 @@ class Debug extends Base
 		{
 			$efficiency = self::spent();
 			$memory = tosize($efficiency['memory']);
-			echo '<div id="page_trace" style="position:absolute;bottom:0;right:0;font-size:14px;width:100%;z-index: 999999;color: #000;text-align:left;font-family:\'Î¢ÈíÑÅºÚ\';">';
+			echo '<div id="page_trace" style="bottom:0;right:0;font-size:14px;width:100%;z-index: 999999;color: #000;text-align:left;font-family:\'Î¢ÈíÑÅºÚ\';">';
 			echo '<div style="float:left;width:100%;"><span style="float:left;width:400px;"><b>Run time</b> : <font color="red">' . $efficiency['time'] . 's</font>&nbsp;&nbsp;&nbsp;&nbsp;';
 			echo '<b>Use memory</b> : <font color="red">' . $memory . '</font>';
 			echo '</span></div><br>';
