@@ -1,0 +1,65 @@
+<?php
+/**
+ * account.
+ *
+ * @author        zhangwj<phperweb@vip.qq.com>
+ * @copyright     Copyright (c) 2014,RcPHP Dev Team
+ */
+defined('IN_RCPHP') or exit('Access denied');
+
+class accountModel extends Model
+{
+
+	/**
+	 * 继承基类构造方法
+	 *
+	 * @author zhangwj<phperweb@vip.qq.com>
+	 */
+	public function __construct()
+	{
+		parent::__construct();
+	}
+
+	/**
+	 * 新建用户
+	 *
+	 * @author zhangwj<phperweb@vip.qq.com>
+	 * @param array $data
+	 * @return bool
+	 */
+	public function newAccount(Array $data)
+	{
+		if(empty($data))
+		{
+			return false;
+		}
+
+		$this->trans();
+
+		/**
+		 * 写入用户数据
+		 */
+		$lastId = $this->insert("account", $data);
+
+		/**
+		 * 写入登录日志数据
+		 */
+		$log = $this->insert("account_login_log", array(
+			"uid" => $lastId,
+			"dateline" => $data['reg_time']
+		));
+
+		if($lastId !== false && $log !== false)
+		{
+			$this->commit();
+
+			return true;
+		}
+		else
+		{
+			$this->rollback();
+
+			return false;
+		}
+	}
+}
