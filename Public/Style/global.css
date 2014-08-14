@@ -13,12 +13,42 @@
     zoom: 1;
 }
 
+.color999 {
+    color: #999;
+}
+
 .mt51 {
     margin-top: 51px;
 }
 
+.mt100 {
+    margin-top: 100px;
+}
+
+.register-form {
+    width: 390px;
+    line-height: 1.6;
+    position: relative;
+}
+
+form > p {
+    margin: 24px 0;
+}
+
 .footer a {
     color: #888;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.align-center {
+    text-align: center;
 }
 
 .footer .site-link {
