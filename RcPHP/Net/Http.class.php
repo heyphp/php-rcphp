@@ -16,9 +16,10 @@ class Http
 	/**
 	 * Get client IP.
 	 *
+	 * @param bool $int
 	 * @return string
 	 */
-	public static function get_ip()
+	public static function get_ip($int = false)
 	{
 		if(getenv("HTTP_CLIENT_IP") && strcasecmp(getenv("HTTP_CLIENT_IP"), "unknown"))
 		{
@@ -48,6 +49,11 @@ class Http
 					}
 				}
 			}
+		}
+
+		if($int === true)
+		{
+			return dip2long($ip);
 		}
 
 		return $ip;
