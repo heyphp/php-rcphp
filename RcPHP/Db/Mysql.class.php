@@ -58,10 +58,10 @@ class Mysql
 			Controller::halt('Mysql connection failed. Error number£º' . $e->getCode() . ' Error message£º' . $e->getMessage());
 		}
 
-		if($config['driver'] == 'pdo_mysql')
+		$this->dbLink->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+		$this->dbLink->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
+		if(!empty($config['charset']))
 		{
-			$this->dbLink->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-			$this->dbLink->setAttribute(PDO::ATTR_EMULATE_PREPARES, true);
 			$this->dbLink->exec('SET NAMES ' . $config['charset']);
 		}
 
