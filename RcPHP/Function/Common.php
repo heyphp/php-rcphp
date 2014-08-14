@@ -96,7 +96,8 @@ function C($class)
  */
 function M($class = '')
 {
-	$model = APP_PATH . "models/" . (empty($class) ? RcPHP::getController() : $class) . "Model.class.php";
+	$class = empty($class) ? RcPHP::getController() : $class;
+	$model = MODEL_PATH . $class . "Model.class.php";
 
 	if(file_exists($model))
 	{
