@@ -157,7 +157,7 @@ class Model
 				$parse = func_get_args();
 				array_shift($parse);
 			}
-			$parse = array_map($this->quote(), $parse);
+			$parse = $this->quote($parse);
 			$where = vsprintf($where, $parse);
 		}
 
@@ -301,7 +301,7 @@ class Model
 				$parse = func_get_args();
 				array_shift($parse);
 			}
-			$parse = array_map($this->quote(), $parse);
+			$parse = $this->quote($parse);
 			$where = vsprintf($where, $parse);
 		}
 
@@ -426,7 +426,7 @@ class Model
 			$fieldsArray[] = '`' . trim($key) . '`';
 			if($this->_config['master']['driver'] == "mysql")
 			{
-				$valuesArray[] = $this->quote(trim($value))	;
+				$valuesArray[] = $this->quote(trim($value));
 			}
 			else
 			{
