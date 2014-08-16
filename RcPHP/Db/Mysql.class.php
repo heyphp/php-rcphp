@@ -335,7 +335,7 @@ class Mysql
 	 */
 	public function escapeString($string)
 	{
-		return $this->dbLink->quote($string);
+		return addslashes($string);
 	}
 
 	/**

@@ -424,14 +424,7 @@ class Model
 		foreach($data as $key => $value)
 		{
 			$fieldsArray[] = '`' . trim($key) . '`';
-			if($this->_config['master']['driver'] == "mysql")
-			{
-				$valuesArray[] = $this->quote(trim($value));
-			}
-			else
-			{
-				$valuesArray[] = "'" . $this->quote(trim($value)) . "'";
-			}
+			$valuesArray[] = "'" . $this->quote(trim($value)) . "'";
 		}
 
 		$fieldString = implode(',', $fieldsArray);
