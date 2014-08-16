@@ -15,17 +15,18 @@
 		<div class="navbar-collapse collapse">
 			<form class="navbar-form navbar-left">
 				<input type="text" class="form-control top-search-input" placeholder="请输入您要搜索的问题……">
+				<button type="submit" class="btn btn-primary">+ 提问</button>
 			</form>
 			<ul class="nav navbar-nav">
 				<li><a href="/">首页</a></li>
-				<li class="active"><a href="/find">发现</a></li>
-				<li><a href="/subject">话题</a></li>
-				<li><a href="/tags">标签</a></li>
-				<li><a href="/users">用户</a></li>
+				<li class="active"><a href="/index.php/find">发现</a></li>
+				<li><a href="/index.php/subject">话题</a></li>
+				<li><a href="/index.php/tags">标签</a></li>
+				<li><a href="/index.php/users">用户</a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="/account/register">注册</a></li>
-				<li><a href="/account/login">登录</a></li>
+				<li><a href="/index.php/account/register">注册</a></li>
+				<li><a href="/index.php/account/login">登录</a></li>
 			</ul>
 		</div>
 		<!--/.nav-collapse -->
