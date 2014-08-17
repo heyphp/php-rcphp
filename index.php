@@ -9,32 +9,38 @@ header("Content-Type:text/html;charset=GBK");
 
 define('IN_RCPHP', true);
 
+$conf = json_decode($_ENV['VCAP_SERVICES'], true);
+
+var_dump($conf['mysql']);
+
+var_dump($conf['mysql']['credentials']);
+
 /**
- * ¶¨ÒåÏîÄ¿ËùÔÚÂ·¾¶
+ * å®šä¹‰é¡¹ç›®æ‰€åœ¨è·¯å¾„
  */
 define("APP_PATH", dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR);
 
 /**
- * ¶¨ÒåÏîÄ¿Ê¹ÓÃ±àÂë
+ * å®šä¹‰é¡¹ç›®ä½¿ç”¨ç¼–ç 
  */
 define('CHARSET', 'GBK');
 
 /**
- * Â·ÓÉÄ£Ê½
+ * è·¯ç”±æ¨¡å¼
  */
 define('URL_MODEL', 2);
 
 /**
- * ¶¨ÒåÏîÄ¿ÊÇ·ñ¿ªÆôdebugÄ£Ê½
+ * å®šä¹‰é¡¹ç›®æ˜¯å¦å¼€å¯debugæ¨¡å¼
  */
 define('APP_DEBUG', true);
 
 /**
- * Ó¦ÓÃ°æ±¾ºÅ
+ * åº”ç”¨ç‰ˆæœ¬å·
  */
 define('APP_VERSION', 0.1);
 
 /**
- * ÒıÈë¿ò¼ÜÖ÷ÎÄ¼ş
+ * å¼•å…¥æ¡†æ¶ä¸»æ–‡ä»¶
  */
 require 'RcPHP/RcPHP.php';
