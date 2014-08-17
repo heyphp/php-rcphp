@@ -2,39 +2,32 @@
 /**
  * Bootstrap.
  *
- * @author        zhangwj<zhangwj@2345.com>
- * @copyright     Copyright (c) 2013,RcPHP Dev Team
+ * @author zhangwj<zhangwj@2345.com>
+ * @copyright Copyright (c) 2013,RcPHP Dev Team
  */
 header("Content-Type:text/html;charset=GBK");
-
 define('IN_RCPHP', true);
-
 /**
- * å®šä¹‰é¡¹ç›®æ‰€åœ¨è·¯å¾„
+ * ¶¨ÒåÏîÄ¿ËùÔÚÂ·¾¶
  */
 define("APP_PATH", dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Application' . DIRECTORY_SEPARATOR);
-
 /**
- * å®šä¹‰é¡¹ç›®ä½¿ç”¨ç¼–ç 
+ * ¶¨ÒåÏîÄ¿Ê¹ÓÃ±àÂë
  */
 define('CHARSET', 'GBK');
-
 /**
- * è·¯ç”±æ¨¡å¼
+ * Â·ÓÉÄ£Ê½
  */
 define('URL_MODEL', 2);
-
 /**
- * å®šä¹‰é¡¹ç›®æ˜¯å¦å¼€å¯debugæ¨¡å¼
+ * ¶¨ÒåÏîÄ¿ÊÇ·ñ¿ªÆôdebugÄ£Ê½
  */
 define('APP_DEBUG', true);
-
 /**
- * åº”ç”¨ç‰ˆæœ¬å·
+ * Ó¦ÓÃ°æ±¾ºÅ
  */
 define('APP_VERSION', 0.1);
-
 /**
- * å¼•å…¥æ¡†æ¶ä¸»æ–‡ä»¶
+ * ÒıÈë¿ò¼ÜÖ÷ÎÄ¼ş
  */
 require 'RcPHP/RcPHP.php';
