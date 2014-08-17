@@ -1,12 +1,80 @@
 @charset "GB18030";
 
-.top-search-input {
+* {
+    outline: 0 none;
+}
+
+html {
+    font-family: sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%
+}
+
+body {
+    margin: 0
+}
+
+:focus {
+    outline: 0
+}
+
+.navbar-inverse {
+    background: -moz-linear-gradient(center top, #086ED5, #055DB5) repeat-x scroll 0% 0% #0767C8;
+    border-bottom: 1px solid #044E97;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25), 0px 1px 0px rgba(255, 255, 255, 0.15) inset;
+}
+
+.navbar-nav > li > a {
+    color: #F2F4F5 !important;
+}
+
+.navbar-nav > li > a:hover {
+    color: #FFF !important;
+}
+
+.navbar-nav li.current {
+    background-color: #075FB6 !important;
+    background-image: -moz-linear-gradient(center top, #055FB8, #095FB3) !important;
+    background-repeat: repeat-x;
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.12) inset;
+}
+
+.rz-top-search-input {
     width: 350px !important;
+    background: none repeat scroll 0% 0% #E1EAF2;
+}
+
+.rz-top-search-input:focus {
+    background: none repeat scroll 0% 0% #FFF;
+}
+
+.rz-top-add-question {
+    background: -moz-linear-gradient(center top, #0E7BEF, #0D73DA) repeat-x scroll 0% 0% #0E78E7;
+    color: #FFF;
+    font-size: 14px;
+    width: 66px;
+    height: 34px;
+    text-align: center;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    border: 1px solid #045BB2;
+    border-radius: 4px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05), 0px 1px 1px rgba(255, 255, 255, 0.15) inset;
+    transition: all 0.2s ease-in-out 0s;
+    outline: 0px none;
 }
 
 .container {
     width: 990px;
     margin: 0 auto;
+}
+
+.form-control:focus {
+    color: #333;
+    border-color: #999;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
 }
 
 .clearfix {
@@ -25,14 +93,31 @@
     margin-top: 100px;
 }
 
+.mb80 {
+    margin-bottom: 80px;
+}
+
 .register-form {
     width: 390px;
     line-height: 1.6;
     position: relative;
 }
 
+.register-aside {
+    position: absolute;
+    right: -330px;
+    width: 252px;
+    color: #666;
+}
+
 form > p {
     margin: 24px 0;
+}
+
+.footer {
+    border-top: 1px solid #eee;
+    padding: 40px 0;
+    color: #888;
 }
 
 .footer a {
@@ -69,4 +154,96 @@ form > p {
     text-align: center;
     font-size: 13px;
     margin-top: 10px;
+}
+
+.i-feed, .i-google, .i-twitter, .i-github, .i-weibo, .i-facebook, .i-qq, .i-renren, .i-douban, .i-taobao, .i-linkedin, .i-tqq, .i-sf {
+    width: 16px;
+    height: 16px;
+    background: url('/Public/Image/Application/login-icons.png') repeat scroll 0% 0% transparent;
+    text-align: left;
+    text-indent: -9999em;
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+
+.i-google-big, .i-github-big, .i-weibo-big, .i-qq-big, .i-renren-big, .i-baidu-big {
+    width: 24px;
+    height: 24px;
+    background: url('/Public/Image/Application/login-icons.png');
+    text-align: left;
+    text-indent: -9999em;
+    display: inline-block;
+    vertical-align: text-bottom
+}
+
+.i-google {
+    background-position: 0 -340px
+}
+
+.i-twitter {
+    background-position: 0 -324px
+}
+
+.i-github {
+    background-position: 0 -184px
+}
+
+.i-weibo {
+    background-position: 0 -200px
+}
+
+.i-facebook {
+    background-position: 0 -494px
+}
+
+.i-qq {
+    background-position: 0 -120px
+}
+
+.i-renren {
+    background-position: 0 -418px
+}
+
+.i-douban {
+    background-position: 0 -402px
+}
+
+.i-taobao {
+    background-position: 0 -448px
+}
+
+.i-linkedin {
+    background-position: 0 -478px
+}
+
+.i-tqq {
+    background-position: 0 -308px
+}
+
+.i-sf {
+    background-position: 0 -386px
+}
+
+.i-google-big {
+    background-position: 0 -160px
+}
+
+.i-github-big {
+    background-position: 0 -136px
+}
+
+.i-weibo-big {
+    background-position: 0 -48px
+}
+
+.i-qq-big {
+    background-position: 0 -24px
+}
+
+.i-renren-big {
+    background-position: 0 -216px
+}
+
+.i-baidu-big {
+    background-position: 0 -72px
 }
