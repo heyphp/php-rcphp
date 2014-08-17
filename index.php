@@ -9,12 +9,6 @@ header("Content-Type:text/html;charset=GBK");
 
 define('IN_RCPHP', true);
 
-$conf = json_decode($_ENV['VCAP_SERVICES'], true);
-
-var_dump($conf['mysql']);
-
-var_dump($conf['mysql']['credentials']);
-
 /**
  * 定义项目所在路径
  */
