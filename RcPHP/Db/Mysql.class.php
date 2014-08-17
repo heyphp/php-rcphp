@@ -42,7 +42,6 @@ class Mysql
 	 */
 	public function __construct(array $config = array())
 	{
-		var_dump($config);
 		if(empty($config['dsn']))
 		{
 			Controller::halt('Database connection configuration error');
