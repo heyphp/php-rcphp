@@ -21,6 +21,58 @@ class accountModel extends Model
 	}
 
 	/**
+	 * 检查邮箱唯一性
+	 *
+	 * @author zhangwj<phperweb@vip.qq.com>
+	 * @param string $email
+	 * @return bool
+	 */
+	public function checkEmail($email)
+	{
+		if(empty($email))
+		{
+			return false;
+		}
+
+		$total = $this->from("account", "COUNT(*)")
+					  ->where("email = '%s'", $email)
+					  ->fetchColumn();
+
+		if($total > 0)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * 检查昵称唯一性
+	 *
+	 * @author zhangwj<phperweb@vip.qq.com>
+	 * @param string $nickanme
+	 * @return bool
+	 */
+	public function checkNickname($nickname)
+	{
+		if(empty($nickname))
+		{
+			return false;
+		}
+
+		$total = $this->from("account", "COUNT(*)")
+					  ->where("nickname = '%s'", $nickname)
+					  ->fetchColumn();
+
+		if($total > 0)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * 新建用户
 	 *
 	 * @author zhangwj<phperweb@vip.qq.com>

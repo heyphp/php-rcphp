@@ -14,12 +14,12 @@
 	<div class="container">
 		<div class="navbar-collapse collapse">
 			<form class="navbar-form navbar-left">
-				<input type="text" class="form-control top-search-input" placeholder="请输入您要搜索的问题……">
-				<button type="submit" class="btn btn-primary">+ 提问</button>
+				<input type="text" class="form-control rz-top-search-input" placeholder="请输入您要搜索的问题……">
+				<button type="button" class="rz-top-add-question">+ 提问</button>
 			</form>
 			<ul class="nav navbar-nav">
 				<li><a href="/">首页</a></li>
-				<li class="active"><a href="/index.php/find">发现</a></li>
+				<li class="current"><a href="/index.php/find">发现</a></li>
 				<li><a href="/index.php/subject">话题</a></li>
 				<li><a href="/index.php/tags">标签</a></li>
 				<li><a href="/index.php/users">用户</a></li>

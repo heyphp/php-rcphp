@@ -65,6 +65,11 @@ class accountController extends Controller
 				// 检查邮箱
 				$this->_data['error_message'] = "邮箱格式错误";
 			}
+			elseif(M()->checkEmail($email) !== true)
+			{
+				// 邮箱唯一性
+				$this->_data['error_message'] = "邮箱已被使用";
+			}
 			elseif(empty($password))
 			{
 				// 检查密码
@@ -72,8 +77,13 @@ class accountController extends Controller
 			}
 			elseif(empty($nickname))
 			{
-				//检查昵称
+				// 检查昵称
 				$this->_data['error_message'] = "昵称不能为空";
+			}
+			elseif(M()->checkNickname($nickname) !== true)
+			{
+				// 检查昵称唯一性
+				$this->_data['error_message'] = "昵称已被使用";
 			}
 			else
 			{
