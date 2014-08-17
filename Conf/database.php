@@ -5,10 +5,11 @@
  * Date: 14-7-20
  * Time: ÏÂÎç9:07
  */
-
+var_dump($_ENV);
 if(!empty($_ENV['VCAP_SERVICES']))
 {
 	$conf = json_decode($_ENV['VCAP_SERVICES'], true);
+	var_dump($conf);
 
 	return array(
 		'driver' => 'mysql',
