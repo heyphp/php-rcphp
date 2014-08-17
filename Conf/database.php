@@ -15,11 +15,11 @@ if(!empty($_ENV['VCAP_SERVICES']))
 		'charset' => 'GBK',
 		'prefix' => 'rz_',
 		'master' => array(
-			'host' => $conf['mysql']['credentials']['hostname'],
-			'port' => $conf['mysql']['credentials']['port'],
-			'user' => $conf['mysql']['credentials']['username'],
-			'password' => $conf['mysql']['credentials']['password'],
-			'database' => $conf['mysql']['credentials']['name']
+			'host' => $conf['mysql'][0]['credentials']['hostname'],
+			'port' => $conf['mysql'][0]['credentials']['port'],
+			'user' => $conf['mysql'][0]['credentials']['username'],
+			'password' => $conf['mysql'][0]['credentials']['password'],
+			'database' => $conf['mysql'][0]['credentials']['name']
 		),
 	);
 }

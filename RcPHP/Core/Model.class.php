@@ -642,8 +642,6 @@ class Model
 	{
 		$params = $this->getConfig();
 
-		var_dump($params);
-
 		if(!is_array($params))
 		{
 			Controller::halt('Error loading the database configuration.');
