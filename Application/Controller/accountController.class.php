@@ -17,6 +17,8 @@ class accountController extends Controller
 	 */
 	private $_data = array();
 
+	private $_sessid = "00a6c9fb8f5c6d708dde2225b35bec84";
+
 	/**
 	 * 继承基类构造方法
 	 *
@@ -98,6 +100,26 @@ class accountController extends Controller
 					"reg_ip" => $reg_ip,
 					"reg_time" => $reg_time
 				));
+
+				if($result !== false)
+				{
+					setcookie("I", "i=" . $result . "&u=" . urlencode($email) . "&n=" . urlencode($nickname) . "&t=" . $reg_time . "&v=1.0", time() + 3600 * 24 * 30, '/', $_SERVER['HTTP_HOST'], false, true);
+					setcookie("U", md5("i=" . $result . "&u=" . urlencode($email) . "&n=" . urlencode($nickname) . "&t=" . $reg_time . "&v=1.0" . $this->_sessid), time() + 3600 * 24 * 30, '/', $_SERVER['HTTP_HOST'], false, true);
+
+					if(!empty($_GET['forward']))
+					{
+						$this->redirect(trim($_GET['forward']));
+					}
+					else
+					{
+						$this->redirect("/");
+					}
+				}
+				else
+				{
+					// 注册
+					$this->_data['error_message'] = "注册失败";
+				}
 			}
 		}
 

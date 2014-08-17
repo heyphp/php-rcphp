@@ -105,7 +105,7 @@ class accountModel extends Model
 		{
 			$this->commit();
 
-			return true;
+			return $lastId;
 		}
 		else
 		{
