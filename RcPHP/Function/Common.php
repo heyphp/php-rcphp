@@ -153,14 +153,21 @@ function P($key)
  * @param string $func
  * @return bool
  */
-function F($func)
+function F($func, $user = false)
 {
 	if(empty($func))
 	{
 		return false;
 	}
 
-	RcPHP::loadFile(RCPHP_PATH . 'Function' . DS . $func . '.php');
+	if($user === true)
+	{
+		RcPHP::loadFile(COMMON_PATH . 'Common' . DS . $func . '.php');
+	}
+	else
+	{
+		RcPHP::loadFile(RCPHP_PATH . 'Function' . DS . $func . '.php');
+	}
 
 	return true;
 }
