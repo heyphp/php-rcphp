@@ -5,7 +5,7 @@
 }
 
 html {
-    font-family: sans-serif;
+    font-family:'Helvetica Neue',Helvetica,Arial,Sans-serif !important;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%
 }
@@ -20,6 +20,9 @@ body {
 
 .navbar-inverse {
     background: -moz-linear-gradient(center top, #086ED5, #055DB5) repeat-x scroll 0% 0% #0767C8;
+    background: #0666c5;
+    background-color: #0767c8;
+    background-image: -webkit-linear-gradient(top,#086ed5,#055db5);
     border-bottom: 1px solid #044E97;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25), 0px 1px 0px rgba(255, 255, 255, 0.15) inset;
 }
@@ -50,6 +53,9 @@ body {
 
 .rz-top-add-question {
     background: -moz-linear-gradient(center top, #0E7BEF, #0D73DA) repeat-x scroll 0% 0% #0E78E7;
+    background: #0d77e4;
+    background-color: #0e78e7;
+    background-image: -webkit-linear-gradient(top,#0e7bef,#0d73da);
     color: #FFF;
     font-size: 14px;
     width: 66px;
