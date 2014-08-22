@@ -218,7 +218,7 @@ class Check
 			return false;
 		}
 
-		return preg_match('#^[1-9][0-9]{4,10}$#', $num) ? true : false;
+		return preg_match('#^[1-9][0-9]{4,12}$#', $num) ? true : false;
 	}
 
 	/**
