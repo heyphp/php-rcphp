@@ -162,7 +162,7 @@ function F($func, $user = false)
 
 	if($user === true)
 	{
-		RcPHP::loadFile(COMMON_PATH . 'Common' . DS . $func . '.php');
+		RcPHP::loadFile(COMMON_PATH . $func . '.php');
 	}
 	else
 	{
