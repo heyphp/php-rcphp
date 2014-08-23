@@ -11,22 +11,19 @@
 			</dl>
 			<dl class="col-sm-2 site-link">
 				<dt>联系合作</dt>
-				<dd><a href="http://segmentfault.com/hiring">加入我们</a></dd>
-				<dd><a href="http://segmentfault.com/link">合作伙伴</a></dd>
-				<dd><a href="http://segmentfault.com/press">媒体报道</a></dd>
-				<dd><a href="http://0x.segmentfault.com">建议反馈</a></dd>
+				<dd><a href="#">加入我们</a></dd>
+				<dd><a href="#">合作伙伴</a></dd>
+				<dd><a href="#">媒体报道</a></dd>
+				<dd><a href="#">建议反馈</a></dd>
 			</dl>
 			<dl class="col-sm-2 site-link">
 				<dt>常用链接</dt>
-				<dd><a href="http://blog.segmentfault.com/devblog" target="_blank">开发日志</a></dd>
+				<dd><a href="#" target="_blank">开发日志</a></dd>
 			</dl>
 			<dl class="col-sm-2 site-link">
 				<dt>关注我们</dt>
-				<dd><a href="http://segmentfault.com/feeds">问答 RSS 订阅</a></dd>
-				<dd><a href="http://weibo.com/segmentfault" target="_blank">新浪微博</a></dd>
-				<dd><a href="http://twitter.com/segment_fault" target="_blank">Twitter</a></dd>
-				<dd><a href="http://t.qq.com/segmentfault" target="_blank">腾讯微博</a></dd>
-				<dd><a href="http://page.renren.com/699146294" target="_blank">人人网</a></dd>
+				<dd><a href="http://weibo.com/phperweb" target="_blank">新浪微博</a></dd>
+				<dd><a href="http://twitter.com/380176861" target="_blank">Twitter</a></dd>
 			</dl>
 			<dl class="col-sm-4 site-link" id="license">
 				<dt>内容许可</dt>
@@ -43,6 +40,9 @@
 	</div>
 </footer>
 <script type="text/javascript" src="/Public/Script/jquery-1.11.1.js"></script>
-<script type="text/javascript" src="/Public/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/Public/Script/sea/sea.js"></script>
+<script type="text/javascript"
+		src="/Public/Script/config.js"<?php if(!empty($js_module)): ?> data-module="<?php echo $js_module; ?>"<?php endif; ?>></script>
+<script type="text/javascript">seajs.use("/Public/Script/base");</script>
 </body>
 </html>
