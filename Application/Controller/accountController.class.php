@@ -17,7 +17,6 @@ class accountController extends Controller
 	 */
 	private $_data = array();
 
-	private $_sessid = "00a6c9fb8f5c6d708dde2225b35bec84";
 
 	/**
 	 * 继承基类构造方法
@@ -27,6 +26,14 @@ class accountController extends Controller
 	public function __construct()
 	{
 		parent::__construct();
+
+		F("user", true);
+
+		if(checkLogin() !== false)
+		{
+			$this->redirect("/");
+			exit();
+		}
 	}
 
 	/**
@@ -36,7 +43,51 @@ class accountController extends Controller
 	 */
 	public function login()
 	{
-		$this->_data['title'] = '认知 - 登录 - 做最专业的技术问答社区';
+		if(Request::post('login-submit') !== false)
+		{
+			// 登录操作
+			$email = trim(P("email"));
+			$password = trim(P("password"));
+
+			if(empty($email) || Check::isEmail($email) === false)
+			{
+				// 检查邮箱
+				$this->_data['error_message'] = "邮箱格式错误";
+			}
+			elseif(empty($password))
+			{
+				// 检查密码
+				$this->_data['error_message'] = "密码不能为空";
+			}
+			else
+			{
+				$info = M()->checkAccount($email);
+
+				if(empty($info))
+				{
+					$this->_data['error_message'] = "邮箱不存在";
+				}
+				elseif($info['password'] != sha1($password))
+				{
+					$this->_data['error_message'] = "邮箱或密码错误";
+				}
+				else
+				{
+					setcookie("I", Des::encrypt($info['uid'] . "," . $info['nickname'] . "," . APP_VERSION, APP_SESS_KEY), time() + 3600 * 24 * 30, '/', $_SERVER['HTTP_HOST'], false, true);
+
+					if(!empty($_GET['forward']))
+					{
+						$this->redirect(trim($_GET['forward']));
+					}
+					else
+					{
+						$this->redirect("/");
+					}
+				}
+			}
+		}
+
+		$this->_data['title'] = '认知 - 登录 - 最接地气的开发者技术问答社区';
 		$this->assign($this->_data)
 			 ->display();
 	}
@@ -103,8 +154,7 @@ class accountController extends Controller
 
 				if($result !== false)
 				{
-					setcookie("I", "i=" . $result . "&u=" . urlencode($email) . "&n=" . urlencode($nickname) . "&t=" . $reg_time . "&v=1.0", time() + 3600 * 24 * 30, '/', $_SERVER['HTTP_HOST'], false, true);
-					setcookie("U", md5("i=" . $result . "&u=" . urlencode($email) . "&n=" . urlencode($nickname) . "&t=" . $reg_time . "&v=1.0" . $this->_sessid), time() + 3600 * 24 * 30, '/', $_SERVER['HTTP_HOST'], false, true);
+					setcookie("I", Des::encrypt($result . "," . $nickname . "," . APP_VERSION, APP_SESS_KEY), time() + 3600 * 24 * 30, '/', $_SERVER['HTTP_HOST'], false, true);
 
 					if(!empty($_GET['forward']))
 					{
