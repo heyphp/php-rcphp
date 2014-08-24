@@ -77,38 +77,34 @@ class String
 	 * @param string       $to
 	 * @return string|array
 	 */
-	public static function auto_charset($string, $from = 'GBK', $to = 'UTF-8')
+	public static function auto_charset($fContents, $from = 'GBK', $to = 'UTF-8')
 	{
-		if(empty($string))
-		{
-			return false;
-		}
-
 		$from = strtoupper($from) == 'UTF8' ? 'utf-8' : $from;
 		$to = strtoupper($to) == 'UTF8' ? 'utf-8' : $to;
-		if(strtoupper($from) === strtoupper($to) || empty($string) || (is_scalar($string) && !is_string($string)))
+		if(strtoupper($from) === strtoupper($to) || empty($fContents) || (is_scalar($fContents) && !is_string($fContents)))
 		{
-			return $string;
+			//如果编码相同或者非字符串标量则不转换
+			return $fContents;
 		}
 
-		if(is_string($string))
+		if(is_string($fContents))
 		{
 			if(function_exists('mb_convert_encoding'))
 			{
-				return mb_convert_encoding($string, $to, $from);
+				return mb_convert_encoding($fContents, $to, $from);
 			}
 			else if(function_exists('iconv'))
 			{
-				return iconv($from, $to, $string);
+				return iconv($from, $to, $fContents);
 			}
 			else
 			{
-				return $string;
+				return $fContents;
 			}
 		}
-		else if(is_array($string))
+		else if(is_array($fContents))
 		{
-			foreach($string as $key => $val)
+			foreach($fContents as $key => $val)
 			{
 				$_key = self::auto_charset($key, $from, $to);
 				$fContents[$_key] = self::auto_charset($val, $from, $to);
@@ -118,11 +114,11 @@ class String
 				}
 			}
 
-			return $string;
+			return $fContents;
 		}
 		else
 		{
-			return $string;
+			return $fContents;
 		}
 	}
 
