@@ -16,13 +16,22 @@ body {
     outline: 0 none;
 }
 
+a {
+    text-decoration: none;
+}
+
 .navbar-inverse {
-    background: -moz-linear-gradient(center top, #086ED5, #055DB5) repeat-x scroll 0% 0% #0767C8;
-    background: #0666c5;
-    background-color: #0767c8;
-    background-image: -webkit-linear-gradient(top, #086ed5, #055db5);
-    border-bottom: 1px solid #044E97;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25), 0px 1px 0px rgba(255, 255, 255, 0.15) inset;
+    background-color: #303A40;
+    z-index: 100;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-inverse ul {
+    list-style-type: none;
+}
+
+.navbar-nav {
+    margin-left: 20px;
 }
 
 .navbar-nav > li > a {
@@ -30,15 +39,18 @@ body {
     -webkit-font-smoothing: subpixel-antialiased;
 }
 
-.navbar-nav > li > a:hover {
+.navbar-nav > li > a:hover, .navbar-nav li.selected {
+    background-color: #517895 !important;
     color: #FFF !important;
 }
 
 .navbar-nav li.current {
-    background-color: #075FB6 !important;
-    background-image: -moz-linear-gradient(center top, #055FB8, #095FB3) !important;
-    background-repeat: repeat-x;
-    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.12) inset;
+    _display: inline-block;
+    background-color: #127fb6;
+}
+
+.navbar-form {
+    margin: 7px -15px !important;
 }
 
 .rz-top-search-input {
@@ -50,25 +62,44 @@ body {
     background: none repeat scroll 0% 0% #FFF;
 }
 
-.rz-top-add-question {
-    background: -moz-linear-gradient(center top, #0E7BEF, #0D73DA) repeat-x scroll 0% 0% #0E78E7;
-    background: #0d77e4;
-    background-color: #0e78e7;
-    background-image: -webkit-linear-gradient(top, #0e7bef, #0d73da);
-    color: #FFF;
+.rz-publish-btn {
+    width: 80px;
+    margin: 12px 15px 0px 0px;
+    padding: 0px;
+    float: right;
+}
+
+.rz-publish-btn a {
+    display: block;
+    width: 80px;
+    height: 32px;
+    line-height: 32px;
     font-size: 14px;
-    width: 66px;
-    height: 34px;
+    background-color: #517895;
     text-align: center;
-    padding-top: 6px;
-    padding-bottom: 6px;
-    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.12);
+    color: #FFF;
+    border-radius: 3px;
+    text-decoration: none;
     cursor: pointer;
-    border: 1px solid #045BB2;
-    border-radius: 4px;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05), 0px 1px 1px rgba(255, 255, 255, 0.15) inset;
-    transition: all 0.2s ease-in-out 0s;
-    outline: 0px none;
+}
+
+.rz-publish-btn a:hover {
+    background-color: #127fb6;
+}
+
+.rz-top-nav-userinfo, .rz-top-nav-userinfo > a, .rz-top-nav-userinfo > a:after {
+    position: relative;
+    height: 50px !important;
+    line-height: 50px;
+    text-indent: 46px;
+    color: #FFF;
+    text-decoration: none;
+    border-top: 0px none;
+    background: none repeat scroll 0% 0% transparent;
+    box-shadow: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .container {
@@ -113,6 +144,13 @@ body {
     right: -330px;
     width: 252px;
     color: #666;
+}
+
+.slug {
+    margin: 15px 0px;
+    color: #666;
+    font-size: 18px;
+    font-weight: normal;
 }
 
 form > p {
@@ -161,7 +199,7 @@ form > p {
     margin-top: 10px;
 }
 
-.i-feed, .i-google, .i-twitter, .i-github, .i-weibo, .i-facebook, .i-qq, .i-renren, .i-douban, .i-taobao, .i-linkedin, .i-tqq, .i-sf {
+.i-feed, .i-google, .i-twitter, .i-github, .i-weibo, .i-facebook, .i-qq, .i-douban, .i-taobao, .i-linkedin, .i-sf {
     width: 16px;
     height: 16px;
     background: url('/Public/Image/Application/login-icons.png') repeat scroll 0% 0% transparent;
@@ -171,7 +209,7 @@ form > p {
     vertical-align: text-bottom;
 }
 
-.i-google-big, .i-github-big, .i-weibo-big, .i-qq-big, .i-renren-big, .i-baidu-big {
+.i-google-big, .i-github-big, .i-weibo-big, .i-qq-big, .i-baidu-big {
     width: 24px;
     height: 24px;
     background: url('/Public/Image/Application/login-icons.png');
@@ -205,10 +243,6 @@ form > p {
     background-position: 0 -120px
 }
 
-.i-renren {
-    background-position: 0 -418px
-}
-
 .i-douban {
     background-position: 0 -402px
 }
@@ -219,10 +253,6 @@ form > p {
 
 .i-linkedin {
     background-position: 0 -478px
-}
-
-.i-tqq {
-    background-position: 0 -308px
 }
 
 .i-sf {
@@ -245,10 +275,118 @@ form > p {
     background-position: 0 -24px
 }
 
-.i-renren-big {
-    background-position: 0 -216px
-}
-
 .i-baidu-big {
     background-position: 0 -72px
+}
+
+.auth-login {
+    margin-top: 15px;
+}
+
+.auth-big, .auth-small {
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px
+}
+
+.auth-big, .auth-small {
+    display: inline-block;
+    margin-right: 10px;
+    border: 1px solid #CCC;
+    border-bottom-color: #BBB;
+    padding: 15px 18px;
+    background-color: #FFF;
+    font-size: 20px;
+    line-height: 1;
+    color: #666 !important;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12)
+}
+
+.auth-big:hover, .auth-small:hover {
+    text-decoration: none;
+    border-color: #999
+}
+
+.auth-big:active, .auth-small:active {
+    background-color: #EEE
+}
+
+.auth-big i, .auth-small i {
+    margin-right: 10px
+}
+
+.auth-small {
+    margin-right: 5px;
+    padding: 8px 10px;
+    font-size: 14px
+}
+
+.auth-small i {
+    margin-right: 6px
+}
+
+.more-arrow {
+    display: inline-block;
+    border: 10px solid #CCC;
+    border-color: transparent transparent transparent #CCC;
+    vertical-align: text-bottom
+}
+
+.more-arrow:hover {
+    border-left-color: #357EBD
+}
+
+.sfid-login {
+    margin-top: 40px;
+    color: #999
+}
+
+.sfid-login p {
+    display: inline-block;
+    margin-right: 8px;
+    width: 290px;
+    vertical-align: middle
+}
+
+.sfid-login .remember {
+    margin-top: -10px
+}
+
+.dropdown-item {
+    display: none;
+    position: absolute;
+    padding: 5px 0 !important;
+    width: 120px;
+    right: 0;
+    z-index: 3;
+    border: 1px solid #CCC;
+    border-top: 0;
+    background: #FFF;
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1)
+}
+
+.dropdown-item a {
+    color: #666;
+    display: block;
+    padding: 0px 10px;
+    height: 36px;
+    line-height: 36px;
+}
+
+.dropdown-item a:hover, .dropdown-item a:active {
+    background: #f0f0f0;
+    color: #666;
+    text-decoration: none;
+}
+
+.dropdown-item .hr {
+    margin-top: 5px;
+    border-top: 1px solid #EEE;
+    padding-top: 5px
 }
