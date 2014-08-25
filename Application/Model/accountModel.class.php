@@ -114,4 +114,24 @@ class accountModel extends Model
 			return false;
 		}
 	}
+
+	/**
+	 * 检查用户信息
+	 *
+	 * @author zhangwj<phperweb@vip.qq.com>
+	 * @param string $email
+	 * @return array|bool
+	 */
+	public function checkAccount($email)
+	{
+		if(empty($email) || Check::isEmail($email) === false)
+		{
+			return false;
+		}
+
+		return $this->from("account", "uid,email,nickname,password")
+					->where("email = '%s'", $email)
+					->limit(1)
+					->fetchRow();
+	}
 }
