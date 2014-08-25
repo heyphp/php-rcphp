@@ -54,6 +54,7 @@ class Loader
 		'Github' => 'Oauth/Github.class.php',
 		'Weibo' => 'Oauth/Weibo.class.php',
 		'Google' => 'Oauth/Google.class.php',
+		'Des' => 'Crypt/Des.class.php'
 	);
 
 	/**

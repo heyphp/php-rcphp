@@ -216,7 +216,7 @@ class RcPHP
 			'Cache',
 			'Core',
 			'DB',
-			'Mcrypt',
+			'Crypt',
 			'Net',
 			'Storage',
 			'Util'
