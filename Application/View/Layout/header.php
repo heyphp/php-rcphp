@@ -10,12 +10,11 @@
 </head>
 <body id="xtopjsinfo">
 <!-- Fixed navbar -->
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div class="navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container">
 		<div class="navbar-collapse collapse">
 			<form class="navbar-form navbar-left">
 				<input type="text" class="form-control rz-top-search-input" placeholder="请输入您要搜索的问题……">
-				<button type="button" class="rz-top-add-question">+ 提问</button>
 			</form>
 			<ul class="nav navbar-nav">
 				<li><a href="/">首页</a></li>
@@ -24,11 +23,17 @@
 				<li><a href="/index.php/tags">标签</a></li>
 				<li><a href="/index.php/users">用户</a></li>
 			</ul>
-			<ul class="nav navbar-nav navbar-right">
+			<ul class="nav navbar-nav navbar-right" id="J_user_nav">
 				<li><a href="/index.php/account/register">注册</a></li>
 				<li><a href="/index.php/account/login">登录</a></li>
 			</ul>
+			<div class="rz-publish-btn">
+				<a href="/index.php/publish/question">
+					<i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;提问
+				</a>
+			</div>
 		</div>
-		<!--/.nav-collapse -->
 	</div>
+	<!--/.nav-collapse -->
+</div>
 </div>

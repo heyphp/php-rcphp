@@ -13,13 +13,12 @@
 			<div class="register-aside">
 				如果您有下列网站帐号，可使用这些帐号<a href="/index.php/account/login">直接登录</a>，无需注册
 				<a style="display: block; margin-top: 6px; text-decoration: none;" href="/index.php/account/login">
+					<i class="i-qq">腾讯QQ</i>
 					<i class="i-google">Google</i>
 					<i class="i-github">Github</i>
 					<i class="i-weibo">新浪微博</i>
-					<i class="i-tqq">腾讯微博</i>
 					<i class="i-twitter">Twitter</i>
 					<i class="i-facebook">Facebook</i>
-					<i class="i-renren">人人</i>
 					<i class="i-douban">豆瓣</i>
 				</a>
 			</div>
