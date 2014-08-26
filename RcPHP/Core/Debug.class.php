@@ -156,7 +156,7 @@ class Debug extends Base
 	public static function addMessage($message, $type = 0)
 	{
 		//ÅÐ¶ÏÊÇ·ñ¿ªÆôµ÷ÊÔ
-		if((defined('DEBUG') && DEBUG == 1) || (defined('RCPHP_DEBUG') && RCPHP_DEBUG === true))
+		if((defined('APP_DEBUG') && APP_DEBUG == 1) || (defined('APP_DEBUG') && APP_DEBUG === true))
 		{
 			switch($type)
 			{

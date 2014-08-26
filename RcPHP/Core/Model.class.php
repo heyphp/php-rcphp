@@ -63,6 +63,13 @@ class Model
 	protected $_prefix;
 
 	/**
+	 * 连接索引
+	 *
+	 * @var null
+	 */
+	protected static $_linkNum = null;
+
+	/**
 	 * 构造函数
 	 *
 	 * @return void
@@ -697,9 +704,14 @@ class Model
 	 */
 	protected function master()
 	{
-		Debug::addMessage("Master connection");
+		if(is_null(self::$_linkNum))
+		{
+			Debug::addMessage("Master connection");
 
-		return $this->_master = $this->factory($this->_config['master'], 0);
+			self::$_linkNum = 0;
+		}
+
+		return $this->_master = $this->factory($this->_config['master']);
 	}
 
 	/**
@@ -711,9 +723,10 @@ class Model
 	{
 		if($this->_singleton === true)
 		{
-			return $this->_master = $this->factory($this->_config['master'], 0);
+			self::$_linkNum = 0;
+
+			return $this->_master = $this->factory($this->_config['master']);
 		}
-		Debug::addMessage("Slave connection");
 
 		//获得从数据库配置的索引
 		$config_slave = $this->_config['slave'];
@@ -723,11 +736,16 @@ class Model
 			$config_slave[] = $this->_config['master'];
 		}
 
-		$length = count($config_slave);
+		if(is_null(self::$_linkNum))
+		{
+			Debug::addMessage("Slave connection");
 
-		$index = $length == 1 ? 0 : array_rand($config_slave);
+			$length = count($config_slave);
 
-		return $this->_slave = $this->factory($config_slave[$index], $index + 1);
+			self::$_linkNum = $length == 1 ? 0 : array_rand($config_slave);
+		}
+
+		return $this->_slave = $this->factory($config_slave[self::$_linkNum]);
 	}
 
 	/**
@@ -746,9 +764,9 @@ class Model
 	 * @param array $config
 	 * @return object
 	 */
-	public function factory($config, $linkNum = 0)
+	public function factory($config)
 	{
-		if(!isset($this->_links[$linkNum]))
+		if(!isset($this->_links[self::$_linkNum]))
 		{
 			$driver = $config['driver'];
 
@@ -768,14 +786,14 @@ class Model
 						}
 						$config['dsn'] = sprintf('%s:%s', 'mysql', http_build_query($dsnArray, '', ';'));
 					}
-					$this->_links[$linkNum] = new Mysql($config);
+					$this->_links[self::$_linkNum] = new Mysql($config);
 					break;
 				default:
-					$this->_links[$linkNum] = new Mysql($config);
+					$this->_links[self::$_linkNum] = new Mysql($config);
 			}
 		}
 
-		return $this->_links[$linkNum];
+		return $this->_links[self::$_linkNum];
 	}
 
 	/**
