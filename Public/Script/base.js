@@ -24,10 +24,15 @@ define(function (require) {
 
 			$("#J_user_nav").html(htmlCode.join(""));
 
-			$("#J_user_dropdown").parent().mouseenter(function () {
-				$(".dropdown-item").show();
-			}).mouseleave(function () {
-				$(".dropdown-item").hide();
+			$("#J_user_dropdown").click(function () {
+				if ($(".dropdown-item").css("display") == "none") {
+					$(this).parent().addClass("current");
+					$(".dropdown-item").show();
+				}
+				else {
+					$(this).parent().removeClass("current");
+					$(".dropdown-item").hide();
+				}
 			});
 
 		}
