@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html ng-app lang="zh-cn">
+<html lang="zh-cn">
 <head>
 	<meta charset="gb2312">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
