@@ -12,6 +12,10 @@ body {
     margin: 0;
 }
 
+h2 {
+    font-size: 20px !important;
+}
+
 :focus {
     outline: 0 none;
 }
@@ -115,6 +119,17 @@ a {
 
 .clearfix {
     zoom: 1;
+}
+
+.hidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
 }
 
 .color999 {
@@ -389,4 +404,49 @@ form > p {
     margin-top: 5px;
     border-top: 1px solid #EEE;
     padding-top: 5px
+}
+
+.common-title {
+    margin-top: 0;
+}
+
+.p {
+    position: relative;
+    margin: 24px 0;
+}
+
+.edit-guide {
+    padding: 15px;
+    font-size: 13px;
+}
+
+.edit-guide h3 {
+    margin: 0;
+    font-size: 16px !important;
+}
+
+.edit-guide ul {
+    margin: 0;
+    padding-left: 15px;
+}
+
+.edit-guide li {
+    margin-top: 8px;
+}
+
+.warn {
+    background: #ffefc6;
+    color: #960;
+}
+
+.preview, #wmd-preview {
+    margin: 24px 0px;
+    padding: 10px 15px 0px;
+    background: none repeat scroll 0% 0% #F3F3F3;
+    border: 2px dotted #CCC;
+}
+
+.fmt {
+    font-size: 14px;
+    word-wrap: break-word;
 }
