@@ -28,7 +28,7 @@
 				<li><a href="/index.php/account/login">µ«¬º</a></li>
 			</ul>
 			<div class="rz-publish-btn">
-				<a href="/index.php/publish/question">
+				<a href="/index.php/publish/ask">
 					<i class="glyphicon glyphicon-edit"></i>&nbsp;&nbsp;Ã·Œ 
 				</a>
 			</div>
