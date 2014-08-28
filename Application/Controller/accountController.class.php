@@ -17,7 +17,6 @@ class accountController extends Controller
 	 */
 	private $_data = array();
 
-
 	/**
 	 * 继承基类构造方法
 	 *
