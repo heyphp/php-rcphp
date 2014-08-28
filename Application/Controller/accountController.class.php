@@ -198,7 +198,7 @@ class accountController extends Controller
 	 */
 	public function logout()
 	{
-		Cookie::delete("I");
+		Cookie::delete("I", "/", $_SERVER['HTTP_HOST']);
 		if(Request::get("forward") !== false)
 		{
 			$this->redirect(G("forward"));
