@@ -33,10 +33,6 @@ class commonController extends Controller
 
 			$userInfo = String::auto_charset(checkLogin());
 
-			$userInfo['avatar'] = "http://" . $_SERVER['HTTP_HOST'] . "/Public/Upload/avatar/" . (ceil($userInfo['uid'] / 3000)) . "/" . $userInfo['uid'] . ".jpg";
-
-			$userInfo['error_avatar'] = "http://" . $_SERVER['HTTP_HOST'] . "/Public/Image/Application/avatar-mid-img.png";
-
 			$data = array(
 				"code" => 500,
 				"data" => false
@@ -45,6 +41,10 @@ class commonController extends Controller
 			if($userInfo !== false)
 			{
 				$data['code'] = 200;
+
+				$userInfo['avatar'] = "http://" . $_SERVER['HTTP_HOST'] . "/Public/Upload/avatar/" . (ceil($userInfo['uid'] / 3000)) . "/" . $userInfo['uid'] . ".jpg";
+				$userInfo['error_avatar'] = "http://" . $_SERVER['HTTP_HOST'] . "/Public/Image/Application/avatar-mid-img.png";
+
 				$data['data'] = $userInfo;
 			}
 
