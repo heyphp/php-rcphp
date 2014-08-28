@@ -41,6 +41,10 @@ class publishController extends Controller
 	 */
 	public function ask()
 	{
+		if(Request::post("ask-submit") !== false)
+		{
+		}
+		
 		$this->_data['title'] = '认知 - 提出新问题 - 最接地气的开发者技术问答社区';
 
 		$this->_data['js_module'] = "ask";
