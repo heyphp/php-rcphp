@@ -190,4 +190,22 @@ class accountController extends Controller
 				->setSize(200, 80)
 				->doimg();
 	}
+
+	/**
+	 * ÍË³ö
+	 *
+	 * @author zhangwj<phperweb@vip.qq.com>
+	 */
+	public function logout()
+	{
+		Cookie::delete("I");
+		if(Request::get("forward") !== false)
+		{
+			$this->redirect(G("forward"));
+		}
+		else
+		{
+			$this->register("/");
+		}
+	}
 }
