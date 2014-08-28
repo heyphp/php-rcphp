@@ -25,6 +25,13 @@ class publishController extends Controller
 	public function __construct()
 	{
 		parent::__construct();
+
+		F("user", true);
+
+		if(checkLogin() === false)
+		{
+			$this->redirect("/index.php/account/login");
+		}
 	}
 
 	/**
