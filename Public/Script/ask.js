@@ -1,7 +1,6 @@
 /**
  * Created by zhangwj on 14/8/28.
  */
-
 define(function (require) {
 	"use strict";
 

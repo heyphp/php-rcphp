@@ -17,7 +17,7 @@ define(function (require) {
 			htmlCode.push('<ul class="dropdown-item">');
 			htmlCode.push('<li><a href="/index.php/account/user">我的主页</a></li>');
 			htmlCode.push('<li><a href="/index.php/account/message">我的消息</a></li>');
-			htmlCode.push('<li><a href="/index.php/account/setting">帐号设置</a></li>');
+			htmlCode.push('<li><a href="/index.php/account/settings">帐号设置</a></li>');
 			htmlCode.push('<li><a href="/index.php/account/logout">退出</a></li>');
 			htmlCode.push('</ul>');
 			htmlCode.push('</li>');
