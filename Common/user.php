@@ -39,7 +39,7 @@ function getUserInfo($uid)
 		return false;
 	}
 
-	$userSql = "SELECT uid,email,nickname,password,exp,reg_time,reg_ip FROM rz_account WHERE uid = " . intval($uid) . " FOR UPDATE";
+	$userSql = "SELECT uid,email,nickname,password,gender,birthday,address,mobile,company,job,homepage,description,reg_time,reg_ip,login_time,login_ip FROM rz_account WHERE uid = " . intval($uid) . " FOR UPDATE";
 
 	$model = new Model();
 
