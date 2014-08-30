@@ -134,4 +134,22 @@ class accountModel extends Model
 					->limit(1)
 					->fetchRow();
 	}
+
+	/**
+	 * 修改用户信息
+	 *
+	 * @author zhangwj<phperweb@vip.qq.com>
+	 * @param array $data
+	 * @param  int  $uid
+	 * @return bool
+	 */
+	public function modifyAccount(Array $data, $uid)
+	{
+		if(empty($data) || empty($uid))
+		{
+			return false;
+		}
+
+		return $this->update("account", $data, "uid = " . intval($uid));
+	}
 }

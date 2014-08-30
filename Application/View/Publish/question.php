@@ -30,7 +30,7 @@
 				</ul>
 			</aside>
 			<div class="p">
-				<input type="submit" name="ask-submit" id="J_ask_submit" class="btn btn-primary btn-lg btn-xl" tabindex="7" value="提交问题"
+				<input type="submit" name="ask-submit" id="J_ask_submit" class="btn btn-primary btn-lg btn-xl" tabindex="7" style="width: 100%;" value="提交问题"
 					   disabled="disabled">
 			</div>
 		</div>

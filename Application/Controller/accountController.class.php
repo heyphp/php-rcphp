@@ -18,6 +18,13 @@ class accountController extends Controller
 	private $_data = array();
 
 	/**
+	 * 用户信息
+	 *
+	 * @var null|array
+	 */
+	private $_user = null;
+
+	/**
 	 * 继承基类构造方法
 	 *
 	 * @author zhangwj<phperweb@vip.qq.com>
@@ -28,10 +35,11 @@ class accountController extends Controller
 
 		F("user", true);
 
-		if(checkLogin() !== false)
+		$this->_user = checkLogin();
+
+		if($this->_user !== false && (RcPHP::getAction() == "login" && RcPHP::getAction() == "register"))
 		{
 			$this->redirect("/");
-			exit();
 		}
 	}
 
@@ -178,6 +186,45 @@ class accountController extends Controller
 	}
 
 	/**
+	 * 基本信息设置
+	 *
+	 * @author zhangwj<phperweb@vip.qq.com>
+	 */
+	public function settings()
+	{
+		if(Request::post('settings-profile-submit') !== false)
+		{
+			$input = array(
+				'nickname' => trim(P("nickname")),
+				'gender' => intval(P('gender')),
+				'birthday' => trim(P('birthday')),
+				'mobile' => trim(P('mobile')),
+				'address' => trim(P('address')),
+				'company' => trim(P('company')),
+				'job' => intval(P('job')),
+				'homepage' => trim(P('homepage')),
+				'description' => trim(P('description'))
+			);
+
+			$res = M()->modifyAccount($input, $this->_user['uid']);
+
+			if($res !== false)
+			{
+				$this->redirect('/index.php/account/settings');
+			}
+		}
+
+		$this->_data['title'] = '认知 - 我的个人资料 - 做最专业的技术问答社区';
+
+		$this->_data['jobs'] = RcPHP::getConfig("job");
+
+		$this->_data['user'] = $this->_user;
+
+		$this->assign($this->_data)
+			 ->display();
+	}
+
+	/**
 	 * 获取验证码
 	 *
 	 * @author zhangwj<phperweb@vip.qq.com>
@@ -198,14 +245,14 @@ class accountController extends Controller
 	 */
 	public function logout()
 	{
-		Cookie::delete("I", "/", $_SERVER['HTTP_HOST']);
+		setcookie('I', '', time() - 1, '/', $_SERVER['HTTP_HOST']);
 		if(Request::get("forward") !== false)
 		{
 			$this->redirect(G("forward"));
 		}
 		else
 		{
-			$this->register("/");
+			$this->redirect("/");
 		}
 	}
 }

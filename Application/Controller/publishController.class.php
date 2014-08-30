@@ -39,7 +39,7 @@ class publishController extends Controller
 	 *
 	 * @author zhangwj<phperweb@vip.qq.com>
 	 */
-	public function ask()
+	public function question()
 	{
 		if(Request::post("ask-submit") !== false)
 		{
