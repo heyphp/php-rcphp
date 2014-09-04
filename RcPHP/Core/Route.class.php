@@ -47,6 +47,13 @@ class Route
 		$reqUri = $_SERVER['REQUEST_URI'];
 		$reqStr = str_replace(BASE_URI, '', $reqUri);
 
+		$tmp = explode("?", $reqStr);
+
+		$reqStr = $tmp[0];
+		$queryStr = $tmp[1];
+
+		unset($tmp);
+
 		if(substr($reqStr, 0, 1) == '/')
 		{
 			$reqStr = substr($reqStr, 1, strlen($reqStr));
@@ -67,10 +74,20 @@ class Route
 		RcPHP::$_action = empty($reqArr['1']) ? DEFAULT_ACTION : $reqArr['1'];
 
 		// uri parameters
-		for($i = 2; $i < count($reqArr); $i++)
+		for($i = 2; $len = count($reqArr), $i < $len; $i++)
 		{
 			$f = $i % 2;
 			if($f == 0) $_GET[$reqArr[$i]] = RcPHP::$_params[$reqArr[$i]] = empty($reqArr[$i + 1]) ? null : $reqArr[$i + 1];
+		}
+
+		// 处理问好后面的参数
+		if(!empty($queryStr))
+		{
+			$queryArr = explode("=", $queryStr);
+			for($i = 0; $len = count($queryArr), $i < $len; $i += 2)
+			{
+				$_GET[$queryArr[$i]] = empty($queryArr[$i + 1]) ? '' : $queryArr[$i + 1];
+			}
 		}
 	}
 
