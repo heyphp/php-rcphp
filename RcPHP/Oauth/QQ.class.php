@@ -126,6 +126,16 @@ class QQ
 	}
 
 	/**
+	 * 获取OpenId
+	 *
+	 * @return int
+	 */
+	public function getOpenId()
+	{
+		return 0;
+	}
+
+	/**
 	 * 其他Api调用
 	 *
 	 * @param string $url
