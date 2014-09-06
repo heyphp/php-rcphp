@@ -1,0 +1,21 @@
+{
+	"name": "zhangwj/rcphp",
+	"description": "The RcPHP Framework",
+	"type": "framework",
+	"keywords": [
+		"framework",
+		"rcphp"
+	],
+	"homepage": "http://2345.com/",
+	"license": "Apache2",
+	"authors": [
+		{
+			"name": "daxiong123",
+			"email": "phperweb@gmail.com"
+		}
+	],
+	"require": {
+		"php": ">=5.3.0"
+	},
+	"minimum-stability": "dev"
+}
