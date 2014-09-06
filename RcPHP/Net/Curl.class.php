@@ -5,9 +5,11 @@
  * @author         RcPHP Dev Team
  * @copyright      Copyright (c) 2013,RcPHP Dev Team
  * @license        Apache License 2.0 {@link http://www.apache.org/licenses/LICENSE-2.0}
- * @package        Library.Util
+ * @package        Net
  * @since          1.0
  */
+namespace RCPHP\Net;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class Curl
@@ -93,6 +95,8 @@ class Curl
 			{
 				$this->headers[] = $header;
 			}
+
+			\RCPHP\Debug::addMessage("Set connection header.");
 		}
 
 		return $this;
@@ -110,7 +114,7 @@ class Curl
 		{
 			$this->userAgent = $ua;
 
-			Debug::addMessage("Set curl ua");
+			\RCPHP\Debug::addMessage("Set connection userAgent.");
 		}
 
 		return $this;
@@ -128,16 +132,18 @@ class Curl
 		{
 			$this->isProxy = true;
 			$this->proxy = $proxy;
+
+			\RCPHP\Debug::addMessage("Set connection proxy.");
 		}
 
 		return $this;
 	}
 
 	/**
-	 * 设置cookie
+	 * Set cookie.
 	 *
 	 * @param string $cookie_file
-	 * @return void
+	 * @return $this
 	 */
 	public function setCookie($cookie_file)
 	{
@@ -147,14 +153,18 @@ class Curl
 		}
 		else
 		{
-			fopen($cookie_file, 'w') or RcController::halt('The cookie file could not be opened. Make sure this directory has the correct permissions');
+			fopen($cookie_file, 'w') or \RCPHP\Controller::halt('The cookie file could not be opened. Make sure this directory has the correct permissions');
 			$this->cookie_file = $cookie_file;
 			fclose($this->cookie_file);
 		}
+
+		\RCPHP\Debug::addMessage("Set connection cookie.");
+
+		return $this;
 	}
 
 	/**
-	 * GET方式获取数据
+	 * Get method.
 	 *
 	 * @param string $url
 	 * @param string $ip
@@ -204,7 +214,7 @@ class Curl
 	}
 
 	/**
-	 * POST方式获取数据
+	 * Post method.
 	 *
 	 * @param string $url
 	 * @param array  $data

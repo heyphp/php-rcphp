@@ -8,6 +8,8 @@
  * @package        Net
  * @since          1.0
  */
+namespace RCPHP\Net;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class Upload
@@ -65,7 +67,7 @@ class Upload
 		// Set default upload file size.
 		$this->allowFileSize = 2097152;
 
-		Debug::addMessage('Upload Class Initialized');
+		\RCPHP\Debug::addMessage('Upload Class Initialized');
 
 		return true;
 	}
