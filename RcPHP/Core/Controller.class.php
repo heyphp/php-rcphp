@@ -8,17 +8,12 @@
  * @package        Core
  * @since          1.0
  */
+namespace RCPHP;
+
 defined('IN_RCPHP') or exit('Access denied');
 
-class Controller extends Base
+class Controller
 {
-
-	/**
-	 * View object.
-	 *
-	 * @var object
-	 */
-	protected static $_view;
 
 	/**
 	 * __construct
@@ -209,22 +204,6 @@ class Controller extends Base
 	}
 
 	/**
-	 * The singleton pattern.
-	 *
-	 * @param string $className
-	 * @return object
-	 */
-	public static function instance($className)
-	{
-		if(empty($className))
-		{
-			return false;
-		}
-
-		return Structure::singleton($className);
-	}
-
-	/**
 	 * Stripslashes.
 	 *
 	 * @param string|array $string
@@ -266,10 +245,8 @@ class Controller extends Base
 	 */
 	public function assign($key, $value = null)
 	{
-		//load view class.
-		self::$_view = View::getInstance();
-
-		self::$_view->assign($key, $value);
+		\RCPHP\RcPHP::instance('\RCPHP\View')
+					->assign($key, $value);
 
 		return $this;
 	}
@@ -283,10 +260,8 @@ class Controller extends Base
 	 */
 	public function display($fileName = null, $data = null)
 	{
-		//load view class.
-		self::$_view = View::getInstance();
-
-		self::$_view->display($fileName, $data);
+		\RCPHP\RcPHP::instance('\RCPHP\View')
+					->display($fileName, $data);
 	}
 
 	/**
@@ -298,9 +273,7 @@ class Controller extends Base
 	 */
 	public function fetch($fileName = null, $data = array())
 	{
-		//load view class.
-		self::$_view = View::getInstance();
-
-		return self::$_view->fetch($fileName, $data);
+		return \RCPHP\RcPHP::instance('\RCPHP\View')
+						   ->fetch($fileName, $data);
 	}
 }

@@ -8,17 +8,12 @@
  * @package        Core
  * @since          1.0
  */
+namespace RCPHP;
+
 defined('IN_RCPHP') or exit('Access denied');
 
-class Structure extends Base
+class Structure
 {
-
-	/**
-	 * Objects
-	 *
-	 * @var array
-	 */
-	public static $_objects = array();
 
 	/**
 	 * 初始化系统结构
@@ -137,28 +132,5 @@ class indexController extends Controller {
 }';
 			file_put_contents($file, $controller);
 		}
-	}
-
-	/**
-	 * The singleton pattern returns the instance
-	 *
-	 * @param string $className
-	 * @return object
-	 */
-	public static function singleton($className)
-	{
-		if(empty($className))
-		{
-			return false;
-		}
-
-		$key = trim($className);
-
-		if(isset(self::$_objects[$key]))
-		{
-			return self::$_objects[$key];
-		}
-
-		return self::$_objects[$key] = new $className();
 	}
 }

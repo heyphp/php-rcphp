@@ -8,6 +8,8 @@
  * @package        Util
  * @since          1.0
  */
+namespace RCPHP\Util;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class String
@@ -175,5 +177,15 @@ class String
 		}
 
 		return $str;
+	}
+
+	/**
+	 * Rand color string.
+	 *
+	 * @return string
+	 */
+	public static function rand_color()
+	{
+		return '#' . sprintf("%02X", mt_rand(0, 255)) . sprintf("%02X", mt_rand(0, 255)) . sprintf("%02X", mt_rand(0, 255));
 	}
 }

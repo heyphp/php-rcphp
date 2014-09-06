@@ -8,17 +8,12 @@
  * @package        Core
  * @since          1.0
  */
+namespace RCPHP;
+
 defined('IN_RCPHP') or exit('Access denied');
 
-class View extends Base
+class View
 {
-
-	/**
-	 * 单例模式对象
-	 *
-	 * @var object
-	 */
-	protected static $_instance;
 
 	/**
 	 * 视图布局名称
@@ -46,19 +41,10 @@ class View extends Base
 	 *
 	 * @return void
 	 */
-	protected function __construct()
+	public function __construct()
 	{
 		// Print debug info.
-		Debug::addMessage('View Class Initialized');
-	}
-
-	/**
-	 * 魔术方法 覆盖__clone()方法，禁止克隆
-	 *
-	 * @return void
-	 */
-	private function __clone()
-	{
+		\RCPHP\Debug::addMessage('View Class Initialized');
 	}
 
 	/**
@@ -223,20 +209,5 @@ class View extends Base
 		{
 			$this->_data = array();
 		}
-	}
-
-	/**
-	 * 单例模式 实例化对象
-	 *
-	 * @return object
-	 */
-	public static function getInstance()
-	{
-		if(!(self::$_instance instanceof self))
-		{
-			self::$_instance = new self();
-		}
-
-		return self::$_instance;
 	}
 }

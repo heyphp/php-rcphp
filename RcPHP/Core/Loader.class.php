@@ -8,6 +8,8 @@
  * @package        Core
  * @since          1.0
  */
+namespace RCPHP;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class Loader
@@ -19,7 +21,6 @@ class Loader
 	 * @var array
 	 */
 	public static $CoreClassArray = array(
-		'Base' => 'Core/Base.class.php',
 		'Controller' => 'Core/Controller.class.php',
 		'Debug' => 'Core/Debug.class.php',
 		'Log' => 'Core/Log.class.php',

@@ -67,22 +67,22 @@ function C($class)
 {
 	if(empty($class))
 	{
-		Controller::halt('The controller name is empty');
+		\RCPHP\Controller::halt('The controller name is empty');
 	}
 
 	$controller = APP_PATH . "controllers/" . $class . "Controller.class.php";
 
 	if(file_exists($controller))
 	{
-		RcPHP::loadFile($controller);
+		\RCPHP\RcPHP::loadFile($controller);
 
 		$class = $class . 'Controller';
 
-		return Structure::singleton($class);
+		return \RCPHP\RcPHP::instance($class);
 	}
 	else
 	{
-		Controller::halt('The controller file does not exist');
+		\RCPHP\Controller::halt('The controller file does not exist');
 	}
 
 	return false;
@@ -96,20 +96,20 @@ function C($class)
  */
 function M($class = '')
 {
-	$class = empty($class) ? RcPHP::getController() : $class;
+	$class = empty($class) ? \RCPHP\RcPHP::getController() : $class;
 	$model = MODEL_PATH . $class . "Model.class.php";
 
 	if(file_exists($model))
 	{
-		RcPHP::loadFile($model);
+		\RCPHP\RcPHP::loadFile($model);
 
 		$class = $class . 'Model';
 
-		return Structure::singleton($class);
+		return \RCPHP\RcPHP::instance($class);
 	}
 	else
 	{
-		Controller::halt("The " . $model . " file does not exist");
+		\RCPHP\Controller::halt("The " . $model . " file does not exist");
 	}
 
 	return false;
@@ -128,7 +128,7 @@ function G($key)
 		return false;
 	}
 
-	return Request::get($key, true);
+	return \RCPHP\Request::get($key, true);
 }
 
 /**
@@ -144,7 +144,7 @@ function P($key)
 		return false;
 	}
 
-	return Request::post($key, true);
+	return \RCPHP\Request::post($key, true);
 }
 
 /**
@@ -576,49 +576,6 @@ function html_replace($text, $tags = null)
 }
 
 /**
- * UBB代码转换
- *
- * @param string $Text
- * @return string
- */
-function ubb($text)
-{
-	$text = trim($text);
-	$text = preg_replace("/\\t/is", "  ", $text);
-	$text = preg_replace("/\[h1\](.+?)\[\/h1\]/is", "<h1>\\1</h1>", $text);
-	$text = preg_replace("/\[h2\](.+?)\[\/h2\]/is", "<h2>\\1</h2>", $text);
-	$text = preg_replace("/\[h3\](.+?)\[\/h3\]/is", "<h3>\\1</h3>", $text);
-	$text = preg_replace("/\[h4\](.+?)\[\/h4\]/is", "<h4>\\1</h4>", $text);
-	$text = preg_replace("/\[h5\](.+?)\[\/h5\]/is", "<h5>\\1</h5>", $text);
-	$text = preg_replace("/\[h6\](.+?)\[\/h6\]/is", "<h6>\\1</h6>", $text);
-	$text = preg_replace("/\[separator\]/is", "", $text);
-	$text = preg_replace("/\[center\](.+?)\[\/center\]/is", "<center>\\1</center>", $text);
-	$text = preg_replace("/\[url=http:\/\/([^\[]*)\](.+?)\[\/url\]/is", "<a href=\"http://\\1\" target=_blank>\\2</a>", $text);
-	$text = preg_replace("/\[url=([^\[]*)\](.+?)\[\/url\]/is", "<a href=\"http://\\1\" target=_blank>\\2</a>", $text);
-	$text = preg_replace("/\[url\]http:\/\/([^\[]*)\[\/url\]/is", "<a href=\"http://\\1\" target=_blank>\\1</a>", $text);
-	$text = preg_replace("/\[url\]([^\[]*)\[\/url\]/is", "<a href=\"\\1\" target=_blank>\\1</a>", $text);
-	$text = preg_replace("/\[img\](.+?)\[\/img\]/is", "<img src=\\1>", $text);
-	$text = preg_replace("/\[color=(.+?)\](.+?)\[\/color\]/is", "<font color=\\1>\\2</font>", $text);
-	$text = preg_replace("/\[size=(.+?)\](.+?)\[\/size\]/is", "<font size=\\1>\\2</font>", $text);
-	$text = preg_replace("/\[sup\](.+?)\[\/sup\]/is", "<sup>\\1</sup>", $text);
-	$text = preg_replace("/\[sub\](.+?)\[\/sub\]/is", "<sub>\\1</sub>", $text);
-	$text = preg_replace("/\[pre\](.+?)\[\/pre\]/is", "<pre>\\1</pre>", $text);
-	$text = preg_replace("/\[email\](.+?)\[\/email\]/is", "<a href='mailto:\\1'>\\1</a>", $text);
-	$text = preg_replace("/\[colorTxt\](.+?)\[\/colorTxt\]/eis", "color_txt('\\1')", $text);
-	$text = preg_replace("/\[emot\](.+?)\[\/emot\]/eis", "emot('\\1')", $text);
-	$text = preg_replace("/\[i\](.+?)\[\/i\]/is", "<i>\\1</i>", $text);
-	$text = preg_replace("/\[u\](.+?)\[\/u\]/is", "<u>\\1</u>", $text);
-	$text = preg_replace("/\[b\](.+?)\[\/b\]/is", "<b>\\1</b>", $text);
-	$text = preg_replace("/\[quote\](.+?)\[\/quote\]/is", " <div class='quote'><h5>引用:</h5><blockquote>\\1</blockquote></div>", $text);
-	$text = preg_replace("/\[code\](.+?)\[\/code\]/eis", "highlight_code('\\1')", $text);
-	$text = preg_replace("/\[php\](.+?)\[\/php\]/eis", "highlight_code('\\1')", $text);
-	$text = preg_replace("/\[sig\](.+?)\[\/sig\]/is", "<div class='sign'>\\1</div>", $text);
-	$text = preg_replace("/\\n/is", "<br/>", $text);
-
-	return $text;
-}
-
-/**
  * 功能等同htmlspecialchars
  *
  * @param string $string
@@ -629,7 +586,7 @@ function dhtmlspecialchars($string, $charset = '')
 {
 	if(empty($charset))
 	{
-		$charset = Check::isUtf8($string) === true ? 'UTF-8' : 'GB2312';
+		$charset = \RCPHP\Util\Check::isUtf8($string) === true ? 'UTF-8' : 'GB2312';
 	}
 
 	return version_compare(PHP_VERSION, '5.4', '>=') ? htmlspecialchars($string, ENT_QUOTES, $charset) : htmlspecialchars($string, ENT_QUOTES);
@@ -643,7 +600,7 @@ function dhtmlspecialchars($string, $charset = '')
  */
 function dip2long($ip)
 {
-	if(Check::isIpv4($ip) === true)
+	if(\RCPHP\Util\Check::isIpv4($ip) === true)
 	{
 		return bindec(decbin(ip2long($ip)));
 	}
@@ -658,5 +615,5 @@ function dip2long($ip)
  */
 function rand_color()
 {
-	return '#' . sprintf("%02X", mt_rand(0, 255)) . sprintf("%02X", mt_rand(0, 255)) . sprintf("%02X", mt_rand(0, 255));
+
 }

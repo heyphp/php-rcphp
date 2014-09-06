@@ -8,6 +8,8 @@
  * @package        Core
  * @since          1.0
  */
+namespace RCPHP;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class RcPHP
@@ -42,18 +44,18 @@ class RcPHP
 	public static $_includes = array();
 
 	/**
-	 * Object hash
-	 *
-	 * @var array
-	 */
-	public static $_objects = array();
-
-	/**
 	 * Config hash
 	 *
 	 * @var array
 	 */
 	private static $_config = array();
+
+	/**
+	 * Object hash
+	 *
+	 * @var array
+	 */
+	private static $_instance = array();
 
 	/**
 	 * Create App Process
@@ -154,7 +156,7 @@ class RcPHP
 	 */
 	public static function getMethod()
 	{
-		if(Check::isAjax())
+		if(\RcPHP\Util\Check::isAjax())
 		{
 			return "Ajax";
 		}
@@ -194,6 +196,44 @@ class RcPHP
 	}
 
 	/**
+	 * The singleton pattern returns the instance
+	 *
+	 * @param string $class
+	 * @param string $method
+	 * @return mixed
+	 */
+	public static function instance($class, $method = '')
+	{
+		$key = $class . $method;
+
+		if(!isset(self::$_instance[$key]))
+		{
+			if(class_exists($class))
+			{
+				$obj = new $class;
+
+				if(!empty($method) && method_exists($class, $method))
+				{
+					self::$_instance[$key] = call_user_func(array(
+						&$obj,
+						$method
+					));
+				}
+				else
+				{
+					self::$_instance[$key] = $obj;
+				}
+			}
+			else
+			{
+				\RCPHP\Controller::halt("The " . $class . " class file does not exist");
+			}
+		}
+
+		return self::$_instance[$key];
+	}
+
+	/**
 	 * 引用类库 同java的Import
 	 *
 	 * @param $package
@@ -220,8 +260,7 @@ class RcPHP
 			'Net',
 			'Storage',
 			'Util'
-		))
-		)
+		)))
 		{
 			$classfile = RCPHP_PATH . $class . '.class.php';
 		}

@@ -9,9 +9,11 @@
  * @since          1.0
  * @filesource
  */
+namespace RCPHP;
+
 defined('IN_RCPHP') or exit('Access denied');
 
-class Debug extends Base
+class Debug
 {
 
 	/**
