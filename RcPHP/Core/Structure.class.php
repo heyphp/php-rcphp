@@ -29,7 +29,7 @@ class Structure
 		{
 			if(!is_writable(PRO_PATH))
 			{
-				Controller::halt('Do not write the [' . PRO_PATH . '] directory.');
+				\RCPHP\Controller::halt('Do not write the [' . PRO_PATH . '] directory.');
 			}
 
 			$remote = '';
@@ -79,7 +79,7 @@ class Structure
 
 		if(!is_writable(APP_PATH))
 		{
-			Controller::halt('Application [' . APP_PATH . '] cannot write, directory cannot be automatically generated.');
+			\RCPHP\Controller::halt('Application [' . APP_PATH . '] cannot write, directory cannot be automatically generated.');
 		}
 
 		$appDirs = array(
@@ -106,7 +106,7 @@ class Structure
 
 		if(!is_writable(RUNTIME_PATH))
 		{
-			Controller::halt('Do not write the runtime directory.');
+			\RCPHP\Controller::halt('Do not write the runtime directory.');
 		}
 
 		if(!is_dir(CACHE_PATH)) mkdir(CACHE_PATH, 0755);
@@ -125,7 +125,7 @@ class Structure
 		if(!file_exists($file))
 		{
 			$controller = '<?php
-class indexController extends Controller {
+class indexController extends \RCPHP\Controller {
     public function index(){
         echo \'<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: "Î¢ÈíÑÅºÚ"; color: #333;} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.8em; font-size: 36px }</style><div style="padding: 24px 48px;"> <h1>:)</h1><p>Welcome <b>RcPHP</b>!</p></div>\';
     }
