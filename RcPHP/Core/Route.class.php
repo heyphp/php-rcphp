@@ -25,16 +25,13 @@ class Route
 		switch(URL_MODEL)
 		{
 			case 1:
-				self::queryString();
-				break;
-			case 2:
 				self::rest();
 				break;
-			case 3:
+			case 2:
 				self::compat();
 				break;
 			default :
-				self::queryString();
+				self::rest();
 				break;
 		}
 	}
@@ -52,7 +49,11 @@ class Route
 		$tmp = explode("?", $reqStr);
 
 		$reqStr = $tmp[0];
-		$queryStr = $tmp[1];
+
+		if(!empty($tmp[1]))
+		{
+			$queryStr = $tmp[1];
+		}
 
 		unset($tmp);
 
@@ -72,14 +73,14 @@ class Route
 		unset($reqStr);
 
 		// first two segments is controller/action
-		RcPHP::$_controller = empty($reqArr['0']) ? DEFAULT_CONTROLLER : $reqArr['0'];
-		RcPHP::$_action = empty($reqArr['1']) ? DEFAULT_ACTION : $reqArr['1'];
+		\RCPHP\RcPHP::$_controller = empty($reqArr['0']) ? DEFAULT_CONTROLLER : $reqArr['0'];
+		\RCPHP\RcPHP::$_action = empty($reqArr['1']) ? DEFAULT_ACTION : $reqArr['1'];
 
 		// uri parameters
 		for($i = 2; $len = count($reqArr), $i < $len; $i++)
 		{
 			$f = $i % 2;
-			if($f == 0) $_GET[$reqArr[$i]] = RcPHP::$_params[$reqArr[$i]] = empty($reqArr[$i + 1]) ? null : $reqArr[$i + 1];
+			if($f == 0) $_GET[$reqArr[$i]] = \RCPHP\RcPHP::$_params[$reqArr[$i]] = empty($reqArr[$i + 1]) ? null : $reqArr[$i + 1];
 		}
 
 		// 处理问好后面的参数
@@ -88,65 +89,8 @@ class Route
 			$queryArr = explode("=", $queryStr);
 			for($i = 0; $len = count($queryArr), $i < $len; $i += 2)
 			{
-				$_GET[$queryArr[$i]] = empty($queryArr[$i + 1]) ? '' : $queryArr[$i + 1];
+				$_GET[$queryArr[$i]] = \RCPHP\RcPHP::$_params[$queryArr[$i]] = empty($queryArr[$i + 1]) ? '' : $queryArr[$i + 1];
 			}
-		}
-	}
-
-	/**
-	 * Route for querystring.
-	 *
-	 * @return void
-	 */
-	private static function queryString()
-	{
-		$params = array();
-
-		$queryString = $_SERVER['QUERY_STRING'];
-
-		if($queryString != false)
-		{
-			$queryArray = explode("&", $queryString);
-
-			$tmp = array();
-
-			$params = array();
-
-			if(count($queryArray) > 0)
-			{
-				foreach($queryArray as $item)
-				{
-					$tmp = explode('=', $item);
-					$params[$tmp[0]] = $tmp[1];
-				}
-
-				if(empty($params['c']))
-				{
-					RcPHP::$_controller = $_GET['c'] = DEFAULT_CONTROLLER;
-					unset($params['c']);
-				}
-
-				if(empty($params['a']))
-				{
-					RcPHP::$_action = $_GET['a'] = DEFAULT_ACTION;
-					unset($params['a']);
-				}
-
-				RcPHP::$_params = $params;
-			}
-			else
-			{
-				RcPHP::$_controller = $_GET['c'] = DEFAULT_CONTROLLER;
-				RcPHP::$_action = $_GET['a'] = DEFAULT_ACTION;
-			}
-
-			unset($tmp);
-			unset($params);
-		}
-		else
-		{
-			RcPHP::$_controller = $_GET['c'] = DEFAULT_CONTROLLER;
-			RcPHP::$_action = $_GET['a'] = DEFAULT_ACTION;
 		}
 	}
 
