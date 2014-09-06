@@ -21,18 +21,18 @@ class Loader
 	 * @var array
 	 */
 	public static $CoreClassArray = array(
-		'Controller' => 'Core/Controller.class.php',
-		'Debug' => 'Core/Debug.class.php',
-		'Log' => 'Core/Log.class.php',
-		'Model' => 'Core/Model.class.php',
-		'Request' => 'Core/Request.class.php',
-		'Route' => 'Core/Route.class.php',
-		'Structure' => 'Core/Structure.class.php',
-		'View' => 'Core/View.class.php',
-		'Curl' => 'Net/Curl.class.php',
-		'Http' => 'Net/Http.class.php',
-		'Upload' => 'Net/Upload.class.php',
-		'Location' => 'Net/Location.class.php',
+		'RCPHP\Controller' => 'Core/Controller.class.php',
+		'RCPHP\Debug' => 'Core/Debug.class.php',
+		'RCPHP\Log' => 'Core/Log.class.php',
+		'RCPHP\Model' => 'Core/Model.class.php',
+		'RCPHP\Request' => 'Core/Request.class.php',
+		'RCPHP\Route' => 'Core/Route.class.php',
+		'RCPHP\Structure' => 'Core/Structure.class.php',
+		'RCPHP\View' => 'Core/View.class.php',
+		'RCPHP\Net\Curl' => 'Net/Curl.class.php',
+		'RCPHP\Net\Http' => 'Net/Http.class.php',
+		'RCPHP\Net\Upload' => 'Net/Upload.class.php',
+		'RCPHP\Net\Location' => 'Net/Location.class.php',
 		'Redis' => 'Storage/Redis.class.php',
 		'Captcha' => 'Util/Captcha.class.php',
 		'Check' => 'Util/Check.class.php',
@@ -43,7 +43,7 @@ class Loader
 		'Image' => 'Util/Image.class.php',
 		'Pinyin' => 'Util/Pinyin.class.php',
 		'Session' => 'Util/Session.class.php',
-		'String' => 'Util/String.class.php',
+		'RCPHP\Util\String' => 'Util/String.class.php',
 		'Xml' => 'Util/Xml.class.php',
 		'Yac' => 'Cache/Yac.class.php',
 		'Apc' => 'Cache/Apc.class.php',
@@ -65,10 +65,7 @@ class Loader
 	 */
 	public static function registerAutoloader()
 	{
-		spl_autoload_register(array(
-			"Loader",
-			"autoload"
-		));
+		spl_autoload_register('RCPHP\Loader::autoload');
 	}
 
 	/**
@@ -89,11 +86,11 @@ class Loader
 			if(is_file(CONTROLLER_PATH . $class . '.class.php'))
 			{
 				//当文件在controller根目录下存在时,直接加载.
-				RcPHP::loadFile(CONTROLLER_PATH . $class . '.class.php');
+				\RCPHP\RcPHP::loadFile(CONTROLLER_PATH . $class . '.class.php');
 			}
 			else
 			{
-				Controller::halt('The Controller File:' . $class . '.class.php is not exists!');
+				\RCPHP\Controller::halt('The Controller File:' . $class . '.class.php is not exists!');
 			}
 		}
 		else if(substr($class, -5) == 'Model')
@@ -102,12 +99,12 @@ class Loader
 			if(is_file(MODEL_PATH . $class . '.class.php'))
 			{
 				//当所要加载的model文件存在时
-				RcPHP::loadFile(MODEL_PATH . $class . '.class.php');
+				\RCPHP\RcPHP::loadFile(MODEL_PATH . $class . '.class.php');
 			}
 			else
 			{
 				//当所要加载的文件不存在时,显示错误提示信息
-				Controller::halt('The Model file: ' . $class . ' is not exists!');
+				\RCPHP\Controller::halt('The Model file: ' . $class . ' is not exists!');
 			}
 		}
 		else
@@ -116,7 +113,7 @@ class Loader
 			if(is_file(EXT_PATH . $class . '.class.php'))
 			{
 				//当扩展目录内文件存在时,则加载文件
-				RcPHP::loadFile(EXT_PATH . $class . '.class.php');
+				\RCPHP\RcPHP::loadFile(EXT_PATH . $class . '.class.php');
 			}
 			else
 			{
@@ -125,7 +122,7 @@ class Loader
 
 				if(empty($config))
 				{
-					Controller::halt('Autoload config file is not exists!');
+					\RCPHP\Controller::halt('Autoload config file is not exists!');
 				}
 
 				$autoStatus = false;
@@ -134,7 +131,7 @@ class Loader
 					//当自定义自动加载的文件存在时
 					if($key == $class)
 					{
-						RcPHP::loadFile($config[$class]);
+						\RCPHP\RcPHP::loadFile($config[$class]);
 						$autoStatus = true;
 						break;
 					}
@@ -142,7 +139,7 @@ class Loader
 				//当执行完自定义自动加载规则后,还没有找到所要加载的文件时,提示错误信息
 				if($autoStatus == false)
 				{
-					Controller::halt('The file of class ' . $class . ' is not exists!');
+					\RCPHP\Controller::halt('The file of class ' . $class . ' is not exists!');
 				}
 			}
 		}
