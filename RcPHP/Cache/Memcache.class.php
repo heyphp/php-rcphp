@@ -8,6 +8,8 @@
  * @package        Cache
  * @since          1.0
  */
+namespace RCPHP\Cache;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class Memcache
@@ -51,10 +53,10 @@ class Memcache
 	{
 		if(!extension_loaded('memcache'))
 		{
-			RcController::halt('The memcache extension must be loaded before use!');
+			\RCPHP\Controller::halt('The memcache extension must be loaded before use!');
 		}
 
-		$options = RcPHP::getConfig('memcache');
+		$options = \RCPHP\RcPHP::getConfig('memcache');
 
 		if(is_array($options))
 		{
@@ -74,7 +76,7 @@ class Memcache
 
 			if(!$result)
 			{
-				RcController::halt(sprintf('Connect memcached server [%s:%s] failed!', $server['host'], $server['port']));
+				\RCPHP\Controller::halt(sprintf('Connect memcached server [%s:%s] failed!', $server['host'], $server['port']));
 			}
 		}
 	}

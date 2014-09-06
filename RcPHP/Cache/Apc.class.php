@@ -8,6 +8,8 @@
  * @package        Cache
  * @since          1.0
  */
+namespace RCPHP\Cache;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class Apc
@@ -22,7 +24,7 @@ class Apc
 	{
 		if(!extension_loaded('apc'))
 		{
-			RcController::halt('The apc extension must be loaded.');
+			\RCPHP\Controller::halt('The apc extension must be loaded.');
 		}
 	}
 

@@ -8,6 +8,8 @@
  * @package        Cache
  * @since          1.0
  */
+namespace RCPHP\Cache;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class Xcache
@@ -22,7 +24,7 @@ class Xcache
 	{
 		if(!extension_loaded('xcache'))
 		{
-			RcController::halt('The xcache extension must be loaded before use!');
+			\RCPHP\Controller::halt('The xcache extension must be loaded before use!');
 		}
 	}
 

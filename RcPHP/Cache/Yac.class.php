@@ -8,6 +8,8 @@
  * @package        Cache
  * @since          1.0
  */
+namespace RCPHP\Cache;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class Yac
@@ -29,7 +31,7 @@ class Yac
 	{
 		if(!extension_loaded('yac'))
 		{
-			RcController::halt('The Yac extension must be loaded.');
+			\RCPHP\Controller::halt('The Yac extension must be loaded.');
 		}
 
 		$this->_conn = new Yac();
