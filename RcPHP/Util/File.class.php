@@ -9,6 +9,8 @@
  * @package        Util
  * @since          1.0
  */
+namespace RCPHP\Util;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class File
