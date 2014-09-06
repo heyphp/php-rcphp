@@ -66,33 +66,30 @@ class RcPHP
 	{
 		self::loadFile(RCPHP_PATH . 'Core' . DS . 'Loader.class.php');
 
-		Loader::registerAutoloader();
+		\RCPHP\Loader::registerAutoloader();
 
 		if(defined('APP_DEBUG') && APP_DEBUG === true)
 		{
 			error_reporting(E_ALL ^ E_NOTICE);
 
 			//Open script computing time
-			Debug::start();
+			\RCPHP\Debug::start();
 			//Set to capture system anomalies
-			set_error_handler(array(
-				"Debug",
-				'catcher'
-			));
+			set_error_handler('RCPHP\Debug::catcher');
 		}
 		else
 		{
 			$errorLog = RUNTIME_PATH . 'System' . DS;
-			File::mkdir($errorLog);
+			\RCPHP\Util\File::mkdir($errorLog);
 
 			ini_set('display_errors', 'Off');
 			ini_set('log_errors', 'On');
 			ini_set('error_log', $errorLog . date('Ymd', time()) . '.log');
 		}
 
-		Structure::run();
+		\RCPHP\Structure::run();
 
-		Route::dispatch();
+		\RCPHP\Route::dispatch();
 
 		$controller_file = CONTROLLER_PATH . self::$_controller . 'Controller.class.php';
 
@@ -102,7 +99,7 @@ class RcPHP
 		}
 		else
 		{
-			Controller::halt("The controller file does not exist");
+			\RCPHP\Controller::halt("The controller file does not exist");
 		}
 
 		$controller = self::$_controller . "Controller";
@@ -118,14 +115,14 @@ class RcPHP
 		}
 		else
 		{
-			Controller::halt('The controller method ' . self::$_action . ' does not exist');
+			\RCPHP\Controller::halt('The controller method ' . self::$_action . ' does not exist');
 		}
 
 		//End time output debugging information.
 		if(defined('APP_DEBUG') && APP_DEBUG === true)
 		{
-			Debug::stop();
-			Debug::output();
+			\RCPHP\Debug::stop();
+			\RCPHP\Debug::output();
 		}
 	}
 
