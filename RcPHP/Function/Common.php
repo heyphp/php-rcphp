@@ -256,7 +256,7 @@ function tosize($bytes)
  */
 function multi_array_sort($multi_array, $sort_key, $sort = SORT_ASC)
 {
-	if(is_array($multi_array))
+	if(is_array($multi_array) && !empty($multi_array))
 	{
 		foreach($multi_array as $row_array)
 		{
@@ -615,5 +615,4 @@ function dip2long($ip)
  */
 function rand_color()
 {
-
 }
