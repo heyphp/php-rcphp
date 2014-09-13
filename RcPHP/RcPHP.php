@@ -70,4 +70,4 @@ include RCPHP_PATH . 'Function' . DS . 'Common.php';
  * ≥ı ºªØ
  */
 include CORE_PATH . 'RcPHP.class.php';
-RcPHP::run();
+\RCPHP\RcPHP::run();
