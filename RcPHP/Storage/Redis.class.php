@@ -90,7 +90,7 @@ class Redis
 		}
 		else
 		{
-			$configs['slave'][] = $this->_config['master'];
+			$this->_config['slave'][] = $this->_config['master'];
 		}
 	}
 
