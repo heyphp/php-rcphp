@@ -8,6 +8,8 @@
  * @package        Db
  * @since          1.0
  */
+namespace RCPHP\DB;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class Mysql
@@ -44,7 +46,7 @@ class Mysql
 	{
 		if(empty($config['dsn']))
 		{
-			Controller::halt('Database connection configuration error');
+			\RCPHP\Controller::halt('Database connection configuration error');
 		}
 
 		try
@@ -55,7 +57,7 @@ class Mysql
 		}
 		catch(PDOException $e)
 		{
-			Controller::halt('Mysql connection failed. Error number：' . $e->getCode() . ' Error message：' . $e->getMessage());
+			\RCPHP\Controller::halt('Mysql connection failed. Error number：' . $e->getCode() . ' Error message：' . $e->getMessage());
 		}
 
 		$this->dbLink->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
@@ -65,7 +67,7 @@ class Mysql
 			$this->dbLink->exec('SET NAMES ' . $config['charset']);
 		}
 
-		Debug::addMessage('Database has been connected，Drive for ' . $config['driver']);
+		\RCPHP\Debug::addMessage('Database has been connected，Drive for ' . $config['driver']);
 
 		return true;
 	}
@@ -88,17 +90,17 @@ class Mysql
 		$use = sprintf('%.5f', microtime(true) - $stime);
 		if($result === false)
 		{
-			Controller::halt('The SQL query failed. Error number：' . $this->errno() . ' Error message：' . $this->error());
+			\RCPHP\Controller::halt('The SQL query failed. Error number：' . $this->errno() . ' Error message：' . $this->error());
 		}
 
 		//Record the slow query log
 		if($use >= 0.5 && (defined("RC_SLOW_LOG") && RC_SLOW_LOG === true))
 		{
-			Log::write($use, $sql, 'SLOW', 'slow_' . date('Ymd'));
+			\RCPHP\Log::write($use, $sql, 'SLOW', 'slow_' . date('Ymd'));
 		}
 
 		//Debug调试信息
-		Debug::addMessage($use > 0.5 ? "<font color='red'>" . $sql . " [" . $use . "秒]</font>" : $sql . " [" . $use . "秒]", 2);
+		\RCPHP\Debug::addMessage($use > 0.5 ? "<font color='red'>" . $sql . " [" . $use . "秒]</font>" : $sql . " [" . $use . "秒]", 2);
 
 		return $result;
 	}
@@ -121,13 +123,13 @@ class Mysql
 		$use = sprintf('%.5f', microtime(true) - $stime);
 		if($result === false)
 		{
-			Controller::halt('The SQL query failed. Error number：' . $this->errno() . ' Error message：' . $this->error());
+			\RCPHP\Controller::halt('The SQL query failed. Error number：' . $this->errno() . ' Error message：' . $this->error());
 		}
 
 		//Record the slow query log
 		if($use >= 0.5 && (defined("RC_SLOW_LOG") && RC_SLOW_LOG === true))
 		{
-			Log::write($use, $sql, 'SLOW', 'slow_' . date('Ymd'));
+			\RCPHP\Log::write($use, $sql, 'SLOW', 'slow_' . date('Ymd'));
 		}
 
 		//Debug调试信息
@@ -186,7 +188,7 @@ class Mysql
 
 		if($result === false)
 		{
-			Controller::halt('The SQL query failed. Error number:' . $this->errno() . ' Error message:' . $this->error());
+			\RCPHP\Controller::halt('The SQL query failed. Error number:' . $this->errno() . ' Error message:' . $this->error());
 		}
 
 		$rows = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -214,7 +216,7 @@ class Mysql
 
 		if($result === false)
 		{
-			Controller::halt('The SQL query failed. Error number:' . $this->errno() . ' Error message:' . $this->error());
+			\RCPHP\Controller::halt('The SQL query failed. Error number:' . $this->errno() . ' Error message:' . $this->error());
 		}
 
 		$row = $result->fetch(PDO::FETCH_ASSOC);
@@ -242,7 +244,7 @@ class Mysql
 
 		if($result === false)
 		{
-			Controller::halt('The SQL query failed. Error number:' . $this->errno() . ' Error message:' . $this->error());
+			\RCPHP\Controller::halt('The SQL query failed. Error number:' . $this->errno() . ' Error message:' . $this->error());
 		}
 
 		$column = $result->fetchColumn();
@@ -263,7 +265,7 @@ class Mysql
 		{
 			$this->dbLink->beginTransaction();
 			$this->Transactions = true;
-			Debug::addMessage("Open transaction.");
+			\RCPHP\Debug::addMessage("Open transaction.");
 		}
 
 		return true;
@@ -280,13 +282,13 @@ class Mysql
 		{
 			if($this->dbLink->commit())
 			{
-				Debug::addMessage("The transaction has been submitted.");
+				\RCPHP\Debug::addMessage("The transaction has been submitted.");
 				$this->Transactions = false;
-				Debug::addMessage("The transaction is over.");
+				\RCPHP\Debug::addMessage("The transaction is over.");
 			}
 			else
 			{
-				Controller::halt('Transaction commit exception. Error number:' . $this->errno() . ' Error message:' . $this->error());
+				\RCPHP\Controller::halt('Transaction commit exception. Error number:' . $this->errno() . ' Error message:' . $this->error());
 			}
 		}
 		else
@@ -309,13 +311,13 @@ class Mysql
 		{
 			if($this->dbLink->rollBack())
 			{
-				Debug::addMessage("The transaction has been rolled back.");
+				\RCPHP\Debug::addMessage("The transaction has been rolled back.");
 				$this->Transactions = false;
-				Debug::addMessage("The transaction is over.");
+				\RCPHP\Debug::addMessage("The transaction is over.");
 			}
 			else
 			{
-				Controller::halt('Transaction rollback exception Error number:' . $this->errno() . ' Error message:' . $this->error());
+				\RCPHP\Controller::halt('Transaction rollback exception Error number:' . $this->errno() . ' Error message:' . $this->error());
 			}
 		}
 		else
@@ -349,7 +351,7 @@ class Mysql
 		{
 			$this->dbLink = null;
 
-			Debug::addMessage('Database has been disconnected');
+			\RCPHP\Debug::addMessage('Database has been disconnected');
 		}
 
 		return true;
