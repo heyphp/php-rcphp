@@ -33,7 +33,7 @@ class Loader
 		'RCPHP\Net\Http' => 'Net/Http.class.php',
 		'RCPHP\Net\Upload' => 'Net/Upload.class.php',
 		'RCPHP\Net\Location' => 'Net/Location.class.php',
-		'Redis' => 'Storage/Redis.class.php',
+		'RCPHP\Storage\Redis' => 'Storage/Redis.class.php',
 		'Captcha' => 'Util/Captcha.class.php',
 		'Check' => 'Util/Check.class.php',
 		'Cookie' => 'Util/Cookie.class.php',
