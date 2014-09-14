@@ -9,24 +9,26 @@
  * @since          1.0
  * @filesource
  */
+namespace RCPHP\Storage;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class Redis
 {
 
 	/**
-	 * 单例模式实例化对象
-	 *
-	 * @var object
-	 */
-	protected static $_instance = null;
-
-	/**
 	 * Redis连接ID
 	 *
-	 * @var null|object
+	 * @var null|array
 	 */
-	protected $dbLink = null;
+	protected $linkID = array();
+
+	/**
+	 * Redis 配置
+	 *
+	 * @var array
+	 */
+	private $_config = array();
 
 	/**
 	 * 构造方法
@@ -37,36 +39,118 @@ class Redis
 	{
 		if(!extension_loaded('redis'))
 		{
-			Controller::halt('Does not support the Redis extension');
+			\RCPHP\Controller::halt('Does not support the Redis extension');
 		}
 
 		//加载Redis配置
 		if(is_null($config))
 		{
-			$config = RcPHP::getConfig("redis");
+			$config = \RCPHP\RcPHP::getConfig("redis");
 
 			if(empty($config))
 			{
-				Controller::halt('The Redis configuration failed to load');
+				\RCPHP\Controller::halt('The Redis configuration failed to load');
 			}
 		}
 
-		//连接redis数据库
-		$this->dbLink = new Redis();
-		$this->dbLink->connect($config['host'], $config['port'], 3);
+		$this->_config['master'] = array(
+			'host' => $config['host'],
+			'port' => $config['port']
+		);
 
-		if(!$this->dbLink)
-		{
-			Controller::halt('The Redis connection failed');
-		}
-
-		Debug::addMessage('Redis has been connected');
-
-		//需要密码操作
 		if(!empty($config['password']))
 		{
-			$this->dbLink->auth($config['password']);
+			$this->_config['master']['password'] = $config['password'];
 		}
+
+		//分析从库连接配置
+		if(isset($config['slave']) && !empty($config['slave']) && is_array($config['slave']))
+		{
+			if(is_array($config['slave'][0]))
+			{
+				foreach($config['slave'] as $slave)
+				{
+					if(empty($slave['password']) && !empty($this->_config['master']['password']))
+					{
+						$slave['password'] = $this->_config['master']['password'];
+					}
+					$this->_config['slave'][] = $slave;
+				}
+			}
+			else
+			{
+				if(empty($config['slave']['password']) && !empty($this->_config['master']['password']))
+				{
+					$slave['password'] = $this->_config['master']['password'];
+				}
+				$this->_config['slave'][] = $config['slave'];
+			}
+
+			$this->_config['slave'][] = $this->_config['master'];
+		}
+		else
+		{
+			$configs['slave'][] = $this->_config['master'];
+		}
+	}
+
+	/**
+	 * Connect redis.
+	 *
+	 * @param bool $master
+	 * @return object
+	 */
+	public function connect($master = true)
+	{
+		$config = array();
+
+		if($master === true)
+		{
+			$linkNum = 0;
+			$config = $this->_config['master'];
+		}
+		else
+		{
+			if(isset($this->linkID[0]))
+			{
+				return $this->linkID[0];
+			}
+
+			$length = count($this->_config['slave']);
+
+			$linkNum = $length == 1 ? 0 : array_rand($this->_config['slave']);
+			$config = $this->_config['slave'][$linkNum];
+			$linkNum++;
+		}
+
+		if(!isset($this->linkID[$linkNum]))
+		{
+			if(empty($config))
+			{
+				\RCPHP\Controller::halt('The Redis configuration failed to load');
+			}
+
+			//连接redis数据库
+			$this->linkID[$linkNum] = new \Redis();
+			$this->linkID[$linkNum]->connect($config['host'], $config['port'], 3);
+
+			if(!$this->linkID[$linkNum])
+			{
+				\RCPHP\Controller::halt('The Redis connection failed');
+			}
+
+			\RCPHP\Debug::addMessage('Redis has been connected');
+
+			//需要密码操作
+			if(!empty($config['password']))
+			{
+				$this->linkID[$linkNum]->auth($config['password']);
+			}
+		}
+
+		unset($config);
+
+		return $this->linkID[$linkNum];
 	}
 
 	/**
@@ -79,14 +163,16 @@ class Redis
 	 */
 	public function set($key, $value, $timeOut = 0)
 	{
-		$result = $this->dbLink->set($key, $value);
+		$result = $this->connect()
+					   ->set($key, $value);
 
 		if($timeOut > 0)
 		{
-			$this->dbLink->setTimeout($key, $timeOut);
+			$this->connect()
+				 ->setTimeout($key, $timeOut);
 		}
 
-		Debug::addMessage("Set redis cache, cache name is ：" . $key);
+		\RCPHP\Debug::addMessage("Set redis cache, cache name is : " . $key);
 
 		return $result;
 	}
@@ -99,7 +185,8 @@ class Redis
 	 */
 	public function get($key)
 	{
-		return $this->dbLink->get($key);
+		return $this->connect(false)
+					->get($key);
 	}
 
 	/**
@@ -112,18 +199,21 @@ class Redis
 	{
 		if(is_array($key))
 		{
-			return $this->dbLink->delete($key);
+			return $this->connect()
+						->delete($key);
 		}
 
 		$num = func_num_args(); // 获取函数参数个数
 
 		if($num > 1)
 		{
-			return $this->dbLink->delete(func_get_args());
+			return $this->connect()
+						->delete(func_get_args());
 		}
 		else
 		{
-			return $this->dbLink->delete($key);
+			return $this->connect()
+						->delete($key);
 		}
 	}
 
@@ -134,7 +224,8 @@ class Redis
 	 */
 	public function flushAll()
 	{
-		return $this->dbLink->flushAll();
+		return $this->connect()
+					->flushAll();
 	}
 
 	/**
@@ -145,7 +236,8 @@ class Redis
 	 */
 	public function exists($key)
 	{
-		return $this->dbLink->exists($key);
+		return $this->connect()
+					->exists($key);
 	}
 
 	/**
@@ -158,27 +250,37 @@ class Redis
 	 */
 	public function expire($key, $time, $flag = false)
 	{
-		return $flag === false ? $this->dbLink->expire($key, $time) : $this->dbLink->expireAt($key, $time);
+		return $flag === false ? $this->connect()
+									  ->expire($key, $time) : $this->connect()
+																   ->expireAt($key, $time);
 	}
 
 	/**
 	 * 返回Redisd对象
 	 *
+	 * @param bool $master
 	 * @return object
 	 */
-	public function redis()
+	public function redis($master = true)
 	{
-		return $this->dbLink;
+		return $this->connect($master);
 	}
 
 	/**
 	 * 关闭数据库连接
 	 *
-	 * @return object
+	 * @return bool
 	 */
 	public function close()
 	{
-		return $this->dbLink->close();
+		$this->connect()
+			 ->close();
+		$this->connect(false)
+			 ->close();
+
+		\RCPHP\Debug::addMessage('Redis is close.');
+
+		return true;
 	}
 
 	/**
@@ -188,24 +290,6 @@ class Redis
 	 */
 	public function __destruct()
 	{
-		Debug::addMessage('Redis is close.');
-
 		$this->close();
-	}
-
-	/**
-	 * 单例模式
-	 *
-	 * @param mixed $params
-	 * @return object
-	 */
-	public static function getInstance($params = null)
-	{
-		if(!self::$_instance)
-		{
-			self::$_instance = new self($params);
-		}
-
-		return self::$_instance;
 	}
 }
