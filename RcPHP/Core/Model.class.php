@@ -29,26 +29,11 @@ class Model
 	 */
 	protected $_params = array();
 
-	/**
-	 * 主数据库实例化对象
-	 *
-	 * @var object
-	 */
-	protected $_master = null;
-
-	/**
-	 * 从数据库实例化对象
-	 *
-	 * @var object
-	 */
-	protected $_slave = null;
-
-	/**
-	 * 数据库链接池
+    /*
 	 *
 	 * @var array
 	 */
-	protected $_links = array();
+	protected static $_links = array();
 
 	/**
 	 * 数据库实例化是否为单例模式
@@ -63,13 +48,6 @@ class Model
 	 * @var string
 	 */
 	protected $_prefix;
-
-	/**
-	 * 连接索引
-	 *
-	 * @var null
-	 */
-	protected static $_linkNum = null;
 
 	/**
 	 * 构造函数
@@ -129,7 +107,7 @@ class Model
 	{
 		if(is_null($tableName))
 		{
-			Controller::halt('The table name is empty.');
+			\RCPHP\Controller::halt('The table name is empty.');
 		}
 
 		$tableStr = (!empty($this->_prefix)) ? $this->_prefix . trim($tableName) : trim($tableName);
@@ -156,7 +134,7 @@ class Model
 	{
 		if(empty($where))
 		{
-			Controller::halt("The where param is empty.");
+			\RCPHP\Controller::halt("The where param is empty.");
 		}
 
 		if(!empty($cond) && is_string($where))
@@ -190,7 +168,7 @@ class Model
 	{
 		if(empty($order))
 		{
-			Controller::halt('The order param is empty.');
+			\RCPHP\Controller::halt('The order param is empty.');
 		}
 
 		if(is_array($order))
@@ -259,7 +237,7 @@ class Model
 	{
 		if(empty($tableName) || empty($where))
 		{
-			Controller::halt('The name of the table or the condition is empty');
+			\RCPHP\Controller::halt('The name of the table or the condition is empty');
 		}
 
 		$tableName = (!empty($this->_prefix)) ? $this->_prefix . trim($tableName) : '`' . trim($tableName) . '`';
@@ -281,7 +259,7 @@ class Model
 	{
 		if(empty($field))
 		{
-			Controller::halt('The SQL statement grouping field does not exist.');
+			\RCPHP\Controller::halt('The SQL statement grouping field does not exist.');
 		}
 
 		$this->_params['group'] = !empty($this->_params['group']) ? $this->_params['group'] . ', ' . $field : ' GROUP BY ' . $field;
@@ -300,7 +278,7 @@ class Model
 	{
 		if(empty($where))
 		{
-			Controller::halt("The where param is empty.");
+			\RCPHP\Controller::halt("The where param is empty.");
 		}
 
 		if(!empty($cond) && is_string($where))
@@ -418,12 +396,12 @@ class Model
 	{
 		if(empty($tableName))
 		{
-			Controller::halt('Table name is empty.');
+			\RCPHP\Controller::halt('Table name is empty.');
 		}
 
 		if(!is_array($data) || empty($data))
 		{
-			Controller::halt('The data format is not correct.');
+			\RCPHP\Controller::halt('The data format is not correct.');
 		}
 
 		//组装SQL语句
@@ -476,12 +454,12 @@ class Model
 	{
 		if(empty($tableName))
 		{
-			Controller::halt('Table name is empty.');
+			\RCPHP\Controller::halt('Table name is empty.');
 		}
 
 		if(!is_array($data) || empty($data))
 		{
-			Controller::halt('The data format is not correct.');
+			\RCPHP\Controller::halt('The data format is not correct.');
 		}
 
 		$values = array();
@@ -518,7 +496,7 @@ class Model
 	{
 		if(empty($tableName))
 		{
-			Controller::halt('Table name is empty.');
+			\RCPHP\Controller::halt('Table name is empty.');
 		}
 
 		$tableName = !empty($this->_prefix) ? $this->_prefix . trim($tableName) : trim($tableName);
@@ -653,7 +631,7 @@ class Model
 
 		if(!is_array($params))
 		{
-			Controller::halt('Error loading the database configuration.');
+			\RCPHP\Controller::halt('Error loading the database configuration.');
 		}
 
 		//数据库表前缀
@@ -706,14 +684,7 @@ class Model
 	 */
 	protected function master()
 	{
-		if(is_null(self::$_linkNum))
-		{
-			Debug::addMessage("Master connection");
-
-			self::$_linkNum = 0;
-		}
-
-		return $this->_master = $this->factory($this->_config['master']);
+		return $this->factory($this->_config['master'], 0);
 	}
 
 	/**
@@ -725,10 +696,13 @@ class Model
 	{
 		if($this->_singleton === true)
 		{
-			self::$_linkNum = 0;
+			return $this->factory($this->_config['master'], 0);
+        }
 
-			return $this->_master = $this->factory($this->_config['master']);
-		}
+        if(isset(self::$_links[0]))
+        {
+            return self::$_links[0];
+        }
 
 		//获得从数据库配置的索引
 		$config_slave = $this->_config['slave'];
@@ -738,16 +712,11 @@ class Model
 			$config_slave[] = $this->_config['master'];
 		}
 
-		if(is_null(self::$_linkNum))
-		{
-			Debug::addMessage("Slave connection");
+		$length = count($config_slave);
 
-			$length = count($config_slave);
+		$linkNum = $length == 1 ? 0 : array_rand($config_slave);
 
-			self::$_linkNum = $length == 1 ? 0 : array_rand($config_slave);
-		}
-
-		return $this->_slave = $this->factory($config_slave[self::$_linkNum]);
+		return $this->factory($config_slave[$linkNum], $linkNum + 1);
 	}
 
 	/**
@@ -757,7 +726,7 @@ class Model
 	 */
 	protected function getConfig()
 	{
-		return RcPHP::getConfig('database');
+		return \RCPHP\RcPHP::getConfig('database');
 	}
 
 	/**
@@ -766,10 +735,12 @@ class Model
 	 * @param array $config
 	 * @return object
 	 */
-	public function factory($config)
+	public function factory($config, $linkNum)
 	{
-		if(!isset($this->_links[self::$_linkNum]))
-		{
+		if(!isset(self::$_links[$linkNum]))
+        {
+            \RCPHP\Debug::addMessage("DB " . ($linkNum == 0 ? "master" : "slave") . " has been connected");
+
 			$driver = $config['driver'];
 
 			switch($driver)
@@ -788,14 +759,14 @@ class Model
 						}
 						$config['dsn'] = sprintf('%s:%s', 'mysql', http_build_query($dsnArray, '', ';'));
 					}
-					$this->_links[self::$_linkNum] = new Mysql($config);
+                    self::$_links[$linkNum] = new Mysql($config);
 					break;
 				default:
-					$this->_links[self::$_linkNum] = new Mysql($config);
+                    self::$_links[$linkNum] = new Mysql($config);
 			}
 		}
 
-		return $this->_links[self::$_linkNum];
+		return self::$_links[$linkNum];
 	}
 
 	/**
