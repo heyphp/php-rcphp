@@ -68,7 +68,7 @@ class String
 			$result = join("", array_slice($match[0], $start, $length));
 		}
 
-		return $suffix ? $result . $suffix : $result;
+		return $suffix && mb_strlen($str, $charset) >= $length ? $result . $suffix : $result;
 	}
 
 	/**

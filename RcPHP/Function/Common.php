@@ -162,11 +162,11 @@ function F($func, $user = false)
 
 	if($user === true)
 	{
-		RcPHP::loadFile(COMMON_PATH . $func . '.php');
+		\RCPHP\RcPHP::loadFile(COMMON_PATH . $func . '.php');
 	}
 	else
 	{
-		RcPHP::loadFile(RCPHP_PATH . 'Function' . DS . $func . '.php');
+		\RCPHP\RcPHP::loadFile(RCPHP_PATH . 'Function' . DS . $func . '.php');
 	}
 
 	return true;
@@ -606,13 +606,4 @@ function dip2long($ip)
 	}
 
 	return false;
-}
-
-/**
- * Rand color code.
- *
- * @return string
- */
-function rand_color()
-{
 }
