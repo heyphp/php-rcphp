@@ -264,4 +264,37 @@ class Check
 	{
 		return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') || (isset($_SERVER['X-Requested-With']) && $_SERVER['X-Requested-With'] == 'XMLHttpRequest') ? true : false;
 	}
+
+	/**
+	 * 判断是否是HTTPS
+	 *
+	 * @return bool
+	 */
+	public static function isHttps()
+	{
+		if(!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off')
+		{
+			return true;
+		}
+		elseif(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+		{
+			return true;
+		}
+		elseif(!empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) !== 'off')
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * 验证是否是命令行执行
+	 *
+	 * @return bool
+	 */
+	public static function isClient()
+	{
+		return (PHP_SAPI === 'cli' OR defined('STDIN'));
+	}
 }
