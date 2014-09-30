@@ -17,7 +17,7 @@ defined('IN_RCPHP') or exit('Access denied');
 /**
  * Determine the PHP version.
  */
-version_compare(PHP_VERSION, '5.3.0', '>') or exit('The wrong version number');
+version_compare(PHP_VERSION, '5.3.0', '>') or exit('The wrong version number.');
 
 // ∞Ê±æ–≈œ¢
 const RCPHP_VERSION = "1.0-dev";
