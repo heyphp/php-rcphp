@@ -81,29 +81,35 @@ function dump($var, $echo = true, $label = null, $strict = true)
  * @param string $class
  * @return object
  */
-function C($class)
+function &load_controller($class)
 {
 	if(empty($class))
 	{
-		\RCPHP\Controller::halt('The controller name is empty');
+		return false;
 	}
 
-	$controller = APP_PATH . "controllers/" . $class . "Controller.class.php";
+	$className = false;
+
+	$controller = CONTROLLER_PATH . $class . "Controller.class.php";
 
 	if(file_exists($controller))
 	{
-		\RCPHP\RcPHP::loadFile($controller);
+		$className = $class . 'Controller';
 
-		$class = $class . 'Controller';
-
-		return \RCPHP\RcPHP::instance($class);
+		if(class_exists($className, false) === false)
+		{
+			\RCPHP\RcPHP::loadFile($controller);
+		}
 	}
-	else
+
+	if($className === false)
 	{
-		\RCPHP\Controller::halt('The controller file does not exist');
+		\RCPHP\Net\Http::send_http_status(404);
+
+		\RCPHP\Controller::halt('Unable to locate the specified class: ' . $class . 'Controller.class.php');
 	}
 
-	return false;
+	return \RCPHP\RcPHP::instance($className);
 }
 
 /**
@@ -112,25 +118,32 @@ function C($class)
  * @param string $class
  * @return object
  */
-function M($class = '')
+function &load_model($class = '')
 {
 	$class = empty($class) ? \RCPHP\RcPHP::getController() : $class;
+
 	$model = MODEL_PATH . $class . "Model.class.php";
+
+	$className = false;
 
 	if(file_exists($model))
 	{
-		\RCPHP\RcPHP::loadFile($model);
+		$className = $class . 'Model';
 
-		$class = $class . 'Model';
-
-		return \RCPHP\RcPHP::instance($class);
+		if(class_exists($className, false) === false)
+		{
+			\RCPHP\RcPHP::loadFile($model);
+		}
 	}
-	else
+
+	if($className === false)
 	{
-		\RCPHP\Controller::halt("The " . $model . " file does not exist");
+		\RCPHP\Net\Http::send_http_status(404);
+
+		\RCPHP\Controller::halt('Unable to locate the specified class: ' . $class . 'Model.class.php');
 	}
 
-	return false;
+	return \RCPHP\RcPHP::instance($className);
 }
 
 /**
@@ -219,7 +232,7 @@ function &load_class($class, $directory = 'Util')
 		{
 			$className = $class;
 
-			if(class_exists($class, false) === false)
+			if(class_exists($className, false) === false)
 			{
 				\RCPHP\RcPHP::loadFile($path . $directory . DS . $class . '.class.php');
 			}
@@ -232,7 +245,7 @@ function &load_class($class, $directory = 'Util')
 	{
 		\RCPHP\Net\Http::send_http_status(404);
 
-		\RCPHP\Controller::halt('Unable to locate the specified class: ' . $class . '.php');
+		\RCPHP\Controller::halt('Unable to locate the specified class: ' . $class . '.class.php');
 	}
 
 	return \RCPHP\RcPHP::instance($className);
