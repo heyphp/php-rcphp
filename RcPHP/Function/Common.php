@@ -11,6 +11,24 @@
 defined('IN_RCPHP') or exit('Access denied');
 
 /**
+ * 判断php版本
+ *
+ * @param string $version
+ * @return bool
+ */
+function is_php($version)
+{
+	static $_is_php;
+
+	if(!isset($_is_php[$version]))
+	{
+		$_is_php[$version] = version_compare(PHP_VERSION, $version, '>=');
+	}
+
+	return $_is_php[$version];
+}
+
+/**
  * 浏览器友好的变量输出
  *
  * @param mixed   $var
@@ -153,60 +171,71 @@ function P($key)
  * @param string $func
  * @return bool
  */
-function F($func, $user = false)
+function &load_function($func)
 {
 	if(empty($func))
 	{
 		return false;
 	}
 
-	if($user === true)
+	foreach(array(
+				RCPHP_PATH . 'Function',
+				COMMON_PATH
+			) as $path)
 	{
-		\RCPHP\RcPHP::loadFile(COMMON_PATH . $func . '.php');
-	}
-	else
-	{
-		\RCPHP\RcPHP::loadFile(RCPHP_PATH . 'Function' . DS . $func . '.php');
+		if(file_exists($path . DS . $func . '.php'))
+		{
+			\RCPHP\RcPHP::loadFile($path . DS . $func . '.php');
+
+			return true;
+		}
 	}
 
-	return true;
+	return false;
 }
 
 /**
  * 加载类库
  *
  * @param string $class
- * @param string $lib
+ * @param string $directory
  * @return object|bool
  */
-function load_class($class, $lib = '')
+function &load_class($class, $directory = 'Util')
 {
 	if(empty($class))
 	{
 		return false;
 	}
 
-	if($lib != 'classes')
+	$className = false;
+
+	foreach(array(
+				RCPHP_PATH,
+				EXT_PATH
+			) as $path)
 	{
-		$fileName = RCPHP_PATH . $lib . DS . $class . '.php';
-	}
-	else
-	{
-		$fileName = PRO_PATH . 'classes' . DS . $class . '.php';
+		if(file_exists($path . $directory . DS . $class . '.class.php'))
+		{
+			$className = $class;
+
+			if(class_exists($class, false) === false)
+			{
+				\RCPHP\RcPHP::loadFile($path . $directory . DS . $class . '.class.php');
+			}
+
+			break;
+		}
 	}
 
-	if(file_exists($fileName))
+	if($className === false)
 	{
-		RcPHP::loadFile($fileName);
+		\RCPHP\Net\Http::send_http_status(404);
 
-		return Structure::singleton($class);
-	}
-	else
-	{
-		Controller::halt('The ' . $fileName . ' file does not exist');
+		\RCPHP\Controller::halt('Unable to locate the specified class: ' . $class . '.php');
 	}
 
-	return false;
+	return \RCPHP\RcPHP::instance($className);
 }
 
 /**
@@ -589,7 +618,7 @@ function dhtmlspecialchars($string, $charset = '')
 		$charset = \RCPHP\Util\Check::isUtf8($string) === true ? 'UTF-8' : 'GB2312';
 	}
 
-	return version_compare(PHP_VERSION, '5.4', '>=') ? htmlspecialchars($string, ENT_QUOTES, $charset) : htmlspecialchars($string, ENT_QUOTES);
+	return is_php(5.4) ? htmlspecialchars($string, ENT_QUOTES, $charset) : htmlspecialchars($string, ENT_QUOTES);
 }
 
 /**
