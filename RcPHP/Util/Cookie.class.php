@@ -8,112 +8,106 @@
  * @package        Util
  * @since          1.0
  */
+namespace RCPHP\Util;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class Cookie
 {
 
 	/**
-	 * cookie expire time
+	 * Cookie path
 	 *
 	 * @var string
 	 */
-	private static $expire = 3600;
+	public static $path = "/";
 
 	/**
-	 * cookie path
+	 * Cookie domain
 	 *
 	 * @var string
 	 */
-	private static $path = "/";
+	public static $domain = null;
 
 	/**
-	 * cookie domain
+	 * Cookie secure
 	 *
-	 * @var string
+	 * @var bool
 	 */
-	private static $domain = "";
+	public static $secure = false;
+
+	/**
+	 * Http olny
+	 *
+	 * @var bool
+	 */
+	public static $httponly = false;
 
 	/**
 	 * cookie prefix
 	 *
 	 * @var string
 	 */
-	private static $prefix = "";
-
-	/**
-	 * Setting cookies prefix
-	 *
-	 * @param $prefix
-	 * @return void
-	 */
-	public static function prefix($prefix)
-	{
-		self::$prefix = $prefix;
-	}
+	public static $prefix = "";
 
 	/**
 	 * Set cookie
 	 *
-	 * @param string $name
-	 * @param string $val
+	 * @param string $key
+	 * @param string $value
 	 * @param string $expire
-	 * @param string $path
-	 * @param string $domain
 	 * @return void
 	 */
-	public static function set($name, $val, $expire = '', $path = '', $domain = '')
+	public static function set($key, $value, $expire = 0)
 	{
-		$expire = (empty($expire)) ? time() + (int)self::$expire : $expire; // cookie时间
-		$path = (empty($path)) ? self::$path : $path; // cookie路径
-		$domain = (empty($domain)) ? self::$domain : $domain; // 主机名称
-		if(empty($domain))
+		if($expire != 0)
 		{
-			setcookie(self::$prefix . $name, $val, $expire, $path);
-		}
-		else
-		{
-			setcookie(self::$prefix . $name, $val, $expire, $path, $domain);
+			$expire = time() + $expire;
 		}
 
-		$_COOKIE[self::$prefix . $name] = $val;
+		setcookie(self::$prefix . $key, $value, $expire, Cookie::$path, Cookie::$domain, Cookie::$secure, Cookie::$httponly);
+
+		$_COOKIE[self::$prefix . $key] = $value;
 	}
 
 	/**
 	 * Get cookie
 	 *
-	 * @param string $name
+	 * @param string $key
 	 * @return string
 	 */
-	public static function get($name)
+	public static function get($key, $default = null)
 	{
-		return $_COOKIE[self::$prefix . $name];
+		if(self::is_set($key))
+		{
+			return $_COOKIE[self::$prefix . $key];
+		}
+		else
+		{
+			return $default;
+		}
 	}
 
 	/**
 	 * Delete cookie
 	 *
-	 * @param string $name
-	 * @param string $path
-	 * @param string $domain
+	 * @param string $key
 	 * @return void
 	 */
-	public static function delete($name, $path = '/', $domain = '')
+	public static function delete($keys)
 	{
-		if(is_array($name))
+		if(is_array($keys))
 		{
-			foreach($name as $key => $val)
+			foreach($keys as $key)
 			{
-				self::set($val, '', time() - 3600, empty($path) ? self::$path : $path, $domain);
-				$_COOKIE[self::$prefix . $val] = '';
-				unset($_COOKIE[self::$prefix . $val]);
+				unset($_COOKIE[self::$prefix . $key]);
+				self::set($key, null);
 			}
 		}
 		else
 		{
-			self::set($name, '', time() - 3600, empty($path) ? self::$path : $path, $domain);
-			$_COOKIE[self::$prefix . $name] = '';
-			unset($_COOKIE[self::$prefix . $name]);
+			unset($_COOKIE[self::$prefix . $keys]);
+			self::set($keys, null);
 		}
 	}
 
@@ -130,11 +124,11 @@ class Cookie
 	/**
 	 * Cookie is exists
 	 *
-	 * @param string $name
+	 * @param string $key
 	 * @return bool
 	 */
-	public static function is_set($name)
+	public static function is_set($key)
 	{
-		return isset($_COOKIE[self::$prefix . $name]);
+		return isset($_COOKIE[self::$prefix . $key]);
 	}
 }
