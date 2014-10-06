@@ -64,6 +64,11 @@ class RcPHP
 	 */
 	public static function run()
 	{
+		if(!is_php("5.4"))
+		{
+			ini_set('magic_quotes_runtime', 0);
+		}
+
 		self::loadFile(RCPHP_PATH . 'Core' . DS . 'Loader.class.php');
 
 		\RCPHP\Loader::registerAutoloader();
