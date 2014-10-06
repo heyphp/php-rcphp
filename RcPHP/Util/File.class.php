@@ -307,4 +307,59 @@ class File
 			return file_put_contents($fileName, $content);
 		}
 	}
+
+	/**
+	 * Get file mime type.
+	 *
+	 * @param string $fileName
+	 * @return bool|null|string
+	 */
+	public static function mime($fileName)
+	{
+		if(empty($fileName))
+		{
+			return false;
+		}
+
+		if(function_exists("mime_content_type"))
+		{
+			return mime_content_type($fileName);
+		}
+
+		if($conf = \RCPHP\RcPHP::getConfig("mime"))
+		{
+			$ext = self::extension($fileName);
+
+			return $conf[$ext];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get file extension.
+	 *
+	 * @param string $fileName
+	 * @return bool|string
+	 */
+	public static function extension($fileName)
+	{
+		if(empty($fileName))
+		{
+			return false;
+		}
+
+		if(function_exists("pathinfo"))
+		{
+			$parse = pathinfo($fileName);
+
+			return $parse['extension'];
+		}
+		else
+		{
+			$parse = explode(".", $fileName);
+
+			return end($parse);
+		}
+	}
 }
