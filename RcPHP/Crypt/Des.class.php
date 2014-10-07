@@ -8,6 +8,8 @@
  * @package        Crypt
  * @since          1.0
  */
+namespace RCPHP\Crypt;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class Des
@@ -18,14 +20,18 @@ class Des
 	 *
 	 * @param string $str
 	 * @param string $key
+	 * @param int    $expire
 	 * @return string
 	 */
-	public static function encrypt($str, $key)
+	public static function encrypt($str, $key, $expire = 60)
 	{
-		if($str == "")
+		if(empty($str))
 		{
-			return "";
+			return null;
 		}
+
+		$expire = sprintf('%010d', !empty($expire) ? $expire + time() : 0);
+		$str = $expire . $str;
 
 		return self::_des($key, $str, 1);
 	}
@@ -43,15 +49,25 @@ class Des
 		{
 			return "";
 		}
+		$data = self::_des($key, $str, 0);
+		$expire = substr($data, 0, 10);
+		if($expire > 0 && $expire < time())
+		{
+			return '';
+		}
+		$data = substr($data, 10);
 
-		return self::_des($key, $str, 0);
+		return $data;
 	}
 
 	/**
 	 * DesËã·¨
 	 *
-	 * @param string $str
 	 * @param string $key
+	 * @param string $message
+	 * @param int    $encrypt
+	 * @param int    $mode
+	 * @param null   $iv
 	 * @return string
 	 */
 	private static function _des($key, $message, $encrypt, $mode = 0, $iv = null)
@@ -1180,5 +1196,4 @@ class Des
 		//return the keys we've created
 		return $keys;
 	} //end of des_createKeys
-
 }
