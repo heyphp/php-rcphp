@@ -127,7 +127,7 @@ class RcPHP
 		if(defined('APP_DEBUG') && APP_DEBUG === true)
 		{
 			\RCPHP\Debug::stop();
-			\RCPHP\Debug::output();
+			register_shutdown_function('RCPHP\Debug::output');
 		}
 	}
 
