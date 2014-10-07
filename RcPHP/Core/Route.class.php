@@ -22,17 +22,25 @@ class Route
 	 */
 	public static function dispatch()
 	{
-		switch(URL_MODEL)
+		if(\RCPHP\Util\Check::isClient())
 		{
-			case 1:
-				self::rest();
-				break;
-			case 2:
-				self::compat();
-				break;
-			default :
-				self::rest();
-				break;
+			// 客户端路由单独处理
+			self::client();
+		}
+		else
+		{
+			switch(URL_MODEL)
+			{
+				case 1:
+					self::rest();
+					break;
+				case 2:
+					self::compat();
+					break;
+				default :
+					self::rest();
+					break;
+			}
 		}
 	}
 
@@ -95,11 +103,42 @@ class Route
 	}
 
 	/**
-	 * Route fot compat.
+	 * Route for compat.
 	 *
 	 * @return void
 	 */
 	public static function compat()
 	{
+	}
+
+	/**
+	 * Route for client.
+	 *
+	 * @return void
+	 */
+	public static function client()
+	{
+		$argv = $_SERVER['argv'];
+		unset($argv[0]);
+
+		if(empty($argv))
+		{
+			\RCPHP\RcPHP::$_controller = DEFAULT_CONTROLLER;
+			\RCPHP\RcPHP::$_action = DEFAULT_ACTION;
+		}
+		else
+		{
+			\RCPHP\RcPHP::$_controller = (!empty($argv[1]) && substr($argv[1], 0, 1) !== '-') ? $argv[1] : DEFAULT_CONTROLLER;
+			\RCPHP\RcPHP::$_action = (!empty($argv[2]) && substr($argv[2], 0, 1) !== '-') ? $argv[2] : DEFAULT_CONTROLLER;
+
+			foreach($argv as $k => $v)
+			{
+				if(substr($v, 0, 1) === '-')
+				{
+					$arg = explode("=", substr($v, 1));
+					$_GET[$arg[0]] = \RCPHP\RcPHP::$_params[$arg[0]] = empty($arg[1]) ? '' : $arg[1];
+				}
+			}
+		}
 	}
 }
