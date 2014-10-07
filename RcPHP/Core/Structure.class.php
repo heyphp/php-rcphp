@@ -124,12 +124,24 @@ class Structure
 
 		if(!file_exists($file))
 		{
-			$controller = '<?php
+			if(\RCPHP\Util\Check::isClient())
+			{
+				$controller = '<?php
+class indexController extends \RCPHP\Controller {
+    public function index(){
+        echo "Welcome RcPHP!\n";
+    }
+}';
+			}
+			else
+			{
+				$controller = '<?php
 class indexController extends \RCPHP\Controller {
     public function index(){
         echo \'<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: "Î¢ÈíÑÅºÚ"; color: #333;} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.8em; font-size: 36px }</style><div style="padding: 24px 48px;"> <h1>:)</h1><p>Welcome <b>RcPHP</b>!</p></div>\';
     }
 }';
+			}
 			file_put_contents($file, $controller);
 		}
 	}
