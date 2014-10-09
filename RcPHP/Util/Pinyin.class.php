@@ -9,6 +9,8 @@
  * @since          1.0
  * @filesource
  */
+namespace RCPHP\Util;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class Pinyin
