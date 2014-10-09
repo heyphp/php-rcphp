@@ -185,70 +185,64 @@ class Debug
 	 */
 	public static function output()
 	{
-		if(php_sapi_name() == 'cli')
+		self::stop();
+		$efficiency = self::spent();
+		$memory = tosize($efficiency['memory']);
+		echo '<div id="page_trace" style="bottom:0;right:0;font-size:14px;width:100%;z-index: 999999;color: #000;text-align:left;font-family:\'Î¢ÈíÑÅºÚ\';">';
+		echo '<div style="float:left;width:100%;"><span style="float:left;width:400px;"><b>Run time</b> : <font color="red">' . $efficiency['time'] . 's</font>&nbsp;&nbsp;&nbsp;&nbsp;';
+		echo '<b>Use memory</b> : <font color="red">' . $memory . '</font>';
+		echo '</span></div><br>';
+		echo '<div id="page_trace_tab" style="display: ;background:white;margin:0;height: 250px;">';
+		echo '<div id="page_trace_tab_cont" style="padding: 0; line-height: 24px">';
+		echo '<div>';
+		echo '<ol style="padding: 0; margin:0">';
+		if(count(self::$includeFile) > 0)
 		{
-			self::outputInCmd();
+			echo '[Autoload files]';
+			foreach(self::$includeFile as $file)
+			{
+				echo '<li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">' . $file . '</li>';
+			}
 		}
-		else
+		if(count(self::$info) > 0)
 		{
-			$efficiency = self::spent();
-			$memory = tosize($efficiency['memory']);
-			echo '<div id="page_trace" style="bottom:0;right:0;font-size:14px;width:100%;z-index: 999999;color: #000;text-align:left;font-family:\'Î¢ÈíÑÅºÚ\';">';
-			echo '<div style="float:left;width:100%;"><span style="float:left;width:400px;"><b>Run time</b> : <font color="red">' . $efficiency['time'] . 's</font>&nbsp;&nbsp;&nbsp;&nbsp;';
-			echo '<b>Use memory</b> : <font color="red">' . $memory . '</font>';
-			echo '</span></div><br>';
-			echo '<div id="page_trace_tab" style="display: ;background:white;margin:0;height: 250px;">';
-			echo '<div id="page_trace_tab_cont" style="padding: 0; line-height: 24px">';
-			echo '<div>';
-			echo '<ol style="padding: 0; margin:0">';
-			if(count(self::$includeFile) > 0)
+			echo '<br>[System information]';
+			foreach(self::$info as $info)
 			{
-				echo '[Autoload files]';
-				foreach(self::$includeFile as $file)
-				{
-					echo '<li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">' . $file . '</li>';
-				}
+				echo '<li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">' . $info . '</li>';
 			}
-			if(count(self::$info) > 0)
-			{
-				echo '<br>[System information]';
-				foreach(self::$info as $info)
-				{
-					echo '<li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">' . $info . '</li>';
-				}
-			}
-
-			if(count(self::$sqls) > 0)
-			{
-				echo '<br>[SQL statement]';
-				foreach(self::$sqls as $sql)
-				{
-					echo '<li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">' . $sql . '</li>';
-				}
-			}
-
-			if(count(get_included_files()) > 0)
-			{
-				echo '<br>[Include files]';
-				foreach(get_included_files() as $file)
-				{
-					echo '<li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">' . $file . '&nbsp;(' . tosize(abs(filesize($file))) . ')</li>';
-				}
-			}
-
-			if(count(self::$systems) > 0)
-			{
-				echo '<br>[Trace]';
-				foreach(self::$systems as $system)
-				{
-					echo '<li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">' . $system . '</li>';
-				}
-			}
-			echo '</ol>';
-			echo '</div>';
-			echo '</div>';
-			echo '</div>';
-			echo '</div>';
 		}
+
+		if(count(self::$sqls) > 0)
+		{
+			echo '<br>[SQL statement]';
+			foreach(self::$sqls as $sql)
+			{
+				echo '<li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">' . $sql . '</li>';
+			}
+		}
+
+		if(count(get_included_files()) > 0)
+		{
+			echo '<br>[Include files]';
+			foreach(get_included_files() as $file)
+			{
+				echo '<li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">' . $file . '&nbsp;(' . tosize(abs(filesize($file))) . ')</li>';
+			}
+		}
+
+		if(count(self::$systems) > 0)
+		{
+			echo '<br>[Trace]';
+			foreach(self::$systems as $system)
+			{
+				echo '<li style="border-bottom:1px solid #EEE;font-size:14px;padding:0 12px">' . $system . '</li>';
+			}
+		}
+		echo '</ol>';
+		echo '</div>';
+		echo '</div>';
+		echo '</div>';
+		echo '</div>';
 	}
 }
