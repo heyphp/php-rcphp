@@ -53,8 +53,6 @@ class Request
 	 */
 	public static function post($index = null, $xss = false)
 	{
-
-		// ²ÎÊı·ÖÎö
 		if(is_null($index) || is_array($index) || !isset($_POST[$index]))
 		{
 			return false;
