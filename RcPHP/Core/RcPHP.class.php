@@ -126,7 +126,6 @@ class RcPHP
 		//End time output debugging information.
 		if(defined('APP_DEBUG') && APP_DEBUG === true)
 		{
-			\RCPHP\Debug::stop();
 			register_shutdown_function('RCPHP\Debug::output');
 		}
 	}
