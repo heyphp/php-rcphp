@@ -44,7 +44,7 @@ class Controller
 			return false;
 		}
 
-		if(defined('APP_DEBUG'))
+		if(defined('APP_DEBUG') && APP_DEBUG !== false)
 		{
 			//output message
 			$trace = debug_backtrace();
@@ -106,7 +106,7 @@ class Controller
 		}
 		else
 		{
-			Http::send_http_status(404);
+			\RCPHP\Net\Http::send_http_status(404);
 		}
 
 		return true;
