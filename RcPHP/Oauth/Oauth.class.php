@@ -8,6 +8,8 @@
  * @package        Oauth
  * @since          1.0
  */
+namespace RCPHP\Oauth;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 abstract class Oauth
@@ -56,40 +58,197 @@ abstract class Oauth
 	protected $callback = '';
 
 	/**
+	 * 额外参数
+	 *
+	 * @var array
+	 */
+	protected $param = array();
+
+	/**
+	 * Oauth driver
+	 *
+	 * @var string
+	 */
+	protected $driver = '';
+
+	/**
 	 * 构造方法
 	 *
 	 * @return bool
 	 */
-	public function __construct()
+	public function __construct($token = null)
 	{
-		return true;
-	}
+		$this->driver = ucfirst(strtolower(get_class($this)));
 
-	/**
-	 * 获取Access token.
-	 *
-	 * @param string $data
-	 * @return array
-	 * @throws Exception
-	 */
-	protected function parseToken($data)
-	{
-		if(empty($data))
+		$conf = \RCPHP\RcPHP::getConfig($this->driver);
+
+		if(!empty($conf) && !empty($conf['appKey']) && !empty($conf['appSecret']) && !empty($conf['callback']))
 		{
-			Controller::halt("The data param is null.");
-		}
-
-		$data = json_decode($data, true);
-
-		if($data['access_token'] && $data['expires_in'])
-		{
-			$data['openid'] = $this->getOpenId();
-
-			return $data;
+			$this->appKey = $conf['appKey'];
+			$this->appSecret = $conf['appSecret'];
+			$this->callback = $conf['callback'];
+			$this->token = $token;
 		}
 		else
 		{
-			throw new Exception("Get access token is error,error message is " . $data['error']);
+			\RCPHP\Controller::halt($this->driver . ' configuration error.');
+		}
+	}
+
+	/**
+	 * 实例化OAUTH驱动
+	 *
+	 * @param string $driver
+	 * @param null   $token
+	 * @return void
+	 */
+	public static function getInstance($driver, $token = null)
+	{
+		$className = ucfirst(strtolower($driver));
+
+		$fileName = RCPHP_PATH . 'Oauth' . DS . $className . '.class.php';
+
+		if(file_exists($fileName))
+		{
+			require_once $fileName;
+
+			$class = "\\RCPHP\\Oauth\\" . $className;
+
+			if(class_exists($class))
+			{
+				return new $class($token);
+			}
+			else
+			{
+				\RCPHP\Controller::halt("Instantiating " . $className . " class does not exist.");
+			}
+		}
+		else
+		{
+			\RCPHP\Controller::halt("Instantiating " . $className . " class does not exist.");
+		}
+	}
+
+	/**
+	 * 获取配置
+	 *
+	 * @throws \Exception
+	 */
+	private function getConfig()
+	{
+		$conf = \RCPHP\RcPHP::getConfig($this->driver);
+
+		if(!empty($conf['param']))
+		{
+			$this->param = $conf['param'];
+		}
+
+		if(!empty($conf['callback']))
+		{
+			$this->callback = $conf['callback'];
+		}
+		else
+		{
+			throw new \Exception("Callback url is null.");
+		}
+	}
+
+	/**
+	 * 获取登录跳转地址
+	 *
+	 * @param string $callback
+	 * @return string
+	 */
+	public function login_url($callback = '')
+	{
+		$this->getConfig();
+
+		if(!empty($callback))
+		{
+			$this->callback = $callback;
+		}
+
+		$params = array(
+			'client_id' => $this->appKey,
+			'response_type' => $this->responseType,
+			'redirect_uri' => $this->callback
+		);
+
+		if(empty($this->param) && is_array($this->param))
+		{
+			$params = array_merge($params, $this->param);
+		}
+
+		return $this->loginUrl . '?' . http_build_query($params);
+	}
+
+	/**
+	 * 获取access_token
+	 *
+	 * @param string $code
+	 * @return array
+	 */
+	public function access_token($code)
+	{
+		if(empty($code))
+		{
+			\RCPHP\Controller::halt("The code param is null.");
+		}
+
+		$this->getConfig();
+
+		$params = array(
+			'grant_type' => $this->grantType,
+			'code' => $code,
+			'client_id' => $this->appKey,
+			'client_secret' => $this->responseType,
+			'redirect_uri' => $this->callback
+		);
+
+		$result = $this->http($this->accessTokenUrl, http_build_query($params), 'POST');
+
+		if(!empty($result))
+		{
+			$this->token = $this->parseToken($result);
+
+			return $this->token;
+		}
+		else
+		{
+			return array();
+		}
+	}
+
+	/**
+	 * 使用Refresh Token刷新以获得新的Access Token
+	 * 仅部分支持
+	 *
+	 * @param string $refresh_token
+	 * @return array
+	 */
+	public function access_token_refresh($refresh_token)
+	{
+		if(empty($refresh_token))
+		{
+			\RCPHP\Controller::halt("The refresh_token param is null.");
+		}
+
+		$params = array(
+			'grant_type' => 'refresh_token',
+			'refresh_token' => $refresh_token,
+			'client_id' => $this->client_id,
+			'client_secret' => $this->client_secret
+		);
+
+		$result = $this->http($this->accessTokenUrl, http_build_query($params), 'POST');
+
+		if(!empty($result))
+		{
+			return json_decode($result, true);
+		}
+		else
+		{
+			return array();
 		}
 	}
 
@@ -97,7 +256,7 @@ abstract class Oauth
 	 * 提交请求
 	 *
 	 * @param string $url
-	 * @param string $postfields
+	 * @param string $params
 	 * @param string $method
 	 * @param array  $headers
 	 * @return mixed
@@ -108,27 +267,25 @@ abstract class Oauth
 
 		if($method == "post")
 		{
-			return RcPHP::import("Net/Curl")
-						->setHeader($headers)
-						->setUserAgent($ua)
-						->post($url, $params);
+			return \RCPHP\RcPHP::instance('\RCPHP\Net\Curl')
+							   ->setHeader($headers)
+							   ->setUserAgent($ua)
+							   ->post($url, $params);
 		}
-
 		else
 		{
-			return RcPHP::import("Net/Curl")
-						->setHeader($headers)
-						->setUserAgent($ua)
-						->get($url);
+			return \RCPHP\RcPHP::instance('\RCPHP\Net\Curl')
+							   ->setHeader($headers)
+							   ->setUserAgent($ua)
+							   ->get($url);
 		}
 	}
 
 	/**
-	 * 获取当前授权用户信息
-	 *
+	 * @param array $data
 	 * @return mixed
 	 */
-	abstract public function me();
+	abstract protected function parseToken(array $data);
 
 	/**
 	 * 获取登录用户ID

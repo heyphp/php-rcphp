@@ -8,6 +8,8 @@
  * @package        Oauth
  * @since          1.0
  */
+namespace RCPHP\Oauth;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class Baidu extends Oauth
@@ -18,133 +20,50 @@ class Baidu extends Oauth
 	 *
 	 * @var string
 	 */
-	private $apiBase = 'https://openapi.baidu.com/rest/2.0/';
+	protected $apiBase = 'https://openapi.baidu.com/rest/2.0/';
 
 	/**
-	 * 构造方法 百度帐号配置
+	 * 百度帐号体系 登录地址
 	 *
-	 * @return void
+	 * @var string
 	 */
-	public function __construct()
-	{
-		parent::__construct();
-
-		$conf = RcPHP::getConfig("baidu");
-
-		if(!empty($conf) && !empty($conf['appKey']) && !empty($conf['appSecret']) && !empty($conf['callback']))
-		{
-			$this->appKey = $conf['appKey'];
-			$this->appSecret = $conf['appSecret'];
-			$this->callback = $conf['callback'];
-		}
-		else
-		{
-			Controller::halt('Baidu configuration error.');
-		}
-	}
+	protected $loginUrl = 'http://openapi.baidu.com/oauth/2.0/authorize';
 
 	/**
-	 * 授权
+	 * 百度帐号体系 Token地址
 	 *
-	 * @param string $scope
-	 * @return string
+	 * @var string
 	 */
-	public function login_url($callback = '', $scope = '')
-	{
-		if(!empty($callback))
-		{
-			$this->callback = $callback;
-		}
-
-		$params = array(
-			'client_id' => $this->appKey,
-			'response_type' => $this->responseType,
-			'redirect_uri' => $this->callback,
-			'scope' => $scope,
-			'state' => md5(time()),
-			'display' => 'page'
-		);
-
-		return 'http://openapi.baidu.com/oauth/2.0/authorize?' . http_build_query($params);
-	}
+	protected $accessTokenUrl = 'https://openapi.baidu.com/oauth/2.0/token';
 
 	/**
-	 * 获取access_token
+	 * 解析access_token
 	 *
-	 * @param string $code
+	 * @param array $data
 	 * @return array
+	 * @throws Exception
 	 */
-	public function access_token($code)
+	protected function parseToken(array $data)
 	{
-		if(empty($code))
+		if(empty($data))
 		{
-			Controller::halt("The code param is null.");
+			throw new \Exception("Param data is null.");
 		}
 
-		$params = array(
-			'grant_type' => $this->grantType,
-			'code' => $code,
-			'client_id' => $this->appKey,
-			'client_secret' => $this->responseType,
-			'redirect_uri' => $this->callback
-		);
-		$url = 'https://openapi.baidu.com/oauth/2.0/token';
+		$data = json_decode($data, true);
 
-		$result = $this->http($url, http_build_query($params), 'POST');
-
-		if(!empty($result))
+		if($data['access_token'] && $data['expires_in'])
 		{
-			$this->token = $this->parseToken($result);
+			$this->token = $data;
 
-			return $this->token;
+			$data['openid'] = $this->getOpenId();
+
+			return $data;
 		}
 		else
 		{
-			return array();
+			throw new \Exception("Get access token is error,error message is " . $data['error']);
 		}
-	}
-
-	/**
-	 * 使用Refresh Token刷新以获得新的Access Token
-	 *
-	 * @param $refresh_token
-	 * @return array
-	 */
-	public function access_token_refresh($refresh_token)
-	{
-		if(empty($refresh_token))
-		{
-			Controller::halt("The refresh_token param is null.");
-		}
-
-		$params = array(
-			'grant_type' => 'refresh_token',
-			'refresh_token' => $refresh_token,
-			'client_id' => $this->client_id,
-			'client_secret' => $this->client_secret
-		);
-		$url = 'https://openapi.baidu.com/oauth/2.0/token';
-
-		$result = $this->http($url, http_build_query($params), 'POST');
-
-		if(!empty($result))
-		{
-			return json_decode($result, true);
-		}
-		else
-		{
-			return array();
-		}
-	}
-
-	/**
-	 * 获取登录用户信息
-	 *
-	 * @return array|mixed
-	 */
-	public function me()
-	{
-		return $this->api('passport/users/getLoggedInUser', array());
 	}
 
 	/**
@@ -159,13 +78,11 @@ class Baidu extends Oauth
 			return $this->token['openid'];
 		}
 
-		$data = $this->me();
+		$data = $this->api('passport/users/getLoggedInUser');
 
-		if(!empty($data))
+		if(!empty($data) && !empty($data['uid']))
 		{
-			$data = json_decode($data, true);
-
-			return empty($data['uid']) ? null : $data['uid'];
+			return $data['uid'];
 		}
 		else
 		{
@@ -185,18 +102,12 @@ class Baidu extends Oauth
 	{
 		if(empty($url))
 		{
-			Controller::halt("The url param is null.");
+			\RCPHP\Controller::halt("The url param is null.");
 		}
 
 		$url = $this->$apiBase . $url;
-		if(!empty($this->token['token']))
-		{
-			$params['access_token'] = $this->token['token'];
-		}
-		else
-		{
-			throw new Exception("The access token is null.");
-		}
+
+		$params['access_token'] = $this->token['access_token'];
 
 		if($method == 'GET')
 		{
