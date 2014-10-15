@@ -28,6 +28,11 @@ class Rsa
 		$expire = sprintf('%010d', !empty($expire) ? $expire + time() : 0);
 		$str = $expire . $str;
 
+		if(file_exists($key))
+		{
+			$key = file_get_contents($key);
+		}
+
 		$resource = openssl_pkey_get_private($key);
 
 		if($resource === false)
@@ -55,6 +60,11 @@ class Rsa
 	 */
 	public static function decrypt($str, $key)
 	{
+		if(file_exists($key))
+		{
+			$key = file_get_contents($key);
+		}
+
 		$resource = openssl_pkey_get_public($key);
 
 		if($resource === false)
