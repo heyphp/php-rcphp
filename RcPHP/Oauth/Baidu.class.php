@@ -12,7 +12,7 @@ namespace RCPHP\Oauth;
 
 defined('IN_RCPHP') or exit('Access denied');
 
-class Baidu extends Oauth
+class Baidu extends \RCPHP\Oauth\Oauth
 {
 
 	/**

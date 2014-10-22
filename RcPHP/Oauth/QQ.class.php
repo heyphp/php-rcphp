@@ -10,7 +10,7 @@
  */
 defined('IN_RCPHP') or exit('Access denied');
 
-class QQ
+class QQ extends \RCPHP\Oauth\Oauth
 {
 
 	/**
@@ -21,118 +21,81 @@ class QQ
 	private $apiBase = 'https://graph.qq.com/user/';
 
 	/**
-	 * 构造方法 QQ配置
+	 * 微博 登录地址
 	 *
-	 * @return void
+	 * @var string
 	 */
-	public function __construct()
-	{
-		parent::__construct();
-
-		$conf = RcPHP::getConfig("qq");
-
-		if(!empty($conf) && !empty($conf['appKey']) && !empty($conf['appSecret']) && !empty($conf['callback']))
-		{
-			$this->appKey = $conf['appKey'];
-			$this->appSecret = $conf['appSecret'];
-			$this->callback = $conf['callback'];
-		}
-		else
-		{
-			Controller::halt('QQ configuration error.');
-		}
-	}
+	protected $loginUrl = 'https://graph.qq.com/oauth2.0/authorize';
 
 	/**
-	 * 生成授权网址
+	 * 微博 Token地址
 	 *
-	 * @param string $callback_url
-	 * @param string $scope
-	 * @return string
+	 * @var string
 	 */
-	public function login_url($callback_url = '', $scope = '', $state = "test")
-	{
-		if(!empty($callback))
-		{
-			$this->callback = $callback;
-		}
-
-		$params = array(
-			'response_type' => $this->responseType,
-			'client_id' => $this->appKey,
-			'redirect_uri' => $this->callback,
-			'state' => md5($state),
-			'scope' => $scope
-		);
-
-		return 'https://graph.qq.com/oauth2.0/authorize?' . http_build_query($params);
-	}
+	protected $accessTokenUrl = 'https://graph.qq.com/oauth2.0/token';
 
 	/**
-	 * 获取access_token
+	 * 解析access_token
 	 *
-	 * @param string $code
-	 * @return array
+	 * @param array $data
+	 * @return mixed|void
+	 * @throws \Exception
 	 */
-	public function access_token($code)
+	protected function parseToken(array $data)
 	{
-		if(empty($code))
+		if(empty($data))
 		{
-			Controller::halt("The code param is null.");
+			throw new \Exception("Param data is null.");
 		}
 
-		$params = array(
-			'grant_type' => $this->grantType,
-			'code' => $code,
-			'client_id' => $this->appKey,
-			'client_secret' => $this->appSecret,
-			'redirect_uri' => $this->callback
-		);
-		$url = 'https://graph.qq.com/oauth2.0/token';
+		$data = json_decode($data, true);
 
-		$result = $this->http($url, http_build_query($params));
-
-		if(!empty($result))
+		if(!empty($data['access_token']) && !empty($data['expires_in']))
 		{
-
-			$result = explode('&', $result);
-
-			$data = array();
-
-			foreach($result as $v)
-			{
-				$tmp = explode('=', $v);
-				$data[$tmp[0]] = $data[$tmp[1]];
-			}
-
 			$this->token = $data;
 
-			return $this->token;
+			$data['openid'] = $this->getOpenId();
+
+			return $data;
 		}
 		else
 		{
-			return array();
+			throw new \Exception("Get access token is error,error message is " . $data['error']);
 		}
 	}
 
 	/**
-	 * 获取登录用户信息
+	 * 获取授权用户ID
 	 *
-	 * @return array|mixed
-	 */
-	public function me()
-	{
-		return $this->api('user', array());
-	}
-
-	/**
-	 * 获取OpenId
-	 *
-	 * @return int
+	 * @return mixed|void
+	 * @throws \Exception
 	 */
 	public function getOpenId()
 	{
-		return 0;
+		if(!empty($this->token['openid']))
+		{
+			return $this->token['openid'];
+		}
+
+		$response = $this->http("https://graph.qq.com/oauth2.0/me?access_token=" . $this->token['access_token']);
+
+		if(strpos($response, "callback") !== false)
+		{
+			$lpos = strpos($response, "(");
+			$rpos = strrpos($response, ")");
+			$response = substr($response, $lpos + 1, $rpos - $lpos - 1);
+		}
+
+		$data = json_decode($response, true);
+
+		if(!empty($data) && !empty($data['openid']))
+		{
+			return (int)$data['openid'];
+		}
+		else
+		{
+			throw new \Exception("Get Open ID is error,error message is " . $data['msg']);
+		}
 	}
 
 	/**
@@ -147,20 +110,21 @@ class QQ
 	{
 		if(empty($url))
 		{
-			Controller::halt("The url param is null.");
+			\RCPHP\Controller::halt("The url param is null.");
 		}
 
 		$url = $this->$apiBase . $url;
-		if(!empty($this->token['access_token']))
+
+		$params['access_token'] = $this->token['access_token'];
+
+		if($method == 'GET')
 		{
-			$params['access_token'] = $this->token['access_token'];
+			$result = $this->http($url . '?' . http_build_query($params));
 		}
 		else
 		{
-			throw new Exception("The access token is null.");
+			$result = $this->http($url, http_build_query($params), 'POST');
 		}
-
-		$result = $this->http($url, $params, $method);
 
 		if(!empty($result))
 		{
