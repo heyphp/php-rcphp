@@ -41,7 +41,7 @@ class Baidu extends \RCPHP\Oauth\Oauth
 	 *
 	 * @param array $data
 	 * @return array
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	protected function parseToken(array $data)
 	{

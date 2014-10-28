@@ -8,109 +8,62 @@
  * @package        Oauth
  * @since          1.0
  */
+namespace RCPHP\Oauth;
+
 defined('IN_RCPHP') or exit('Access denied');
 
-class Qihoo
+class Qihoo extends \RCPHP\Oauth\Oauth
 {
 
 	/**
-	 * 360 Api地址
+	 * 360帐号体系 Api地址
 	 *
 	 * @var string
 	 */
-	private $apiBase = 'https://openapi.360.cn/';
+	protected $apiBase = 'https://openapi.360.cn/';
 
 	/**
-	 * 构造方法 360配置
+	 * 360帐号体系 登录地址
 	 *
-	 * @return void
+	 * @var string
 	 */
-	public function __construct()
-	{
-		parent::__construct();
-
-		$conf = RcPHP::getConfig("360");
-
-		if(!empty($conf) && !empty($conf['appKey']) && !empty($conf['appSecret']) && !empty($conf['callback']))
-		{
-			$this->appKey = $conf['appKey'];
-			$this->appSecret = $conf['appSecret'];
-			$this->callback = $conf['callback'];
-		}
-		else
-		{
-			Controller::halt('360 configuration error.');
-		}
-	}
+	protected $loginUrl = 'https://openapi.360.cn/oauth2/authorize';
 
 	/**
-	 * 生成授权网址
+	 * 360帐号体系 Token地址
 	 *
-	 * @param string $callback_url
-	 * @param string $scope
-	 * @return string
+	 * @var string
 	 */
-	public function login_url($callback_url = '', $scope = '')
-	{
-		if(!empty($callback))
-		{
-			$this->callback = $callback;
-		}
-
-		$params = array(
-			'response_type' => $this->responseType,
-			'client_id' => $this->appKey,
-			'redirect_uri' => $this->callback,
-			'scope' => $scope
-		);
-
-		return 'https://openapi.360.cn/oauth2/authorize?' . http_build_query($params);
-	}
+	protected $accessTokenUrl = 'https://openapi.360.cn/oauth2/access_token';
 
 	/**
-	 * 获取access_token
+	 * 解析access_token
 	 *
-	 * @param string $code
+	 * @param array $data
 	 * @return array
+	 * @throws \Exception
 	 */
-	public function access_token($code)
+	protected function parseToken(array $data)
 	{
-		if(empty($code))
+		if(empty($data))
 		{
-			Controller::halt("The code param is null.");
+			throw new \Exception("Param data is null.");
 		}
 
-		$params = array(
-			'grant_type' => $this->grantType,
-			'code' => $code,
-			'client_id' => $this->appKey,
-			'client_secret' => $this->responseType,
-			'redirect_uri' => $this->callback
-		);
-		$url = 'https://openapi.360.cn/oauth2/access_token';
+		$data = json_decode($data, true);
 
-		$result = $this->http($url, http_build_query($params), 'POST');
-
-		if(!empty($result))
+		if($data['access_token'] && $data['expires_in'])
 		{
-			$this->token = $this->parseToken($result);
+			$this->token = $data;
 
-			return $this->token;
+			$data['openid'] = $this->getOpenId();
+
+			return $data;
 		}
 		else
 		{
-			return array();
+			throw new \Exception("Get access token is error,error message is " . $data['error']);
 		}
-	}
-
-	/**
-	 * 获取登录用户信息
-	 *
-	 * @return array|mixed
-	 */
-	public function me()
-	{
-		return $this->api('user/me', array());
 	}
 
 	/**
@@ -125,11 +78,11 @@ class Qihoo
 			return $this->token['openid'];
 		}
 
-		$data = $this->me();
+		$data = $this->api('user/me.json');
 
-		if(!empty($data))
+		if(!empty($data) && !empty($data['id']))
 		{
-			return empty($data['id']) ? null : $data['id'];
+			return $data['id'];
 		}
 		else
 		{
@@ -149,20 +102,21 @@ class Qihoo
 	{
 		if(empty($url))
 		{
-			Controller::halt("The url param is null.");
+			\RCPHP\Controller::halt("The url param is null.");
 		}
 
 		$url = $this->$apiBase . $url;
-		if(!empty($this->token['token']))
+
+		$params['access_token'] = $this->token['access_token'];
+
+		if($method == 'GET')
 		{
-			$params['access_token'] = $this->token['token'];
+			$result = $this->http($url . '?' . http_build_query($params));
 		}
 		else
 		{
-			throw new Exception("The access token is null.");
+			$result = $this->http($url, http_build_query($params), 'POST');
 		}
-
-		$result = $this->http($url, $params, $method);
 
 		if(!empty($result))
 		{

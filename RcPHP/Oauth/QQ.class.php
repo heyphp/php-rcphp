@@ -8,6 +8,8 @@
  * @package        Oauth
  * @since          1.0
  */
+namespace RCPHP\Oauth;
+
 defined('IN_RCPHP') or exit('Access denied');
 
 class QQ extends \RCPHP\Oauth\Oauth
