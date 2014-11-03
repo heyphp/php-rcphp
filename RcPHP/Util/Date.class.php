@@ -93,38 +93,39 @@ class Date
 		$text = '';
 		$time = is_null($time) || $time > time() ? time() : intval($time);
 
-		$t = time() - $time; //时间差 （秒）
+		//时间差 （秒）
+		$t = time() - $time;
 		if($t <= 3)
 		{
 			$text = '刚刚';
 		}
 		else if($t < 60)
 		{
-			$text = $t . '秒前'; // 一分钟内
+			$text = $t . '秒前';
 		}
 		else if($t < 60 * 60)
 		{
-			$text = floor($t / 60) . '分钟前'; //一小时内
+			$text = floor($t / 60) . '分钟前';
 		}
 		else if($t < 60 * 60 * 24)
 		{
-			$text = floor($t / (60 * 60)) . '小时前'; // 一天内
+			$text = floor($t / (60 * 60)) . '小时前';
 		}
 		else if($t < 60 * 60 * 24 * 3)
 		{
-			$text = floor($time / (60 * 60 * 24)) == 1 ? '昨天 ' . date('H:i', $time) : '前天 ' . date('H:i', $time); //昨天和前天
+			$text = floor($time / (60 * 60 * 24)) == 1 ? '昨天 ' . date('H:i', $time) : '前天 ' . date('H:i', $time);
 		}
 		else if($t < 60 * 60 * 24 * 30)
 		{
-			$text = date('m月d日 H:i', $time); //一个月内
+			$text = date('m月d日 H:i', $time);
 		}
 		else if($t < 60 * 60 * 24 * 365)
 		{
-			$text = date('m月d日', $time); //一年内
+			$text = date('m月d日', $time);
 		}
 		else
 		{
-			$text = date('Y年m月d日', $time); //一年以前
+			$text = date('Y年m月d日', $time);
 		}
 
 		return $text;
