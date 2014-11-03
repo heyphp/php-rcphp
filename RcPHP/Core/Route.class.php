@@ -88,7 +88,10 @@ class Route
 		for($i = 2; $len = count($reqArr), $i < $len; $i++)
 		{
 			$f = $i % 2;
-			if($f == 0) $_GET[$reqArr[$i]] = \RCPHP\RcPHP::$_params[$reqArr[$i]] = empty($reqArr[$i + 1]) ? null : $reqArr[$i + 1];
+			if($f == 0)
+			{
+				$_GET[$reqArr[$i]] = \RCPHP\RcPHP::$_params[$reqArr[$i]] = empty($reqArr[$i + 1]) ? null : $reqArr[$i + 1];
+			}
 		}
 
 		// 处理问好后面的参数

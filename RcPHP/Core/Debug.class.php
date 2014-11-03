@@ -124,7 +124,10 @@ class Debug
 	{
 		$message = '';
 
-		if(!isset(self::$errMsg[$errno])) $errno = 'Unkown';
+		if(!isset(self::$errMsg[$errno]))
+		{
+			$errno = 'Unkown';
+		}
 
 		$color = 'red';
 

@@ -37,7 +37,10 @@ class Structure
 			if(defined('REMOTE_PATH'))
 			{
 				$remote = REMOTE_PATH . DS;
-				if(!is_dir(PRO_PATH . REMOTE_PATH . DS)) mkdir(PRO_PATH . REMOTE_PATH . DS, 0755, true);
+				if(!is_dir(PRO_PATH . REMOTE_PATH . DS))
+				{
+					mkdir(PRO_PATH . REMOTE_PATH . DS, 0755, true);
+				}
 			}
 
 			$sourceDirs = array(
@@ -54,7 +57,10 @@ class Structure
 
 			foreach($sourceDirs as $dir)
 			{
-				if(!is_dir($dir)) mkdir($dir, 0755, true);
+				if(!is_dir($dir))
+				{
+					mkdir($dir, 0755, true);
+				}
 			}
 
 			self::buildApp();
@@ -91,7 +97,10 @@ class Structure
 
 		foreach($appDirs as $dir)
 		{
-			if(!is_dir($dir)) mkdir($dir, 0755, true);
+			if(!is_dir($dir))
+			{
+				mkdir($dir, 0755, true);
+			}
 		}
 	}
 
@@ -102,15 +111,24 @@ class Structure
 	 */
 	public static function buildRuntime()
 	{
-		if(!is_dir(RUNTIME_PATH)) mkdir(RUNTIME_PATH, 0755, true);
+		if(!is_dir(RUNTIME_PATH))
+		{
+			mkdir(RUNTIME_PATH, 0755, true);
+		}
 
 		if(!is_writable(RUNTIME_PATH))
 		{
 			\RCPHP\Controller::halt('Do not write the runtime directory.');
 		}
 
-		if(!is_dir(CACHE_PATH)) mkdir(CACHE_PATH, 0755);
-		if(!is_dir(LOG_PATH)) mkdir(LOG_PATH, 0755);
+		if(!is_dir(CACHE_PATH))
+		{
+			mkdir(CACHE_PATH, 0755);
+		}
+		if(!is_dir(LOG_PATH))
+		{
+			mkdir(LOG_PATH, 0755);
+		}
 	}
 
 	/**
