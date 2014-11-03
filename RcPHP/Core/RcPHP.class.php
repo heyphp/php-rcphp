@@ -295,15 +295,12 @@ class RcPHP
 		}
 
 		//Judgment document ever loaded, loaded directly returns true
-		if(!isset(self::$_includes[$fileName]))
+		if(!isset(self::$_includes[$fileName]) && file_exists($filename))
 		{
 
-			//load file
-			if(file_exists($fileName))
-			{
-				include_once $fileName;
-				self::$_includes[$fileName] = true;
-			}
+			//load file.
+            include_once $fileName;
+			self::$_includes[$fileName] = true;
 		}
 
 		return !empty(self::$_includes[$fileName]) ? self::$_includes[$fileName] : false;
