@@ -510,7 +510,7 @@ class Image
 	 * @param string $imageType
 	 * @return bool
 	 */
-	protected function createImage($imageDist, $distName = null, $imageType)
+	protected function createImage($imageDist, $distName = null, $imageType = 'jpg')
 	{
 
 		//参数分析
