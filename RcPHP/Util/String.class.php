@@ -44,7 +44,7 @@ class String
 	 * @param string  $suffix
 	 * @return string
 	 */
-	public static function msubstr($str, $start = 0, $length, $charset = "utf-8", $suffix = '...')
+	public static function msubstr($str, $start = 0, $length = 10, $charset = "utf-8", $suffix = '...')
 	{
 		if(function_exists("mb_substr"))
 		{
