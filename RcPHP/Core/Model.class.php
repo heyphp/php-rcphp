@@ -29,7 +29,7 @@ class Model
 	 */
 	protected $_params = array();
 
-    /*
+	/*
 	 *
 	 * @var array
 	 */
@@ -697,12 +697,12 @@ class Model
 		if($this->_singleton === true)
 		{
 			return $this->factory($this->_config['master'], 0);
-        }
+		}
 
-        if(isset(self::$_links[0]))
-        {
-            return self::$_links[0];
-        }
+		if(isset(self::$_links[0]))
+		{
+			return self::$_links[0];
+		}
 
 		//获得从数据库配置的索引
 		$config_slave = $this->_config['slave'];
@@ -738,8 +738,8 @@ class Model
 	public function factory($config, $linkNum)
 	{
 		if(!isset(self::$_links[$linkNum]))
-        {
-            \RCPHP\Debug::addMessage("DB " . ($linkNum == 0 ? "master" : "slave") . " has been connected");
+		{
+			\RCPHP\Debug::addMessage("DB " . ($linkNum == 0 ? "master" : "slave") . " has been connected");
 
 			$driver = $config['driver'];
 
@@ -752,17 +752,13 @@ class Model
 						$dsnArray = array();
 						$dsnArray['host'] = $config['host'];
 						$dsnArray['dbname'] = $config['database'];
-
-						if(!empty($config['port']))
-						{
-							$dsnArray['port'] = $config['port'];
-						}
+						$dsnArray['port'] = !empty($config['port']) ? (int)$config['port'] : 3306;
 						$config['dsn'] = sprintf('%s:%s', 'mysql', http_build_query($dsnArray, '', ';'));
 					}
-                    self::$_links[$linkNum] = new Mysql($config);
+					self::$_links[$linkNum] = new Mysql($config);
 					break;
 				default:
-                    self::$_links[$linkNum] = new Mysql($config);
+					self::$_links[$linkNum] = new Mysql($config);
 			}
 		}
 
