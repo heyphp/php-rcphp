@@ -90,7 +90,7 @@ class Xml
 	public static function xmlEncode($data, $root = null, $encoding = 'UTF-8')
 	{
 		$root = is_null($root) ? 'root' : trim($root);
-		$xml = "<?xml version=\"1.0\" encoding=\"{$encoding}\" ?>\r";
+		$xml = "<?xml version=\"1.0\" encoding=\"" . $encoding . "\" ?>\r";
 		$xml .= "<" . $root . ">\r";
 		$xml .= self::dataToXml($data);
 		$xml .= "</" . $root . ">";
