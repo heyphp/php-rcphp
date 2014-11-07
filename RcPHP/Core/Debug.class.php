@@ -139,13 +139,13 @@ class Debug
 		if(defined('RCPHP_WEB') && RCPHP_WEB === true)
 		{
 			$message = '<font color=' . $color . '>';
-			$message .= '<b>' . self::$errMsg[$errno] . "</b>[在文件 {$errfile} 中,第 $errline 行]:";
+			$message .= '<b>' . self::$errMsg[$errno] . "</b>[在文件 " . $errfile . " 中,第 " . $errline . " 行]:";
 			$message .= $errstr;
 			$message .= '</font>';
 		}
 		else
 		{
-			$message .= self::$errMsg[$errno] . "[在文件 {$errfile} 中,第 $errline 行]:";
+			$message .= self::$errMsg[$errno] . "[在文件 " . $errfile . " 中,第 " . $errline . " 行]:";
 			$message .= $errstr;
 		}
 
