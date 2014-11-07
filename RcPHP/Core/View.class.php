@@ -193,9 +193,8 @@ class View
 		//¿ªÆô»º³åÇø
 		ob_start();
 		include $viewFile;
-		$content = ob_get_clean();
 
-		return $content;
+		return ob_get_clean();
 	}
 
 	/**
