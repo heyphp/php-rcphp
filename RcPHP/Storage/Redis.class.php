@@ -130,7 +130,6 @@ class Redis
 				\RCPHP\Controller::halt('The Redis configuration failed to load');
 			}
 
-			//连接redis数据库
 			$this->linkID[$linkNum] = new \Redis();
 			$this->linkID[$linkNum]->connect($config['host'], $config['port'], 3);
 

@@ -363,16 +363,18 @@ function arrayToObject($data)
 {
 	if(is_array($data))
 	{
-		/*
-         * Return array converted to object
-         * Using __FUNCTION__ (Magic constant)
-         * for recursive call
-         */
+		/**
+		 * Return array converted to object
+		 * Using __FUNCTION__ (Magic constant)
+		 * for recursive call
+		 */
 		return (object)array_map(__FUNCTION__, $data);
 	}
 	else
 	{
-		// Return object return $data;
+		/**
+		 * Return object return $data;
+		 */
 		return $data;
 	}
 }
