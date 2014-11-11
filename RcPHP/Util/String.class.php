@@ -108,9 +108,9 @@ class String
 		{
 			foreach($fContents as $key => $val)
 			{
-				$_key = self::auto_charset($key, $from, $to);
-				$fContents[$_key] = self::auto_charset($val, $from, $to);
-				if($key != $_key)
+				$k = self::auto_charset($key, $from, $to);
+				$fContents[$k] = self::auto_charset($val, $from, $to);
+				if($key != $k)
 				{
 					unset($fContents[$key]);
 				}
