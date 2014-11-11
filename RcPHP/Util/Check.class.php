@@ -295,6 +295,6 @@ class Check
 	 */
 	public static function isClient()
 	{
-		return (PHP_SAPI === 'cli' OR defined('STDIN'));
+		return (PHP_SAPI === 'cli' || defined('STDIN'));
 	}
 }
