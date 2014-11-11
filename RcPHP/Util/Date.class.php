@@ -55,12 +55,12 @@ class Date
 	 * @param string $new_date
 	 * @return int
 	 */
-	public static function difference_date($date, $new_date = null)
+	public static function difference_date($date, $newDate = null)
 	{
 		$date = strtotime($date);
-		$new_date = is_null($new_date) ? time() : strtotime($new_date);
+		$new_date = is_null($newDate) ? time() : strtotime($newDate);
 
-		return abs(ceil(($date - $new_date) / 86400));
+		return abs(ceil(($date - $newDate) / 86400));
 	}
 
 	/**
