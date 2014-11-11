@@ -89,7 +89,10 @@ function select_sort(Array $arr)
 		$min = $i;
 		for($j = $i + 1; $j < $len; $j++) //记录剩下中最小那的
 		{
-			if($arr[$j] < $arr[$min]) $min = $j;
+			if($arr[$j] < $arr[$min])
+			{
+				$min = $j;
+			}
 		}
 		if($min != $i) //把当前数与该最小数交换
 		{
@@ -121,8 +124,14 @@ function quick_sort(Array $arr)
 	$l = $r = array();
 	for($i = 1; $i < $len; $i++)
 	{
-		if($arr[$i] < $mid) $l[] = $arr[$i];
-		else $r[] = $arr[$i];
+		if($arr[$i] < $mid)
+		{
+			$l[] = $arr[$i];
+		}
+		else
+		{
+			$r[] = $arr[$i];
+		}
 	}
 	$l = quick_sort($l);
 	$r = quick_sort($r);

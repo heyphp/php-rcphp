@@ -151,7 +151,11 @@ class Location
 	 */
 	public function getlocation($ip = '')
 	{
-		if(!$this->fp) return null; // 如果数据文件没有被正确打开，则直接返回空
+		if(!$this->fp)
+		{
+			return null;
+		}
+		// 如果数据文件没有被正确打开，则直接返回空
 		if(empty($ip))
 		{
 			$ip = Http::get_ip();

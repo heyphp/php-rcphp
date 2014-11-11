@@ -81,7 +81,10 @@ class Structure
 	public static function buildApp()
 	{
 		// Create app directory.
-		if(!is_dir(APP_PATH)) mkdir(APP_PATH, 0755, true);
+		if(!is_dir(APP_PATH))
+		{
+			mkdir(APP_PATH, 0755, true);
+		}
 
 		if(!is_writable(APP_PATH))
 		{
