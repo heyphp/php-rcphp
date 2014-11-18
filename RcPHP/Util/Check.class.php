@@ -256,6 +256,21 @@ class Check
 	}
 
 	/**
+	 * 验证是否为代理
+	 *
+	 * @return bool
+	 */
+	public static function isAgent()
+	{
+		if($_SERVER['HTTP_X_FORWARDED_FOR'] || $_SERVER['HTTP_VIA'] || $_SERVER['HTTP_PROXY_CONNECTION'] || $_SERVER['HTTP_USER_AGENT_VIA'])
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * 验证是否为机器人
 	 *
 	 * @return bool
