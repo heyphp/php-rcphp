@@ -256,6 +256,21 @@ class Check
 	}
 
 	/**
+	 * 验证是否为机器人
+	 *
+	 * @return bool
+	 */
+	public static function isRobot()
+	{
+		if(preg_match("/(Bot|Crawl|Spider|slurp|sohu-search|lycos|robozilla)/", $_SERVER['HTTP_USER_AGENT']))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * 验证是否是ajax提交
 	 *
 	 * @return bool
