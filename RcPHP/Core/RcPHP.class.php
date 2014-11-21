@@ -96,11 +96,11 @@ class RcPHP
 
 		\RCPHP\Route::dispatch();
 
-		$controller_file = CONTROLLER_PATH . self::$_controller . 'Controller.class.php';
+		$controllerFile = CONTROLLER_PATH . self::$_controller . 'Controller.class.php';
 
-		if(file_exists($controller_file))
+		if(file_exists($controllerFile))
 		{
-			self::loadFile($controller_file);
+			self::loadFile($controllerFile);
 		}
 		else
 		{
@@ -109,14 +109,14 @@ class RcPHP
 
 		$controller = self::$_controller . "Controller";
 
-		$appObject = new $controller();
+		$appObject = self::instance($controller);
 
 		if(method_exists($controller, self::$_action))
 		{
-			$action = self::$_action;
-
-			$appObject->$action(self::$_params);
-			unset($action);
+			call_user_func_array(array(
+				&$appObject,
+				self::$_action
+			), self::$_params);
 		}
 		else
 		{
